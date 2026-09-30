@@ -1,0 +1,8 @@
+imagenes/
+node_modules/
+.wrangler/
+artifacts/
+dist/
+.env
+.env.*
+!.env.example
