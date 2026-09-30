@@ -2,9 +2,13 @@
 
 Web estática de Scalaris: soporte informático local y desarrollo de software a medida.
 
+Sitio público: https://scalaris.pages.dev
+
 ## Archivos
 
 `public/` conserva la copia portable original de HTML, CSS, JavaScript, imágenes, logos y fuentes Inter con su licencia. No necesita dependencias ni compilación. La carpeta local `imagenes/` queda fuera de Git.
+
+Fuente: `Scalaris_01_Identidad_Complementos_Web_2026-09-30.zip`, carpeta `05_Web_Estatica`. Los 12 archivos de la web se verificaron byte por byte contra el ZIP. El Site original de ChatGPT permanece independiente y sin modificaciones.
 
 ## Verificación y vista local
 
