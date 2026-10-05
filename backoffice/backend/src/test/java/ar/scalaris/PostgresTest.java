@@ -560,17 +560,15 @@ class PostgresTest {
   }
 
   @Test
-  void seedCanRunAgainWithoutOverwritingUserPrice() throws Exception {
-    var c = s.one("SELECT * FROM catalog WHERE seed_key='vidainformatica-1'");
-    jdbc.update("UPDATE catalog SET price=13000,active=false WHERE id=?", c.get("id"));
-    try (var source = getClass().getResourceAsStream("/db/migration/V2__editable_catalog.sql")) {
-      jdbc.execute(
-          new String(
-              java.util.Objects.requireNonNull(source).readAllBytes(),
-              java.nio.charset.StandardCharsets.UTF_8));
-    }
-    assertThat(s.one("SELECT * FROM catalog WHERE id=?", c.get("id")).get("price"))
-        .isEqualTo("13000.00");
+  void catalogStartsWithRoundedPricesAndDevelopmentHour() {
+    assertThat(s.one("SELECT * FROM catalog WHERE seed_key='vidainformatica-1'").get("price"))
+        .isEqualTo("11000.00");
+    assertThat(s.one("SELECT * FROM catalog WHERE seed_key='vidainformatica-2'").get("price"))
+        .isEqualTo("65000.00");
+    assertThat(s.one("SELECT * FROM catalog WHERE seed_key='vidainformatica-13'").get("price"))
+        .isEqualTo("50000.00");
+    assertThat(s.one("SELECT * FROM catalog WHERE seed_key='scalaris-web-hour'").get("price"))
+        .isEqualTo("15000.00");
     assertThat(jdbc.queryForObject("SELECT count(*) FROM catalog", Integer.class)).isEqualTo(29);
   }
 

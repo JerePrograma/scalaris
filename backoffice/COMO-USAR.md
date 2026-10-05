@@ -61,7 +61,7 @@ Set-Location 'C:\laburo\Scalaris'
 
 Si el build falla, corregí el error antes de abrir de nuevo. `Build.ps1` instala con el lockfile congelado, ejecuta TypeScript/Vite y empaqueta los recursos actuales en el JAR. Al preparar los recursos reemplaza solamente el directorio estático generado para evitar JS/CSS sobrantes de una compilación anterior. La fuente del frontend está en `backoffice\frontend\src`, no en `target` ni `dist`.
 
-El arranque real **valida V1–V3**. No ejecutes `Migrate.ps1` para actualizar el frontend, abrir diariamente o resolver un 403. Una migración pendiente requiere revisión y aprobación específica; el script de migración conserva su circuito de backup y validación. No modificar migraciones ya aplicadas.
+El arranque real **valida la migración inicial V1**. No ejecutes `Migrate.ps1` para actualizar el frontend, abrir diariamente o resolver un 403. Una migración pendiente requiere revisión y aprobación específica; el script de migración conserva su circuito de backup y validación. No modificar migraciones ya aplicadas.
 
 ## Trabajar con las pantallas existentes
 

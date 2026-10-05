@@ -5,15 +5,18 @@ import type { Catalog } from "../../catalog/types";
 import type { Revision } from "../types";
 import { Form, Text, Field } from "../../../shared/components";
 import { useQuoteDraft } from "../hooks/useQuoteDraft";
+import { DevelopmentEstimator } from "./DevelopmentEstimator";
 
 export function QuoteEditor({
   caseId,
+  service,
   source,
   edit,
   catalog,
   onSaved,
 }: {
   caseId: number;
+  service: string;
   source?: Revision;
   edit?: boolean;
   catalog: Catalog[];
@@ -59,6 +62,33 @@ export function QuoteEditor({
             ))}
         </select>
       </Field>
+      {service === "SOFTWARE" && (
+        <DevelopmentEstimator
+          catalog={catalog}
+          onAdd={(estimate) => {
+            const notice =
+              "Las horas de desarrollo incluidas son un mínimo estimado y aproximado. El alcance final y el esfuerzo pueden ajustarse luego del relevamiento.";
+            const conditions =
+              q.conditions.includes(notice) ||
+              q.conditions.length + notice.length + 2 > 6000
+                ? q.conditions
+                : [q.conditions.trim(), notice].filter(Boolean).join("\n\n");
+            update({
+              items: [
+                ...q.items,
+                {
+                  ...newItem(),
+                  description: `Desarrollo: ${estimate.title} (mínimo aproximado)`,
+                  quantity: String(estimate.hours),
+                  unit: "hora",
+                  unitPrice: estimate.unitPrice,
+                },
+              ],
+              conditions,
+            });
+          }}
+        />
+      )}
       {q.items.map((it, i) => (
         <article className="line-item" key={i}>
           <div className="row between">

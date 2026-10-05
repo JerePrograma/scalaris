@@ -183,6 +183,7 @@ export function CaseView({
           {modal.startsWith("quote") && (
             <QuoteEditor
               caseId={id}
+              service={c.service}
               source={selected}
               edit={modal === "quote-edit"}
               catalog={catalog}
