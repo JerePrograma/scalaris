@@ -1,0 +1,34 @@
+SCALARIS · KIT COMPLETO · 30 DE SEPTIEMBRE DE 2026
+
+ESTADO Y ALCANCE
+La identidad V1 aprobada fue recuperada; sus logos maestros y manual se incluyen en 01_Identidad_V1.
+El lote de 20 piezas de Etapa C fue recuperado íntegro: 20 PNG, 20 SVG editables, 20 SVG de reproducción y dos PDF A4. Se conserva para revisión antes de publicar; no debe interpretarse esta recuperación como una nueva aprobación visual del lote.
+Se agregan la página web estática, tarjeta frente/dorso, QR de WhatsApp, firma de email y contenidos editoriales. Avatar y portada en Complementos son copias de los pilotos recuperados, no diseños nuevos.
+La publicación en redes está pendiente. No se compró un dominio.
+La página se publicó de forma privada en https://scalaris.jereprograma.chatgpt.site y se incluye una copia web estática portable. El acceso alojado depende de los permisos de esa publicación; no es un lanzamiento público.
+Se comprobaron los recursos locales, anclas, fuentes y mensajes de WhatsApp. La revisión visual real de la web en navegador de escritorio y móvil sigue pendiente.
+
+POR DÓNDE EMPEZAR
+1. Mirá Scalaris_Indice_Visual_20_Piezas.png para ubicar las 20 piezas.
+2. Revisá 01_Identidad_V1/01_Documentacion/Scalaris_Brand_Kit_v1.pdf.
+3. Usá los PNG de 02_Lote_20_Etapa_C/01_PNG para revisar o preparar publicaciones.
+4. Abrí 04_Contenidos_Editoriales/00_kit_editorial.html para consultar la guía editorial.
+5. Abrí 05_Web_Estatica/index.html para consultar la web localmente. Conservá juntos index.html, styles.css, script.js y assets. Los recursos visuales y tipográficos son locales; los enlaces a WhatsApp necesitan conexión.
+
+CARPETAS
+01_Identidad_V1: logos PNG/SVG/PDF, manual y recursos de marca.
+02_Lote_20_Etapa_C: colección recuperada, fuentes editables y documentos originales de la etapa.
+03_Complementos: tarjeta de 90 × 50 mm, avatar, portada, QR y firma HTML. Leé LEEME_Complementos.txt.
+04_Contenidos_Editoriales: textos, bios, copys, calendario sugerido, respuestas y plantillas HTML comerciales.
+05_Web_Estatica: copia portable de la web, sin repositorio, configuración de alojamiento ni secretos.
+06_Recursos_Utiles/Inter: fuentes Inter 400, 500, 600 y 700 con su licencia OFL.
+
+EDICIÓN E IMPRESIÓN
+Instalá Inter si vas a editar textos en los SVG. Las versiones de reproducción conservan la apariencia sin depender de la edición de texto. Conservá las ilustraciones con el carácter ilustrativo descrito en sus documentos.
+Los materiales de impresión están en RGB y sin sangrado. No se presentan como originales CMYK/PDF-X listos para cualquier imprenta. Pedí a la imprenta que confirme sangrado, márgenes seguros, color, soporte y tamaño final antes de producir. La tarjeta doble faz contiene frente y dorso en páginas separadas.
+Las fichas de recepción y presupuesto HTML están pendientes de revisión visual de impresión por un bloqueo del navegador durante la comprobación. Antes de usarlas, completá un caso de prueba y revisá la vista previa A4 y el PDF resultante. Los campos no se guardan automáticamente y los importes no se calculan solos. Leé 08_instrucciones_plantillas.txt.
+La firma de email requiere instalación y prueba en el cliente de correo elegido. El QR contiene el enlace de WhatsApp; su lectura no acredita disponibilidad de la cuenta.
+
+CONTROL DEL PAQUETE
+Los ZIP se verificaron por CRC; las rutas del ZIP son relativas. No se incluyen otros ZIP, helpers de producción, capturas de QA, .git, .openai ni credenciales.
+MANIFIESTO_SHA256.txt permite comprobar la integridad de los archivos entregados. Los inventarios originales dentro de Etapa C describen el paquete recuperado de origen; pueden mencionar verificaciones o scripts excluidos deliberadamente de esta entrega limpia.

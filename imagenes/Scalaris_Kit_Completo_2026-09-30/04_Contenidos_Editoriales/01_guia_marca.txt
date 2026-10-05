@@ -1,0 +1,43 @@
+SCALARIS · Guía de marca y uso
+
+IDENTIDAD
+Marca: SCALARIS
+Descriptor: Soporte informático y software
+Slogan: Tu tecnología, en buenas manos
+Contacto: 1141477227
+WhatsApp: https://wa.me/5491141477227
+
+QUÉ HACEMOS
+Diagnóstico y mantenimiento de PC y notebooks; reparación y armado de equipos; redes, WiFi y soporte informático; desarrollo web, software, automatizaciones e integraciones.
+Atención en Marcos Paz, Mariano Acosta, Merlo y cercanías. Retiro y entrega sujetos a coordinación. La modalidad no implica reparación presencial a domicilio.
+
+VOZ
+Clara, humana y rioplatense: contame, escribime, coordinamos. Frases breves, una idea por pieza y un llamado a la acción concreto. Explicar los términos técnicos cuando sea necesario. Hablar del problema y del próximo paso sin prometer resultados antes de revisar el caso.
+Ejemplo: «¿Tu PC está lenta? Contame qué pasa y coordinamos una revisión».
+
+COLOR
+Azul noche #0B1F33: texto principal, fondos oscuros y marca.
+Azul #145CDB: acentos y llamados a la acción.
+Celeste #53C9F4: detalles gráficos y énfasis sobre fondo oscuro.
+Blanco #FFFFFF: fondo y texto sobre azul oscuro.
+Gris hielo #EEF5FA: fondos secundarios.
+Verde: reservado para identificar el contacto por WhatsApp. No usarlo como segundo color de marca.
+Usar azul noche para texto pequeño sobre blanco o gris hielo. No usar celeste como texto pequeño sobre fondo blanco. Comprobar contraste al cambiar combinaciones.
+
+TIPOGRAFÍA
+Inter. Usar 700 para títulos, 600 para etiquetas y 400 para texto. Evitar más de tres tamaños por pieza. Si Inter no está disponible, usar Arial o sans-serif como reemplazo provisional.
+
+LOGO
+Usar los archivos maestros del kit. Mantener proporciones; no estirar, inclinar, agregar sombras ni cambiar los colores. Sobre fondos ocupados, colocar una superficie lisa detrás. Dejar espacio libre alrededor equivalente, como mínimo, a la altura de la letra S del logotipo. En tamaños pequeños, priorizar la versión simple y omitir el slogan si pierde legibilidad. No reconstruir el símbolo con caracteres.
+
+PIEZAS SOCIALES
+Una pieza, una idea. Jerarquía: titular, explicación breve, CTA, marca/contacto. Mantener texto y logo alejados del borde y comprobar el recorte en la vista previa de cada plataforma. Para historias, dejar la zona superior e inferior libre de información imprescindible. Los copys acompañan la pieza y no necesitan repetir todo el texto del diseño.
+
+FOTOGRAFÍA Y GRÁFICA
+Priorizar equipos y situaciones reales con permiso de uso. Evitar pantallas con datos personales, números de serie visibles y fotos que sugieran un taller o equipo humano inexistente. Usar iconos de una misma familia. No presentar renders o imágenes ilustrativas como trabajos realizados.
+
+REGLAS COMERCIALES
+Acordar diagnóstico, alcance y presupuesto antes de realizar el trabajo. Coordinar retiro y entrega caso por caso. No publicar precios, gratuidad, plazos, disponibilidad 24/7, garantías, clientes, testimonios ni certificaciones sin confirmación. No anunciar servicios futuros de QA, diseño o marketing. No pedir contraseñas en mensajes o formularios; coordinar un acceso temporal o ingreso del titular si hace falta. Pedir solo los datos necesarios.
+
+ANTES DE PUBLICAR
+Verificar el teléfono y el enlace; revisar ortografía, legibilidad y recorte; confirmar que el servicio está disponible; no incluir promesas sin validar; comprobar permiso de las fotos. Configurar el enlace de WhatsApp en el perfil: los enlaces escritos dentro de un copy pueden no ser clicables según la plataforma.

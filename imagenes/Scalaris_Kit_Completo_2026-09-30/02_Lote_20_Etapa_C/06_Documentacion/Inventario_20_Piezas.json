@@ -1,0 +1,526 @@
+[
+  {
+    "numero": 1,
+    "archivo": "01_Historia_Diagnostico_1080x1920",
+    "dimensiones": "1080 × 1920 px",
+    "pixel_dimensions": [
+      1080,
+      1920
+    ],
+    "canal": "Historia / Estado",
+    "publico": "Usuarios de PC y notebook",
+    "mensaje": "Entender por qué el equipo no rinde",
+    "cta": "Escribime por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "DIAGNÓSTICO DE PC Y NOTEBOOKS",
+      "¿Tu PC",
+      "no rinde",
+      "como antes?",
+      "Primero, entender qué le pasa.",
+      "Después, elegir el siguiente paso.",
+      "Diagnóstico y mantenimiento",
+      "Escribime por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 2,
+    "archivo": "02_Estado_Software_1080x1920",
+    "dimensiones": "1080 × 1920 px",
+    "pixel_dimensions": [
+      1080,
+      1920
+    ],
+    "canal": "Historia / Estado",
+    "publico": "Negocios y profesionales",
+    "mensaje": "Simplificar el ingreso repetido de datos",
+    "cta": "Contame por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "SOFTWARE PARA NEGOCIOS",
+      "¿Copiás el mismo",
+      "dato más de",
+      "una vez?",
+      "Automatizaciones e integraciones",
+      "a medida para tu negocio.",
+      "Tareas",
+      "Datos",
+      "Conexiones",
+      "Atención remota",
+      "Contame por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 3,
+    "archivo": "03_Post_PC_Trabajo_Estudio_1080x1350",
+    "dimensiones": "1080 × 1350 px",
+    "pixel_dimensions": [
+      1080,
+      1350
+    ],
+    "canal": "Feed 4:5",
+    "publico": "Personas que trabajan o estudian con su PC",
+    "mensaje": "Revisar y mantener el equipo",
+    "cta": "Consultá por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "REPARACIÓN Y MANTENIMIENTO",
+      "A tu PC también",
+      "le toca una",
+      "revisión.",
+      "Diagnóstico para equipos",
+      "de trabajo y estudio.",
+      "Contame qué está pasando",
+      "y para qué usás tu equipo.",
+      "Consultá por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 4,
+    "archivo": "04_Portada_Institucional_Oscura_1702x630",
+    "dimensiones": "1702 × 630 px",
+    "pixel_dimensions": [
+      1702,
+      630
+    ],
+    "canal": "Portada Facebook",
+    "publico": "Visitantes de la Página",
+    "mensaje": "Identidad institucional y canal de contacto",
+    "cta": "Consultá por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "Tu tecnología,",
+      "en buenas manos.",
+      "Soporte informático y software",
+      "Consultá por WhatsApp",
+      "1141477227"
+    ]
+  },
+  {
+    "numero": 5,
+    "archivo": "05_Local_Retiro_Entrega_1080x1080",
+    "dimensiones": "1080 × 1080 px",
+    "pixel_dimensions": [
+      1080,
+      1080
+    ],
+    "canal": "Feed local 1:1",
+    "publico": "Usuarios de equipos de la zona",
+    "mensaje": "Retiro y devolución del equipo coordinados",
+    "cta": "Coordiná por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "SOPORTE LOCAL",
+      "Tu equipo,",
+      "con retiro",
+      "y entrega.",
+      "Retiro y entrega a domicilio",
+      "Marcos Paz · Mariano Acosta",
+      "Merlo y zonas cercanas",
+      "Coordiná por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 6,
+    "archivo": "06_Local_Traslado_Coordinado_1080x1080",
+    "dimensiones": "1080 × 1080 px",
+    "pixel_dimensions": [
+      1080,
+      1080
+    ],
+    "canal": "Feed local 1:1",
+    "publico": "Personas que necesitan trasladar su equipo",
+    "mensaje": "Coordinar el traslado sin mapa ni promesa de gratuidad",
+    "cta": "Coordiná por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "RETIRO Y ENTREGA A DOMICILIO",
+      "El traslado",
+      "de tu equipo,",
+      "coordinado.",
+      "Marcos Paz · Mariano Acosta · Merlo",
+      "y zonas cercanas",
+      "Coordiná por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 7,
+    "archivo": "07_Flyer_Institucional_A4",
+    "dimensiones": "210 × 297 mm",
+    "pixel_dimensions": [
+      2480,
+      3508
+    ],
+    "canal": "A4 institucional",
+    "publico": "Personas y pequeños negocios",
+    "mensaje": "Soporte para equipos y software para negocios",
+    "cta": "Contame qué necesitás por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": "02_Flyer_Institucional_A4",
+    "textos": [
+      "SOPORTE INFORMÁTICO Y SOFTWARE",
+      "Tu tecnología,",
+      "en buenas manos.",
+      "Soluciones para tu equipo.",
+      "Desarrollo para tu negocio.",
+      "01",
+      "Soporte local",
+      "Diagnóstico y mantenimiento de PC y notebooks.",
+      "Reparación, armado a medida, redes y Wi-Fi.",
+      "Retiro y entrega a domicilio",
+      "Marcos Paz, Mariano Acosta, Merlo y zonas cercanas.",
+      "Traslado del equipo coordinado por WhatsApp.",
+      "02",
+      "Software para negocios",
+      "Desarrollo web, automatizaciones e integraciones",
+      "a medida. Atención remota, sin limitarse a la zona local.",
+      "Contame qué necesitás por WhatsApp",
+      "1141477227",
+      "SCALARIS",
+      "Atención directa · Alcance acordado"
+    ]
+  },
+  {
+    "numero": 8,
+    "archivo": "08_Historia_Problemas_Compu_1080x1920",
+    "dimensiones": "1080 × 1920 px",
+    "pixel_dimensions": [
+      1080,
+      1920
+    ],
+    "canal": "Historia / Estado",
+    "publico": "Usuarios de PC y notebook",
+    "mensaje": "Iniciar una consulta de soporte comprensible",
+    "cta": "Escribime por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "SOPORTE PARA TU COMPU",
+      "¿Problemas",
+      "con tu compu?",
+      "Contame qué pasa.",
+      "Reparación y diagnóstico",
+      "de PC y notebooks.",
+      "Escribime por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 9,
+    "archivo": "09_Local_Redes_WiFi_1080x1080",
+    "dimensiones": "1080 × 1080 px",
+    "pixel_dimensions": [
+      1080,
+      1080
+    ],
+    "canal": "Feed local 1:1",
+    "publico": "Hogares y pequeños negocios de la zona",
+    "mensaje": "Revisar cobertura y configuración",
+    "cta": "Consultá por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "REDES Y WI-FI",
+      "¿El Wi-Fi no llega",
+      "donde lo",
+      "necesitás?",
+      "Redes y conectividad para",
+      "hogares y pequeños negocios.",
+      "Marcos Paz · Mariano Acosta · Merlo y zona",
+      "Consultá por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 10,
+    "archivo": "10_Banner_WhatsApp_1600x400",
+    "dimensiones": "1600 × 400 px",
+    "pixel_dimensions": [
+      1600,
+      400
+    ],
+    "canal": "Franja de contacto",
+    "publico": "Quien ya conoce Scalaris",
+    "mensaje": "Abrir una consulta directa",
+    "cta": "Escribime por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "Tu tecnología, en buenas manos",
+      "Escribime por WhatsApp",
+      "1141477227"
+    ]
+  },
+  {
+    "numero": 11,
+    "archivo": "11_Portada_Institucional_Clara_1702x630",
+    "dimensiones": "1702 × 630 px",
+    "pixel_dimensions": [
+      1702,
+      630
+    ],
+    "canal": "Portada Facebook",
+    "publico": "Visitantes de la Página",
+    "mensaje": "Identidad institucional y canal de contacto",
+    "cta": "Consultá por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "Tu tecnología,",
+      "en buenas manos.",
+      "Soporte informático y software",
+      "Consultá por WhatsApp",
+      "1141477227"
+    ]
+  },
+  {
+    "numero": 12,
+    "archivo": "12_Historia_Buenas_Manos_1080x1920",
+    "dimensiones": "1080 × 1920 px",
+    "pixel_dimensions": [
+      1080,
+      1920
+    ],
+    "canal": "Historia / Estado",
+    "publico": "Personas con equipos de uso cotidiano",
+    "mensaje": "Mantenimiento de PC y notebooks",
+    "cta": "Consultá por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "MANTENIMIENTO DE PC Y NOTEBOOKS",
+      "Tu tecnología,",
+      "en buenas",
+      "manos.",
+      "Una revisión empieza por entender",
+      "cómo estás usando tu equipo.",
+      "Consultá por WhatsApp",
+      "1141477227",
+      "Diagnóstico y mantenimiento"
+    ]
+  },
+  {
+    "numero": 13,
+    "archivo": "13_Post_Armado_PC_1080x1350",
+    "dimensiones": "1080 × 1350 px",
+    "pixel_dimensions": [
+      1080,
+      1350
+    ],
+    "canal": "Feed 4:5",
+    "publico": "Quienes necesitan una PC para un uso definido",
+    "mensaje": "Elegir una configuración según uso y presupuesto",
+    "cta": "Contame tu idea por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "ARMADO DE PC A MEDIDA",
+      "Una PC pensada",
+      "para lo que hacés.",
+      "Según tus programas, tareas y presupuesto.",
+      "Contame tu idea por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 14,
+    "archivo": "14_Post_No_Enciende_1080x1350",
+    "dimensiones": "1080 × 1350 px",
+    "pixel_dimensions": [
+      1080,
+      1350
+    ],
+    "canal": "Feed 4:5",
+    "publico": "Usuarios con una PC que falla al iniciar",
+    "mensaje": "Empezar por identificar la falla",
+    "cta": "Escribime por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "DIAGNÓSTICO DE PC Y NOTEBOOKS",
+      "¿No enciende?",
+      "Empecemos por",
+      "el diagnóstico.",
+      "Contame qué hace el equipo",
+      "cuando intentás usarlo.",
+      "Reparación y mantenimiento",
+      "Escribime por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 15,
+    "archivo": "15_Portada_Tecnologia_1702x630",
+    "dimensiones": "1702 × 630 px",
+    "pixel_dimensions": [
+      1702,
+      630
+    ],
+    "canal": "Portada Facebook",
+    "publico": "Visitantes de la Página",
+    "mensaje": "Identidad institucional y canal de contacto",
+    "cta": "Consultá por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "Tu tecnología,",
+      "en buenas manos.",
+      "Soporte informático y software",
+      "Consultá por WhatsApp",
+      "1141477227"
+    ]
+  },
+  {
+    "numero": 16,
+    "archivo": "16_Local_Zonas_1080x1080",
+    "dimensiones": "1080 × 1080 px",
+    "pixel_dimensions": [
+      1080,
+      1080
+    ],
+    "canal": "Feed local 1:1",
+    "publico": "Residentes de las localidades atendidas",
+    "mensaje": "Cobertura local de retiro y entrega",
+    "cta": "Coordiná por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "RETIRO Y ENTREGA A DOMICILIO",
+      "Marcos Paz.",
+      "Mariano Acosta.",
+      "Merlo.",
+      "Y zonas cercanas.",
+      "Traslado de equipos coordinado con vos.",
+      "Coordiná por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 17,
+    "archivo": "17_Flyer_Computadoras_Ritmo_A4",
+    "dimensiones": "210 × 297 mm",
+    "pixel_dimensions": [
+      2480,
+      3508
+    ],
+    "canal": "A4 institucional",
+    "publico": "Personas y pequeños negocios",
+    "mensaje": "Elegir soporte según el uso de la tecnología",
+    "cta": "Contame qué necesitás por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "COMPUTADORAS",
+      "Que siguen",
+      "tu ritmo.",
+      "Trabajo. Estudio. Proyectos.",
+      "Para tu equipo",
+      "Diagnóstico y mantenimiento de PC y notebooks.",
+      "Reparación, armado a medida, redes y Wi-Fi.",
+      "Retiro y entrega a domicilio",
+      "Marcos Paz, Mariano Acosta, Merlo y zonas cercanas.",
+      "Traslado del equipo coordinado por WhatsApp.",
+      "Para tu negocio",
+      "Desarrollo web, automatizaciones e integraciones.",
+      "Soluciones a medida con atención remota.",
+      "Contame qué necesitás por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 18,
+    "archivo": "18_Historia_No_Rinde_1080x1920",
+    "dimensiones": "1080 × 1920 px",
+    "pixel_dimensions": [
+      1080,
+      1920
+    ],
+    "canal": "Historia / Estado",
+    "publico": "Usuarios de PC y notebook",
+    "mensaje": "Diagnóstico del rendimiento",
+    "cta": "Escribime por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": "03_Historia_Soporte_1080x1920",
+    "textos": [
+      "PC Y NOTEBOOKS",
+      "¿Tu compu",
+      "no rinde",
+      "como antes?",
+      "Diagnóstico y mantenimiento",
+      "para entender qué necesita.",
+      "Escribime por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 19,
+    "archivo": "19_Local_Retiro_Claro_1080x1080",
+    "dimensiones": "1080 × 1080 px",
+    "pixel_dimensions": [
+      1080,
+      1080
+    ],
+    "canal": "Feed local 1:1",
+    "publico": "Personas de la zona local",
+    "mensaje": "Retiro y entrega de equipos",
+    "cta": "Coordiná por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": "05_Retiro_Entrega_1080x1080",
+    "textos": [
+      "SOPORTE CERCA TUYO",
+      "Retiro y entrega",
+      "a domicilio.",
+      "Coordiná el traslado de tu equipo.",
+      "Marcos Paz · Mariano Acosta",
+      "Merlo y zonas cercanas",
+      "Coordiná por WhatsApp",
+      "1141477227",
+      "Tu tecnología, en buenas manos"
+    ]
+  },
+  {
+    "numero": 20,
+    "archivo": "20_Portada_Marca_Azul_1702x630",
+    "dimensiones": "1702 × 630 px",
+    "pixel_dimensions": [
+      1702,
+      630
+    ],
+    "canal": "Portada Facebook",
+    "publico": "Visitantes de la Página",
+    "mensaje": "Identidad institucional y canal de contacto",
+    "cta": "Consultá por WhatsApp",
+    "estado": "Sistema v1 aprobado; pieza C producida, revisión del lote pendiente",
+    "origen_piloto": null,
+    "textos": [
+      "Tu tecnología,",
+      "en buenas manos.",
+      "Soporte informático y software",
+      "Consultá por WhatsApp",
+      "1141477227"
+    ]
+  }
+]

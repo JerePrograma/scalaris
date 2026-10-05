@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Scalaris Vite" type="Application" factoryName="Application" singleton="true">
+    <option name="MAIN_CLASS_NAME" value="ar.scalaris.Application" />
+    <module name="backoffice" />
+    <option name="ALTERNATIVE_JRE_PATH" value="Scalaris Temurin 25" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="VM_PARAMETERS" value="-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="PASS_PARENT_ENVS" value="true" />
+    <envs>
+      <env name="SCALARIS_BIND" value="127.0.0.1" />
+      <env name="SCALARIS_PORT" value="8081" />
+      <env name="SCALARIS_ORIGINS" value="http://localhost:8081,http://127.0.0.1:8081,http://localhost:5173,http://127.0.0.1:5173" />
+    </envs>
+    <method v="2"><option name="Make" enabled="true" /></method>
+  </configuration>
+</component>

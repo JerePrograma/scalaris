@@ -1,4 +1,3 @@
-imagenes/
 node_modules/
 .wrangler/
 artifacts/
@@ -6,3 +5,11 @@ dist/
 .env
 .env.*
 !.env.example
+backoffice/backend/target/
+backoffice/frontend/node_modules/
+backoffice/frontend/dist/
+backoffice/.runtime/
+backoffice/config.local.ps1
+backoffice/backend/.idea/
+*.log
+*.tsbuildinfo

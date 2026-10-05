@@ -1,0 +1,11 @@
+SCALARIS · Uso de las plantillas comerciales
+
+1. Abrí 06_ficha_recepcion.html o 07_plantilla_presupuesto.html en un navegador.
+2. Hacé clic en los campos y completalos. No ingreses contraseñas ni datos ajenos al servicio.
+3. Los campos no calculan importes: comprobá conceptos, moneda, impuestos y total manualmente.
+4. Usá «Imprimir o guardar PDF» antes de cerrar. Elegí papel A4, escala 100 % y desactivá encabezados y pies del navegador. Comprobá la vista previa.
+5. Los cambios escritos en el navegador no se guardan automáticamente. El archivo HTML es la fuente editable; podés abrirlo en un editor de texto para adaptar el modelo. La copia PDF conserva lo que completaste para entregar al cliente.
+6. Completá alcance, costos, plazos y condiciones reales. No dejes campos comerciales ambiguos al enviar el presupuesto. No agregues garantías o exenciones generales sin revisar su aplicación al servicio.
+7. Guardá cada ficha o presupuesto con un identificador, mantené acceso limitado y entregá la copia correspondiente al titular. No subas fichas completas a redes ni a galerías públicas.
+
+Las plantillas funcionan localmente y no envían datos a ningún servidor. No incluyen formularios de envío, analítica ni almacenamiento automático.

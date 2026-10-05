@@ -1,0 +1,47 @@
+SCALARIS · Respuestas rápidas
+Reemplazar los campos entre corchetes antes de enviar. Confirmar disponibilidad, costos y condiciones caso por caso.
+
+/inicio
+¡Hola! Soy de Scalaris. Contame qué necesitás y en qué zona estás. Si es por un equipo, decime marca, modelo y qué problema notaste. No envíes contraseñas.
+
+/precio
+Para pasarte un presupuesto necesito conocer un poco más el caso. ¿Qué equipo tenés y qué está pasando? Primero acordamos el diagnóstico, sus condiciones y cualquier costo asociado. Después definimos el trabajo y su presupuesto.
+
+/plazo
+El plazo depende de la revisión, el trabajo necesario y la disponibilidad de componentes, si hicieran falta. Cuando tengamos definido el alcance, te confirmamos una estimación antes de avanzar.
+
+/retiro
+Podemos coordinar retiro y entrega según tu zona y disponibilidad. ¿En qué barrio o localidad estás? Después acordamos dirección, horario y condiciones. Esta modalidad no incluye reparación presencial a domicilio.
+
+/zona
+Atendemos Marcos Paz, Mariano Acosta, Merlo y cercanías. Decime tu localidad y qué necesitás para confirmar cómo podemos coordinarlo.
+
+/diagnostico
+Antes de revisar el equipo, acordamos el alcance del diagnóstico y sus condiciones. Si después hace falta una reparación, te pasamos el detalle y el presupuesto para que decidas cómo seguir.
+
+/software
+Contame qué necesitás resolver, quién usaría la herramienta y cómo hacés esa tarea hoy. Si ya usás algún sistema, decime cuál, sin enviar usuarios ni contraseñas. Con eso podemos definir el alcance de una propuesta.
+
+/web
+¿Qué necesitás que haga tu web y qué información debería mostrar? Contame también si ya tenés dominio, alojamiento y contenido. No envíes claves de acceso.
+
+/acceso
+No nos envíes tu contraseña. Si necesitamos acceso para una prueba, coordinamos que ingreses vos o un acceso temporal limitado al trabajo acordado.
+
+/datos
+Antes de entregar el equipo, te recomendamos tener una copia de los archivos importantes si el estado del equipo lo permite. Avisanos si hay datos que necesitás preservar. Cualquier tarea sobre archivos o almacenamiento se acuerda antes de realizarla.
+
+/aprobacion
+Te comparto el presupuesto [número]: [alcance], por [moneda e importe total], con [condiciones y plazo estimado]. ¿Confirmás que avancemos con ese trabajo? Si cambia el alcance o el costo, te consultamos antes.
+
+/estado
+Tu equipo está en la etapa de [etapa verificada]. El próximo paso es [acción]. [Información concreta disponible]. Te avisamos si necesitamos que confirmes algo antes de avanzar.
+
+/entrega
+Ya podemos coordinar la entrega de [equipo]. Se realizó [trabajo verificado] y se comprobó [pruebas realizadas]. ¿Qué disponibilidad tenés para acordar la entrega?
+
+/seguimiento
+Hola, te escribo por la consulta sobre [tema]. ¿Querés que retomemos la coordinación? Si ya lo resolviste, avisame así cerramos la consulta.
+
+/garantia
+Las condiciones aplicables dependen del trabajo y de los componentes involucrados. Te las detallamos en el presupuesto para que puedas revisarlas antes de confirmar.

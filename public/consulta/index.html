@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0B1F33" />
+    <title>Contanos tu consulta · Scalaris</title>
+    <meta
+      name="description"
+      content="Prepará tu consulta por equipos, repuestos o desarrollo web y software. Revisala y compartila manualmente con Scalaris."
+    />
+    <link rel="icon" href="../assets/isotipo.svg" />
+    <link rel="stylesheet" href="form.css" />
+  </head>
+  <body>
+    <header>
+      <a href="../index.html"
+        ><img
+          src="../assets/logo.svg"
+          alt="Scalaris"
+          width="205"
+          height="48" /></a
+      ><a href="../index.html">Volver al sitio</a>
+    </header>
+    <main>
+      <div class="intro">
+        <span>CONTANOS QUÉ NECESITÁS</span>
+        <h1>Empecemos por<br />una buena consulta.</h1>
+        <p>
+          Respondé unas preguntas para ayudarnos a entender tu equipo, el
+          repuesto que buscás o tu proyecto.
+        </p>
+      </div>
+      <section class="card">
+        <ol class="steps" aria-label="Pasos">
+          <li id="step-0" class="active">1 · Elegí el servicio</li>
+          <li id="step-1">2 · Contanos más</li>
+          <li id="step-2">3 · Revisá y compartí</li>
+        </ol>
+        <div id="form-root"></div>
+        <p id="error" role="alert" class="error" hidden></p>
+      </section>
+      <p class="privacy">
+        No escribas contraseñas, credenciales, documentación sensible ni datos
+        privados. No pedimos fotos. Tus respuestas se mantienen solo mientras
+        esta página está abierta: no se guardan por defecto ni se envían a
+        analítica.
+      </p>
+      <footer>Scalaris · Tu tecnología, en buenas manos.</footer>
+    </main>
+    <script type="module" src="form.js"></script>
+  </body>
+</html>

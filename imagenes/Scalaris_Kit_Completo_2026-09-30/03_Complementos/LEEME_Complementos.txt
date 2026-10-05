@@ -1,0 +1,8 @@
+SCALARIS · Complementos gráficos
+
+Tarjeta: 90 × 50 mm, frente y dorso, PDF vectorial y PNG 300 ppp. El PDF doble faz tiene dos páginas: frente primero, dorso segundo. Sin sangrado, marcas de corte, perfil CMYK ni certificación PDF/X; la imprenta debe adaptar a sus requisitos antes de imprimir.
+SVG editable: textos editables en Inter y logo maestro existente en curvas. Instalar Inter para editar y revisar saltos y espaciado. SVG curvas: reproducción sin dependencia de fuentes.
+Avatar y portada: copias sin alteraciones de los pilotos del kit recuperado; no son nuevos diseños. La portada conserva los colores secundarios originales del kit.
+QR: https://wa.me/5491141477227, comprobado por decodificación tanto en el PNG independiente como en el dorso renderizado. Esto verifica el contenido del QR, no la disponibilidad de la cuenta de WhatsApp.
+Firma HTML: abrir junto a Firma_logo.png. Copiar el bloque de firma en el editor de firmas del cliente de correo y, si no conserva la imagen, insertarla desde Firma_logo.png. No hay dirección de email inventada ni recursos alojados en Internet. Inter usa Arial como alternativa en los clientes que no la tengan. Probar un envío propio antes de utilizarla; la instalación depende del cliente.
+No se publicaron materiales ni se modificaron cuentas externas.

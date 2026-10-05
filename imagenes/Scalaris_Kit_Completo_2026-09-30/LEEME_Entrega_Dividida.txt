@@ -1,0 +1,11 @@
+ENTREGA DIVIDIDA EN ZIP INDEPENDIENTES
+
+Cada ZIP se abre por separado con cualquier descompresor normal. No son volúmenes multipartes.
+
+01_Identidad_Complementos_Web: identidad, tarjetas, QR, firma, contenidos editoriales, web portable, fuentes Inter y LEEME general.
+02_Folletos_SVG_Editables: 20 SVG con texto editable.
+03_Folletos_SVG_Reproduccion: 20 SVG de reproducción.
+04_Folletos_PDF_Recursos_Documentacion: dos PDF A4, recursos y documentación de Etapa C.
+
+Los 20 PNG se entregan por separado en Scalaris_20_PNG_2026-09-30.zip. El índice visual también se entregó por separado. No se repiten en estos cuatro paquetes.
+Para reconstruir la carpeta completa, extraé estos cuatro ZIP en la misma ubicación. Luego extraé el ZIP de PNG dentro de Scalaris_Kit_Completo_2026-09-30/02_Lote_20_Etapa_C/01_PNG/ y colocá el índice visual en la carpeta principal. El manifiesto general permite comprobar los archivos originales del kit completo.

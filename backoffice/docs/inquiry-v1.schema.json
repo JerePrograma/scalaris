@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Scalaris inquiry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "version",
+    "id",
+    "createdAt",
+    "service",
+    "contact",
+    "answers"
+  ],
+  "properties": {
+    "schema": { "const": "scalaris.inquiry" },
+    "version": { "const": 1 },
+    "id": { "type": "string", "format": "uuid" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "service": { "enum": ["EQUIPMENT", "PARTS", "SOFTWARE"] },
+    "contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "phone": { "type": "string", "maxLength": 100 }
+      }
+    },
+    "answers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "topic": { "type": "string", "maxLength": 300 },
+        "type": { "type": "string", "maxLength": 2000 },
+        "model": { "type": "string", "maxLength": 2000 },
+        "problem": { "type": "string", "maxLength": 2000 },
+        "since": { "type": "string", "maxLength": 2000 },
+        "need": { "type": "string", "maxLength": 2000 },
+        "scope": { "type": "string", "maxLength": 2000 },
+        "requirements": { "type": "string", "maxLength": 2000 },
+        "deadline": { "type": "string", "maxLength": 2000 },
+        "part": { "type": "string", "maxLength": 2000 },
+        "compatibility": { "type": "string", "maxLength": 2000 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "service": { "const": "EQUIPMENT" } } },
+      "then": {
+        "properties": {
+          "answers": {
+            "required": ["problem"],
+            "properties": { "problem": { "minLength": 1 } }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "service": { "const": "PARTS" } } },
+      "then": {
+        "properties": {
+          "answers": {
+            "required": ["part"],
+            "properties": { "part": { "minLength": 1 } }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "service": { "const": "SOFTWARE" } } },
+      "then": {
+        "properties": {
+          "answers": {
+            "required": ["need"],
+            "properties": { "need": { "minLength": 1 } }
+          }
+        }
+      }
+    }
+  ]
+}
