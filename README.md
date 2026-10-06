@@ -6,9 +6,11 @@ Sitio público: https://scalaris.pages.dev
 
 ## Archivos
 
-`public/` conserva la copia portable original de HTML, CSS, JavaScript, imágenes, logos y fuentes Inter con su licencia. No necesita dependencias ni compilación. La carpeta local `imagenes/` queda fuera de Git.
+`public/` contiene la web portable de HTML, CSS, JavaScript del formulario, imágenes, logos y fuentes Inter con su licencia. No necesita dependencias ni compilación.
 
-Fuente: `Scalaris_01_Identidad_Complementos_Web_2026-09-30.zip`, carpeta `05_Web_Estatica`. Los 12 archivos de la web se verificaron byte por byte contra el ZIP. El Site original de ChatGPT permanece independiente y sin modificaciones.
+Fuente visual original: `Scalaris_01_Identidad_Complementos_Web_2026-09-30.zip`, carpeta `05_Web_Estatica`. La importación inicial de los 12 archivos se verificó byte por byte contra el ZIP; la portada y el formulario se mantienen ahora en este repositorio. El Site original de ChatGPT permanece independiente y sin modificaciones.
+
+La portada prioriza la consulta guiada en la navegación, el inicio, los servicios y el contacto. En móvil, la tarjeta guiada aparece antes del WhatsApp directo. El símbolo de WhatsApp junto al número proviene de [Simple Icons](https://github.com/simple-icons/simple-icons/blob/develop/icons/whatsapp.svg).
 
 ## Verificación y vista local
 
@@ -46,6 +48,6 @@ La [rectificación de arquitectura y arranque del 4/10/2026](backoffice/VERIFICA
 
 El [seguimiento de IntelliJ y Vite del 5/10/2026](backoffice/VERIFICATION-20261005-VITE.md) confirma el Run real aportado por el usuario y documenta la corrección del 403 en desarrollo, UTF-8 HTTP y la configuración Scalaris Vite.
 
-La consulta guiada independiente está en `public/consulta/index.html`, accesible desde el contacto existente. Prepara un resumen y una ficha JSON descargable; el envío por WhatsApp y la importación en backoffice son manuales. No persiste datos personales por defecto ni requiere servidor público.
+La consulta guiada independiente está en `public/consulta/index.html`. Los enlaces de equipos y software preseleccionan el servicio. Prepara un resumen y una ficha JSON descargable; la acción principal copia el resumen y abre WhatsApp para revisarlo y pegarlo manualmente. El saludo del enlace no incluye el nombre ni el teléfono ingresados. La importación en backoffice también es manual. No persiste datos personales por defecto ni requiere servidor público.
 
-Verificar además el formulario: `node --test scripts/public-form.test.mjs`. El comando y directorio de build de Pages permanecen iguales. Ningún push o deploy está autorizado por la implementación local.
+Verificar además el formulario: `node --test scripts/public-form.test.mjs`. El comando y directorio de build de Pages permanecen iguales. Cloudflare publica únicamente `public/`; el backoffice sigue siendo una aplicación local.

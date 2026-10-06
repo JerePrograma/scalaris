@@ -2,20 +2,23 @@ import {
   services,
   questions,
   conditionalQuestions,
-  labels,
   summary,
   whatsappMessage,
   buildInquiry,
 } from "./model.js";
 const root = document.querySelector("#form-root"),
-  error = document.querySelector("#error");
-let step = 0,
-  service = "",
+  error = document.querySelector("#error"),
+  requestedService = new URLSearchParams(window.location.search).get("service");
+let step = Object.prototype.hasOwnProperty.call(services, requestedService)
+    ? 1
+    : 0,
+  service = step ? requestedService : "",
   contact = { name: "", phone: "" },
   answers = {},
   inquiry = null;
 const id = crypto.randomUUID(),
   createdAt = new Date().toISOString();
+let renderedStep = step;
 function element(tag, text, attrs = {}) {
   const e = document.createElement(tag);
   if (text) e.textContent = text;
@@ -55,8 +58,11 @@ function field(
   } else
     input = element(long ? "textarea" : "input", null, {
       maxlength: String(max),
-      ...(long ? { rows: "3" } : { type: "text" }),
+      ...(long ? { rows: "3" } : { type: key === "phone" ? "tel" : "text" }),
     });
+  input.name = key;
+  if (key === "name" || key === "phone")
+    input.autocomplete = key === "name" ? "name" : "tel";
   input.value = target[key] || "";
   if (required) input.required = true;
   input.addEventListener("input", () => (target[key] = input.value));
@@ -64,6 +70,7 @@ function field(
     input.addEventListener("change", () => {
       target[key] = input.value;
       render();
+      root.querySelector('[name="topic"]').focus({ preventScroll: true });
     });
   wrapper.append(caption, input);
   return wrapper;
@@ -72,7 +79,12 @@ function render() {
   root.replaceChildren();
   document
     .querySelectorAll(".steps li")
-    .forEach((e, i) => e.classList.toggle("active", i === step));
+    .forEach((e, i) => {
+      e.classList.toggle("active", i === step);
+      e.classList.toggle("complete", i < step);
+      if (i === step) e.setAttribute("aria-current", "step");
+      else e.removeAttribute("aria-current");
+    });
   if (step === 0) {
     root.append(element("h2", "¿Sobre qué querés consultar?"));
     const options = element("div", null, { class: "choices" });
@@ -88,6 +100,15 @@ function render() {
           render();
         },
         true,
+      );
+      const descriptions = {
+        EQUIPMENT: "Tu equipo, su funcionamiento o la conexión.",
+        PARTS: "La pieza que buscás y su compatibilidad.",
+        SOFTWARE: "Tu idea, tu negocio o un proceso a mejorar.",
+      };
+      b.replaceChildren(
+        element("strong", label),
+        element("span", descriptions[key], { class: "choice-description" }),
       );
       options.append(b);
     }
@@ -176,16 +197,21 @@ function render() {
     root.append(form);
   }
   if (step === 2) {
-    root.append(element("h2", "Revisá antes de compartir"));
+    root.append(
+      element("h2", "Tu consulta, lista para compartir."),
+      element("p", "Revisá el resumen. Podés corregir tus respuestas antes de enviarlo.", { class: "note" }),
+    );
     const pre = element("pre", summary(inquiry), { class: "summary" });
     root.append(pre);
-    const feedback = element("p", null, { role: "status" });
+    const feedback = element("p", null, { role: "status", class: "feedback" });
+    const correction = button("← Corregir respuestas", () => {
+      step = 1;
+      render();
+    });
+    correction.classList.add("edit-response");
+    root.append(correction);
     const actions = element("div", null, { class: "actions" });
     actions.append(
-      button("← Corregir respuestas", () => {
-        step = 1;
-        render();
-      }),
       button(
         "Copiar resumen",
         async () => {
@@ -197,9 +223,8 @@ function render() {
               "No se pudo copiar automáticamente. Seleccioná el texto del resumen y copialo.";
           }
         },
-        true,
       ),
-      button("Descargar ficha JSON", () => {
+      button("Descargar ficha", () => {
         const blob = new Blob([JSON.stringify(inquiry, null, 2)], {
             type: "application/json",
           }),
@@ -214,34 +239,26 @@ function render() {
           "La ficha se descarga en tu dispositivo. Si querés compartirla, adjuntala manualmente.";
       }),
     );
-    root.append(
-      actions,
-      feedback,
-      element(
-        "p",
-        "Copiar o descargar no envía nada. No existe sincronización automática ni un inbox público.",
-        { class: "note" },
-      ),
-    );
     const wa = element("section", null, { class: "whatsapp" });
     wa.append(
-      element("h3", "Continuar por WhatsApp"),
+      element("h3", "Compartí tu consulta por WhatsApp"),
       element(
         "p",
-        "Al abrir WhatsApp compartirás con ese servicio un mensaje breve con el tipo de consulta y hasta 160 caracteres del motivo. Si decidís enviarlo, Scalaris recibirá ese mensaje y los datos que WhatsApp muestre de tu cuenta. El enlace no incluye tu nombre ni el teléfono que escribiste aquí. Revisá que el motivo no contenga datos sensibles.",
+        "Copiamos el resumen y abrimos el chat. Pegalo, revisalo y tocá Enviar en WhatsApp.",
       ),
       element(
         "p",
-        "Podés revisar y editar el mensaje antes de enviarlo. Abrir WhatsApp no garantiza recepción. La ficha JSON no se adjunta automáticamente.",
+        "El resumen incluye los datos que completaste. Quitá cualquier dato sensible antes de pegarlo. El saludo inicial no incluye tu nombre ni teléfono; vos elegís qué enviar.",
+        { class: "note" },
       ),
     );
     const details = element("details");
     details.append(
-      element("summary", "Ver el mensaje que se abrirá"),
+      element("summary", "Ver el saludo inicial"),
       element("p", whatsappMessage(inquiry)),
     );
     wa.append(details);
-    const link = element("a", "Abrir WhatsApp con este mensaje", {
+    const link = element("a", "Copiar resumen y abrir WhatsApp", {
       class: "button primary",
       href:
         "https://wa.me/5491141477227?text=" +
@@ -249,8 +266,39 @@ function render() {
       target: "_blank",
       rel: "noopener noreferrer",
     });
+    link.addEventListener("click", () => {
+      try {
+        navigator.clipboard.writeText(summary(inquiry)).then(
+          () => (feedback.textContent = "Resumen copiado. Pegalo en el chat y revisalo antes de enviarlo."),
+          () =>
+            (feedback.textContent =
+              "No se pudo copiar automáticamente. Usá Copiar resumen o seleccioná el texto de la ficha para pegarlo en WhatsApp."),
+        );
+      } catch {
+        feedback.textContent =
+          "No se pudo copiar automáticamente. Usá Copiar resumen o seleccioná el texto de la ficha para pegarlo en WhatsApp.";
+      }
+    });
     wa.append(link);
-    root.append(wa);
+    root.append(wa, feedback);
+    const alternatives = element("details", null, { class: "alternate-actions" });
+    alternatives.append(
+      element("summary", "Copiar o descargar la ficha"),
+      actions,
+      element(
+        "p",
+        "Copiar o descargar guarda una copia para vos. Para enviarla, compartila por WhatsApp.",
+        { class: "note" },
+      ),
+    );
+    root.append(alternatives);
   }
+  if (renderedStep !== step) {
+    const heading = root.querySelector("h2");
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView({ block: "start", behavior: "auto" });
+  }
+  renderedStep = step;
 }
 render();

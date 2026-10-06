@@ -1,13 +1,11 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import vm from "node:vm";
 import { execFileSync } from "node:child_process";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../public");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
 const css = readFileSync(resolve(root, "styles.css"), "utf8");
-const script = readFileSync(resolve(root, "script.js"), "utf8");
 const errors = [];
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
 const refs = [...html.matchAll(/\b(?:href|src)="([^"]+)"/g)].map((m) => m[1]);
@@ -30,14 +28,16 @@ if (!html.includes('href="tel:+5491141477227"'))
   errors.push("Teléfono incorrecto");
 const links = refs.filter((ref) => ref.startsWith("https://wa.me/"));
 if (
-  links.length !== 3 ||
+  links.length !== 1 ||
   links.some((ref) => !ref.startsWith("https://wa.me/5491141477227?text="))
 )
-  errors.push("Enlaces WhatsApp incorrectos");
-for (const key of ["general", "equipo", "redes", "armado", "software"]) {
-  if (!html.includes(`value="${key}"`) || !script.includes(`${key}:`))
-    errors.push(`Motivo de contacto inexistente: ${key}`);
-}
+  errors.push("Enlace WhatsApp directo incorrecto");
+for (const ref of [
+  "consulta/index.html",
+  "consulta/index.html?service=EQUIPMENT",
+  "consulta/index.html?service=SOFTWARE",
+])
+  if (!refs.includes(ref)) errors.push(`Acceso a consulta inexistente: ${ref}`);
 if ([...html.matchAll(/<details>/g)].length !== 4)
   errors.push("Se esperaban cuatro FAQ");
 for (const file of [
@@ -50,7 +50,6 @@ for (const file of [
   if (!existsSync(resolve(root, "assets", file)))
     errors.push(`Fuente/licencia inexistente: ${file}`);
 }
-new vm.Script(script, { filename: "script.js" });
 const formRoot = resolve(root, "consulta");
 const formHtml = readFileSync(resolve(formRoot, "index.html"), "utf8");
 const formCss = readFileSync(resolve(formRoot, "form.css"), "utf8");
@@ -73,5 +72,5 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(
-  `OK: ${localFiles} referencias a recursos, anclas, teléfono, 3 enlaces WhatsApp, 5 motivos, 4 FAQ y fuentes/licencia Inter.`,
+  `OK: ${localFiles} referencias a recursos, anclas, teléfono, consulta guiada, 1 enlace WhatsApp directo, 4 FAQ y fuentes/licencia Inter.`,
 );

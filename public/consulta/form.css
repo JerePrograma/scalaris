@@ -1,255 +1,68 @@
-@font-face {
-  font-family: Inter;
-  src: url("../assets/inter-400.ttf");
-  font-weight: 400;
-  font-display: swap;
+@font-face{font-family:Inter;src:url('../assets/inter-400.ttf');font-weight:400;font-display:swap}
+@font-face{font-family:Inter;src:url('../assets/inter-600.ttf');font-weight:600;font-display:swap}
+*{box-sizing:border-box}
+:root{font-family:Inter,Arial,sans-serif;color:#0b1f33;background:#f3f7fb;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{margin:0}
+a{color:#145cdb}
+header{display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid #e1eaf2;padding:22px max(5%,calc((100vw - 1100px)/2));gap:24px}
+header img{display:block;width:180px;height:auto}
+header>a:last-child{font-size:12px;text-decoration:none}
+header>a:last-child:hover{text-decoration:underline;text-underline-offset:4px}
+main{max-width:860px;padding:44px 26px 24px;margin:auto}
+.intro>span{font-size:10px;letter-spacing:.13em;color:#145cdb;font-weight:600}
+.intro h1{font-size:clamp(34px,5.2vw,50px);letter-spacing:-.05em;line-height:1.12;margin:19px 0}
+.intro>p{color:#496479;max-width:630px;font-size:15px;margin:0}
+.card{padding:34px;background:#fff;border:1px solid #d8e4ee;border-radius:20px;margin-top:30px;box-shadow:0 8px 32px #0b1f3305}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0;margin:0 0 28px;list-style:none;color:#496479;font-size:11px}
+.steps li{padding:11px 9px;border-bottom:2px solid #dce6ee;line-height:1.4}
+.steps .active{color:#145cdb;border-color:#145cdb;font-weight:600;background:#eef5ff;border-radius:6px 6px 0 0}
+.steps .complete{color:#145cdb;border-color:#b4d2f6}
+h2{font-size:25px;line-height:1.25;letter-spacing:-.035em;margin:0 0 20px;scroll-margin-top:24px}
+h2:focus{outline:none}
+h3{font-size:18px;letter-spacing:-.025em;margin:29px 0 12px}
+button,.button,input,textarea,select{font:inherit}
+button,.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid #c4d4e1;color:#0b1f33;min-height:48px;padding:12px 17px;border-radius:9px;text-decoration:none;cursor:pointer;background:#fff;font-size:13px;font-weight:600;line-height:1.45;text-align:center;transition:background .15s,border-color .15s}
+button:hover,.button:hover{border-color:#145cdb;background:#f3f8ff}
+.primary{background:#145cdb;border-color:#145cdb;color:#fff}
+.primary:hover{background:#104bb8;border-color:#104bb8}
+.choices{display:grid;grid-template-columns:1fr;gap:13px;margin:22px 0}
+.choices button{display:block;text-align:left;padding:20px 23px;background:#fff;color:#0b1f33;border:1px solid #cbdce9;position:relative}
+.choices button:hover{background:#f1f7ff;border-color:#145cdb}
+.choices button:after{content:'→';position:absolute;right:22px;top:23px;color:#145cdb;font-size:20px}
+.choices strong{display:block;font-size:15px;padding-right:28px}
+.choice-description{display:block;color:#496479;font-size:12px;font-weight:400;margin-top:5px;padding-right:25px}
+label{display:flex;flex-direction:column;gap:8px;margin:21px 0;font-size:13px;font-weight:600}
+input,select,textarea{width:100%;padding:12px 14px;border:1px solid #b7cad9;border-radius:8px;color:#0b1f33;background:#fff;min-width:0;font-size:15px;font-weight:400;line-height:1.5}
+textarea{resize:vertical;min-height:100px}
+input:hover,select:hover,textarea:hover{border-color:#779bb7}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:25px 0 18px}
+form .actions{justify-content:space-between;margin-bottom:0}
+.note,.conditional,.privacy{font-size:12px;color:#496479;line-height:1.7}
+.note{margin:12px 0}
+.conditional{background:#f0f6fc;padding:13px 16px;border-left:3px solid #53c9f4;border-radius:0 7px 7px 0}
+.privacy{margin:24px 6px 0;max-width:740px}
+.summary{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f7fb;border:1px solid #d5e2ed;padding:23px;font:13px/1.8 Inter,Arial,sans-serif;border-radius:12px;margin:20px 0}
+.feedback{font-size:12px;color:#135b38;font-weight:600;line-height:1.6}
+.feedback:empty{display:none}
+.edit-response{min-height:44px;font-size:12px;padding:10px 15px}
+.alternate-actions{border-top:1px solid #d8e4ee;margin-top:24px;padding-top:17px}
+.alternate-actions>summary{font-size:13px}
+.whatsapp{border:1px solid #d4e3f0;background:#f2f7fd;border-radius:14px;margin-top:26px;padding:23px}
+.whatsapp h3{margin:0 0 10px;font-size:19px}
+.whatsapp>p{font-size:13px;color:#425e75;margin:0 0 12px}
+.whatsapp>p.note{font-size:12px;line-height:1.7}
+.whatsapp .button{margin-top:17px;display:flex;width:100%;min-height:54px;font-size:14px}
+.whatsapp details p{font-size:12px;overflow-wrap:anywhere;color:#496479}
+.error{background:#fff1ef;color:#972723;padding:15px;border:1px solid #f2c3bd;border-radius:9px;font-size:13px}
+footer{font-size:11px;color:#496479;margin:28px 6px 0}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #145cdb;outline-offset:3px}
+summary{cursor:pointer;font-size:12px;color:#145cdb}
+.skip{position:absolute;left:20px;top:-100px;padding:12px;background:#fff;z-index:20;border-radius:8px}
+.skip:focus{top:10px}
+@media(max-width:600px){
+  header{padding:18px 6%;gap:15px}header img{width:145px}header>a:last-child{font-size:11px}
+  main{padding:30px 16px 22px}.intro h1{font-size:37px}.intro>p{font-size:14px}.card{padding:22px 19px;border-radius:16px;margin-top:26px}
+  .steps{font-size:10px;gap:7px;margin-bottom:25px}.steps li{padding:10px 5px}h2{font-size:23px}.choices button{padding:19px}.choices strong{font-size:14px}.choice-description{font-size:12px}.choices button:after{right:17px}
+  label{font-size:13px}input,textarea,select{font-size:16px}.actions{flex-direction:column;gap:9px}.actions button{width:100%}form .actions{flex-direction:column-reverse}.summary{padding:17px;font-size:12px}.whatsapp{padding:19px}.whatsapp h3{font-size:18px}.whatsapp .button{font-size:13px}.privacy{font-size:11px;margin-inline:3px}
 }
-@font-face {
-  font-family: Inter;
-  src: url("../assets/inter-600.ttf");
-  font-weight: 600;
-  font-display: swap;
-}
-* {
-  box-sizing: border-box;
-}
-:root {
-  font-family: Inter, Arial, sans-serif;
-  color: #0b1f33;
-  background: #eef5fa;
-  line-height: 1.6;
-}
-body {
-  margin: 0;
-}
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: white;
-  padding: 25px max(5%, calc((100vw - 1000px) / 2));
-  gap: 25px;
-}
-header img {
-  width: 185px;
-  height: auto;
-}
-header > a:last-child {
-  font-size: 13px;
-}
-a {
-  color: #145cdb;
-}
-main {
-  max-width: 900px;
-  padding: 40px 25px;
-  margin: auto;
-}
-.intro > span {
-  font-size: 11px;
-  letter-spacing: 0.13em;
-  color: #145cdb;
-  font-weight: 600;
-}
-.intro h1 {
-  font-size: clamp(34px, 6vw, 54px);
-  letter-spacing: -0.05em;
-  line-height: 1.12;
-  margin: 20px 0;
-}
-.intro > p {
-  color: #49667d;
-  max-width: 620px;
-}
-.card {
-  padding: 30px;
-  background: white;
-  border: 1px solid #d2e0ea;
-  border-radius: 10px;
-  margin-top: 35px;
-}
-.steps {
-  display: flex;
-  gap: 15px;
-  padding: 0;
-  margin: 0 0 32px;
-  list-style: none;
-  font-size: 11px;
-  color: #768b9b;
-  justify-content: space-between;
-}
-.steps .active {
-  color: #145cdb;
-  border-bottom: 2px solid #53c9f4;
-  padding-bottom: 8px;
-  font-weight: 600;
-}
-h2 {
-  font-size: 24px;
-  letter-spacing: -0.03em;
-}
-h3 {
-  font-size: 17px;
-  margin: 30px 0 10px;
-}
-button,
-.button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-button,
-.button {
-  display: inline-block;
-  border: 1px solid #bfcedd;
-  color: #0b1f33;
-  padding: 12px 18px;
-  border-radius: 5px;
-  text-decoration: none;
-  cursor: pointer;
-  background: white;
-}
-.primary {
-  background: #145cdb;
-  border-color: #145cdb;
-  color: white;
-}
-.primary:hover {
-  background: #104bb8;
-}
-.choices {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  margin: 25px 0;
-}
-.choices button {
-  text-align: left;
-  padding: 22px;
-  font-weight: 600;
-}
-label {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin: 20px 0;
-  font-size: 14px;
-  font-weight: 600;
-}
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #afc3d4;
-  border-radius: 5px;
-  color: #0b1f33;
-  background: white;
-  min-width: 0;
-}
-textarea {
-  resize: vertical;
-}
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin: 25px 0;
-}
-.note,
-.conditional,
-.privacy {
-  font-size: 13px;
-  color: #536e83;
-}
-.conditional {
-  background: #eef5fa;
-  padding: 12px;
-  border-left: 3px solid #53c9f4;
-}
-.privacy {
-  margin: 25px 0;
-}
-.summary {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  background: #eef5fa;
-  border: 1px solid #cfdeeb;
-  padding: 22px;
-  font:
-    14px/1.8 Inter,
-    Arial,
-    sans-serif;
-  border-radius: 6px;
-}
-.whatsapp {
-  border-top: 1px solid #cedde9;
-  margin-top: 25px;
-  padding-top: 8px;
-}
-.whatsapp p {
-  font-size: 13px;
-  color: #425e75;
-}
-.whatsapp .button {
-  margin-top: 15px;
-}
-.error {
-  background: #fff1ef;
-  color: #972723;
-  padding: 15px;
-  border-radius: 5px;
-}
-footer {
-  font-size: 11px;
-  color: #668299;
-  margin: 40px 0;
-}
-button:focus-visible,
-a:focus-visible,
-summary:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid #53c9f4;
-  outline-offset: 3px;
-}
-summary {
-  cursor: pointer;
-  font-size: 13px;
-  color: #145cdb;
-}
-@media (max-width: 600px) {
-  header {
-    padding: 18px;
-  }
-  header img {
-    width: 150px;
-  }
-  main {
-    padding: 30px 16px;
-  }
-  .card {
-    padding: 20px 18px;
-  }
-  .steps {
-    font-size: 10px;
-    gap: 10px;
-  }
-  .summary {
-    padding: 15px;
-    font-size: 13px;
-  }
-  input,
-  textarea,
-  select {
-    font-size: 16px;
-  }
-  .actions {
-    flex-direction: column;
-  }
-  .actions button {
-    width: 100%;
-  }
-}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
