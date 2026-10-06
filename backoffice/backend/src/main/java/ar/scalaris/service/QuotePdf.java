@@ -28,7 +28,7 @@ public class QuotePdf {
           writer.logo(logo.readAllBytes());
         }
         writer.line("Tu tecnología, en buenas manos.", 11);
-        writer.line("WhatsApp 2291402230 | wa.me/5492291402230", 10);
+        writer.line("WhatsApp 1141477227 | wa.me/5491141477227", 10);
         writer.gap(14);
         writer.line(
             "PRESUPUESTO #"

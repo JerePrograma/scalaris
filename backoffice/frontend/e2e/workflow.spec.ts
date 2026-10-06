@@ -177,7 +177,7 @@ test("public guided form review download and manual import with duplicate detect
   const href = await page
     .getByRole("link", { name: "Abrir WhatsApp con este mensaje" })
     .getAttribute("href");
-  expect(href).toContain("https://wa.me/5492291402230?text=");
+  expect(href).toContain("https://wa.me/5491141477227?text=");
   expect(decodeURIComponent(href!)).not.toContain("Consulta pública");
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({
