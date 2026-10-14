@@ -24,12 +24,12 @@ for (const ref of refs) {
     localFiles++;
   }
 }
-if (!html.includes('href="tel:+5491141477227"'))
+if (!html.includes('href="tel:+5491172789289"'))
   errors.push("Teléfono incorrecto");
 const links = refs.filter((ref) => ref.startsWith("https://wa.me/"));
 if (
   links.length !== 1 ||
-  links.some((ref) => !ref.startsWith("https://wa.me/5491141477227?text="))
+  links.some((ref) => !ref.startsWith("https://wa.me/5491172789289?text="))
 )
   errors.push("Enlace WhatsApp directo incorrecto");
 for (const ref of [

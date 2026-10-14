@@ -34,7 +34,7 @@ Abrir http://localhost:8080. También puede abrirse `public/index.html` directam
 
 La integración Git de Pages debe estar configurada desde la cuenta Cloudflare. Cada push a `main` publicará los archivos de `public/` después de la verificación.
 
-Contacto: [WhatsApp](https://wa.me/5491141477227), 1141477227.
+Contacto: [WhatsApp](https://wa.me/5491172789289), 1172789289.
 
 ## Backoffice local y formulario guiado
 

@@ -261,7 +261,7 @@ function render() {
     const link = element("a", "Copiar resumen y abrir WhatsApp", {
       class: "button primary",
       href:
-        "https://wa.me/5491141477227?text=" +
+        "https://wa.me/5491172789289?text=" +
         encodeURIComponent(whatsappMessage(inquiry)),
       target: "_blank",
       rel: "noopener noreferrer",
