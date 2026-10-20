@@ -25,11 +25,28 @@ export function canonicalUrl(value) {
   } catch { return null; }
 }
 
+function decodedUrlPart(value) {
+  let decoded = String(value);
+  for (let count = 0; count < 3; count++) {
+    try { const next = decodeURIComponent(decoded); if (next === decoded) break; decoded = next; } catch { break; }
+  }
+  return decoded.toLowerCase();
+}
+
+function hasPurchaseOrMutationAction(url) {
+  const compact = value => decodedUrlPart(value).replace(/[^a-z0-9]/g, "");
+  const actions = new Set(["addtocart", "addtobasket", "buynow", "removeitem", "removefromcart", "deleteitem", "emptycart", "clearcart", "updatecart", "wcajax", "action", "cart", "checkout"]);
+  for (const key of url.searchParams.keys()) if (actions.has(compact(decodedUrlPart(key).split("[")[0]))) return true;
+  const endpoints = new Set([...actions, "basket", "carrito", "finalizarcompra", "orderpay", "orderreceived", "cartphp", "checkoutphp"]);
+  return decodedUrlPart(url.pathname).split(/[\\/]+/).some(part => endpoints.has(compact(part)));
+}
+
 export function classifyCandidateUrl(value) {
   const canonical = canonicalUrl(value);
   if (!canonical) return { eligible: false, reason: "invalid_or_nonpublic_url", url: null };
   const url = new URL(canonical);
   const host = url.hostname.replace(/^www\./, "");
+  if (hasPurchaseOrMutationAction(url)) return { eligible: false, reason: "purchase_cart_or_mutation_action_url", url: canonical };
   if (BLOCKED_HOSTS.some(blocked => host === blocked || host.endsWith("." + blocked))) return { eligible: false, reason: "marketplace_supplier_social_or_aggregator", url: canonical };
   if (/^(?:nb|distriland|tecnoprices|tecnoprice)\./.test(host)) return { eligible: false, reason: "supplier_not_retail_benchmark", url: canonical };
   if (/\.(?:mx|cl|co|br|uy|pe|es|bo|py|ec|ve|cr|pa|us|uk|cn)$/.test(host)) return { eligible: false, reason: "non_argentine_country_domain", url: canonical };
@@ -157,21 +174,111 @@ export function extractPrice(page, scope = productScope(page)) {
 function hasToken(text, value) {
   const wanted = fold(value);
   if (!wanted) return false;
-  const pattern = wanted.split(/[^A-Z0-9]+/).filter(Boolean).map(escapeRegExp).join("[\\s_-]*").replace(/(\d)([A-Z])/g, "$1\\s*$2");
-  return new RegExp("(?:^|[^A-Z0-9])" + pattern + "(?=$|[^A-Z0-9])").test(fold(text));
+  const pattern = (wanted.match(/[A-Z0-9]+|\+/g) || []).map(escapeRegExp).join("[\\s_-]*").replace(/(\d)([A-Z])/g, "$1\\s*$2");
+  return Boolean(pattern) && new RegExp("(?:^|[^A-Z0-9])" + pattern + "(?=$|[^A-Z0-9])").test(fold(text));
 }
 const COLOR_NAMES = { NEGRO: ["NEGRO", "BLACK"], BLACK: ["NEGRO", "BLACK"], BLANCO: ["BLANCO", "WHITE"], WHITE: ["BLANCO", "WHITE"], GRIS: ["GRIS", "GREY", "GRAY"], GREY: ["GRIS", "GREY", "GRAY"], GRAY: ["GRIS", "GREY", "GRAY"], AZUL: ["AZUL", "BLUE"], BLUE: ["AZUL", "BLUE"], VERDE: ["VERDE", "GREEN"], GREEN: ["VERDE", "GREEN"], ROJO: ["ROJO", "RED"], RED: ["ROJO", "RED"], ROSA: ["ROSA", "PINK"], PINK: ["ROSA", "PINK"], AMARILLO: ["AMARILLO", "YELLOW"], YELLOW: ["AMARILLO", "YELLOW"], PLATEADO: ["PLATEADO", "SILVER"], SILVER: ["PLATEADO", "SILVER"] };
+
+// A terminal + is part of a manufacturer's model, rather than a separator.
+const compactPartNumber = value => fold(value).replace(/[^A-Z0-9+]/g, "");
+const CODE_SUFFIX = "(?:\\+|[ _-]*GEN[ _-]*\\d+|[ _-]+(?:V\\d+(?:\\.\\d+)?|R\\d+(?:\\.\\d+)?|REV(?:ISION)?\\.?[ _-]*\\d+(?:\\.\\d+)?|PLUS))";
+function splitCodeSuffix(value) {
+  const normalized = fold(value);
+  const match = normalized.match(new RegExp("(" + CODE_SUFFIX + ")$"));
+  return match ? { base: normalized.slice(0, match.index).trim(), suffix: compactPartNumber(match[1]), revision: /^REV/.test(match[1].trim()) } : { base: normalized, suffix: "", revision: false };
+}
+function suffixRelationship(expected, observed) {
+  const left = splitCodeSuffix(expected), right = splitCodeSuffix(observed);
+  const base = compactPartNumber(left.base);
+  if (base !== compactPartNumber(right.base) || base.length < 5 || !/[A-Z]/.test(base) || !/\d/.test(base)) return null;
+  return { differs: left.suffix !== right.suffix, revisionUnconfirmed: (left.revision || right.revision) && (!left.suffix || !right.suffix) };
+}
+function visiblePartNumbers(text, expected) {
+  const { base } = splitCodeSuffix(expected);
+  const pattern = [...compactPartNumber(base)].map(escapeRegExp).join("[ ._/-]*");
+  if (!pattern) return [];
+  const matcher = new RegExp("(?:^|[^A-Z0-9+])(" + pattern + "(?:" + CODE_SUFFIX + ")*)(?=$|[^A-Z0-9+])", "g");
+  return String(text).split(/\r?\n/).flatMap(line => [...fold(line).matchAll(matcher)].map(match => match[1]));
+}
+function primaryCodeBranch(title, expected) {
+  const parts = splitCodeSuffix(expected).base.split(/\s+/);
+  // A complete two-part model such as H810M H has a meaningful short branch.
+  // Seeing only its shared H810M family cannot confirm H instead of K.
+  if (parts.length !== 2 || !/^[A-Z]$/.test(parts[1]) || !isUniqueModelToken(parts[0]) || compactPartNumber(parts[0]).length < 4) return null;
+  const family = compactPartNumber(parts[0]), branch = parts[1];
+  const pattern = [...family].map(escapeRegExp).join("[ ._/-]*");
+  const matches = [...fold(title).matchAll(new RegExp("(?:^|[^A-Z0-9])" + pattern + "[ _-]*([A-Z0-9]+)(?=$|[^A-Z0-9])", "g"))];
+  const observed = unique(matches.map(match => compactPartNumber(splitCodeSuffix(match[1]).base)));
+  const conflicts = observed.filter(value => /^[A-Z]$/.test(value) && value !== branch).map(value => family + " " + value);
+  return { conflicts, unconfirmed: conflicts.length === 0 && !observed.includes(branch) && (matches.length > 0 || visiblePartNumbers(title, parts[0]).length > 0) };
+}
+function comparableSkuFamily(expected, observed) {
+  const left = compactPartNumber(expected), right = compactPartNumber(observed);
+  if (suffixRelationship(expected, observed)?.differs) return true;
+  // A retailer's numeric/internal SKU is not automatically a manufacturer MPN.
+  // Only closely related, complete alphanumeric codes establish a shared family.
+  if (Math.min(left.length, right.length) < 8 || !/[A-Z]/.test(left) || !/\d/.test(left) || !/[A-Z]/.test(right) || !/\d/.test(right)) return false;
+  if (left.startsWith(right) || right.startsWith(left)) return false;
+  let prefix = 0;
+  while (left[prefix] && left[prefix] === right[prefix]) prefix++;
+  return prefix >= Math.max(6, Math.ceil(Math.min(left.length, right.length) * 0.5)) && left.replace(/\D/g, "") === right.replace(/\D/g, "") && Math.min(left.length, right.length) / Math.max(left.length, right.length) >= 0.8;
+}
+
+function manufacturerCodeEvidence(text, expected) {
+  if (!expected) return [];
+  const fields = [];
+  const pattern = /\b(MANUFACTURER PART NUMBER|CODIGO (?:DE )?FABRICANTE|NUMERO DE PARTE|PART[ _-]?NUMBER|PART[ _-]?NO\.?|MPN|P\/N|SKU|MODELO)\b\s*[:#=\-]?\s*/g;
+  const expectedWords = new Set(fold(expected).split(/\s+/));
+  // Parse each delimited field separately: folding the whole document would erase
+  // line boundaries and silently turn the following description into a code.
+  for (const line of String(text).split(/\r?\n/)) for (const field of line.split(/[|;\t]/)) {
+    const normalized = fold(field), labels = [...normalized.matchAll(pattern)];
+    for (let index = 0; index < labels.length; index++) {
+      const match = labels[index], label = match[1];
+      const raw = normalized.slice(match.index + match[0].length, labels[index + 1]?.index).split(/\s+(?:STOCK|ID|PRECIO|GARANTIA|DESCRIPCION|CATEGORIA|MARCA)\s*[:#=]/)[0].trim().replace(/[.,]+$/, "");
+      // Descriptive UI text such as "Part number CPU" does not establish a code.
+      if (!(/[A-Z]/.test(raw) && /\d/.test(raw)) && !/^\d{5,}$/.test(raw)) continue;
+      const words = raw.split(/\s+/);
+      // "SKU Original HP: ..." and "Modelo OEM que reemplaza: ..." describe
+      // compatibility, whereas the code must immediately follow its field label.
+      if (!/[:#=]/.test(match[0]) && !/\d/.test(words[0]) && !expectedWords.has(words[0])) continue;
+      const manufacturerLabel = !["SKU", "MODELO"].includes(label);
+      const delimitedCode = /^[A-Z0-9][A-Z0-9._/+ -]*$/.test(raw) && words.every(word => expectedWords.has(word) || /\d/.test(word) || /^(?:K|H|D|E|P|V|R|GEN|REV\.?|REVISION|PLUS|I{1,3}|IV)$/.test(word));
+      if (!delimitedCode || /\S\s+\+\s+\S/.test(raw)) {
+        const related = visiblePartNumbers(raw, expected).some(code => compactPartNumber(raw).startsWith(compactPartNumber(code))) || comparableSkuFamily(expected, words[0]);
+        fields.push({ label, value: null, comparable: false, matches: false, basis: "ambiguous_code_field", unconfirmed: manufacturerLabel || related });
+        continue;
+      }
+      const value = raw, matches = compactPartNumber(value) === compactPartNumber(expected);
+      const comparable = manufacturerLabel || matches || comparableSkuFamily(expected, value);
+      fields.push({ label, value, comparable, matches, basis: manufacturerLabel ? "manufacturer_label" : matches ? "same_code" : comparable ? "same_manufacturer_code_family" : "retailer_sku_unattributed" });
+    }
+  }
+  return fields;
+}
+
+function isUniqueModelToken(value) {
+  const token = fold(value);
+  if (!/[A-Z].*\d|\d.*[A-Z]/.test(token)) return false;
+  if (/^(?:LPDDR[2-9]X?|DDR[2-9]L?|GDDR[2-9]X?|(?:SO[- ]?)?DIMM|SDRAM|PCI(?:E)?\d(?:\.\d)?|USB\d(?:\.\d)?)$/.test(token)) return false;
+  return !/^(?:\d+(?:[.,]\d+)?(?:[GMK]?BPS|G|W|A|V|GB|TB|M|CM|MM|LM|L|KG|MAH|MHZ|GHZ|OHM|DBI))$/.test(token);
+}
 
 export function matchIdentity(identity, scope) {
   const title = scope.title || "";
   const text = scope.text || "";
   const locks = identity.variant?.identityLocks || identity.variant || {};
+  const mpn = identity.identifiers?.manufacturerPartNumber;
+  const visibleExactMpn = mpn && visiblePartNumbers(text, mpn).some(code => compactPartNumber(code) === compactPartNumber(mpn));
   const missing = [], conflicts = [], evidence = [];
   if (!scope.proven) missing.push("product_scope");
   if (identity.brand && !hasToken(title, identity.brand)) missing.push("brand_in_product_title");
   for (const key of ["displayTechnologies", "qualityClaims", "networks", "modelTokens", "deviceCodes", "capacitiesAndElectricalRatings", "batteryFormats"]) {
     for (const value of locks[key] || []) {
-      if (hasToken(text, value)) evidence.push({ attribute: key, value });
+      // An exact complete MPN also proves a literal component such as M.2;
+      // do not broaden generic attribute/model matching to unrelated punctuation.
+      const literalMpnAttribute = visibleExactMpn && new RegExp("(?:^|[^A-Z0-9])" + escapeRegExp(fold(value)) + "(?=$|[^A-Z0-9])").test(fold(mpn));
+      if (hasToken(text, value) || literalMpnAttribute) evidence.push({ attribute: key, value });
       else missing.push(key + ":" + value);
     }
   }
@@ -197,35 +304,63 @@ export function matchIdentity(identity, scope) {
   for (const network of ["4G", "5G"]) if (hasToken(title, network) && wantedNetworks.length && !wantedNetworks.includes(network)) conflicts.push("network:" + network);
   if (wantedNetworks.length === 1 && wantedNetworks[0] === "4G" && hasToken(title, "5G")) conflicts.push("4G_vs_5G");
   const gtins = identity.identifiers?.barcodes?.filter(x => x.valid).map(x => x.value) || [];
-  const mpn = identity.identifiers?.manufacturerPartNumber;
-  const uniqueModels = (locks.modelTokens || []).filter(x => /[A-Z].*\d|\d.*[A-Z]/.test(fold(x)) && !/^(?:\d+(?:[.,]\d+)?(?:[GMK]?BPS|G|W|A|V|GB|TB|M|CM|MM|LM|L|KG|MAH|MHZ|GHZ|OHM|DBI))$/.test(fold(x)));
-  const anchors = [...gtins, ...(mpn ? [mpn] : []), ...(locks.deviceCodes || []), ...uniqueModels];
+  const manufacturerCodes = manufacturerCodeEvidence(text, mpn);
+  for (const code of manufacturerCodes) {
+    if (code.unconfirmed) missing.push("manufacturer_part_number_field_unconfirmed");
+    if (code.comparable && !code.matches) {
+      if (suffixRelationship(mpn, code.value)?.revisionUnconfirmed) missing.push("manufacturer_part_number_revision_unconfirmed");
+      else conflicts.push("manufacturerPartNumber:" + code.value);
+    }
+    if (code.matches) evidence.push({ attribute: "manufacturerPartNumber", value: code.value });
+  }
+  // The complete model in the primary title takes precedence over a shared
+  // chipset/model prefix or a GTIN repeated in the description.
+  const titleCodes = mpn ? visiblePartNumbers(title, mpn) : [];
+  for (const code of titleCodes) {
+    const relationship = suffixRelationship(mpn, code);
+    if (relationship?.differs) {
+      if (relationship.revisionUnconfirmed) missing.push("manufacturer_part_number_revision_unconfirmed");
+      else conflicts.push("manufacturerPartNumber:" + code);
+    }
+  }
+  const primaryBranch = mpn && primaryCodeBranch(title, mpn);
+  for (const code of primaryBranch?.conflicts || []) conflicts.push("manufacturerPartNumber:" + code);
+  if (primaryBranch?.unconfirmed) missing.push("primary_manufacturer_part_number");
+  const primarySuffix = mpn && (/[+]$|\s+(?:GEN\s*\d+|V\d+(?:\.\d+)?|R\d+(?:\.\d+)?|REV(?:ISION)?\.?\s*\d+(?:\.\d+)?|PLUS)$/.test(fold(mpn)));
+  if (primarySuffix && !titleCodes.some(code => compactPartNumber(code) === compactPartNumber(mpn)) && !manufacturerCodes.some(code => code.matches)) missing.push("primary_manufacturer_part_number");
+  const uniqueModels = (locks.modelTokens || []).filter(isUniqueModelToken);
+  const anchors = [...gtins, ...(locks.deviceCodes || []), ...uniqueModels];
   const matchedIdentifiers = unique(anchors.filter(value => hasToken(text, value)));
+  if (visibleExactMpn && !matchedIdentifiers.includes(mpn)) matchedIdentifiers.push(mpn);
   if (!matchedIdentifiers.length) missing.push("unique_product_identifier");
   else evidence.push(...matchedIdentifiers.map(value => ({ attribute: "identifier", value })));
   if ((locks.batteryFormats || []).includes("AA") && hasToken(title, "AAA")) conflicts.push("AA_vs_AAA");
   if ((locks.batteryFormats || []).includes("AAA") && hasToken(title, "AA")) conflicts.push("AAA_vs_AA");
-  return { matchExact: scope.proven && missing.length === 0 && conflicts.length === 0, status: conflicts.length ? "variant_conflict" : missing.length ? "variant_unconfirmed" : "exact_visible_attributes", missing: unique(missing), conflicts: unique(conflicts), evidence, originalityAuthenticated: false, note: "Exactitud de atributos visibles; una afirmación Original del vendedor no autentica procedencia." };
+  return { matchExact: scope.proven && missing.length === 0 && conflicts.length === 0, status: conflicts.length ? "variant_conflict" : missing.length ? "variant_unconfirmed" : "exact_visible_attributes", missing: unique(missing), conflicts: unique(conflicts), evidence, manufacturerCodes, originalityAuthenticated: false, note: "Exactitud de atributos visibles; una afirmación Original del vendedor no autentica procedencia." };
 }
 
-export function fetchFailure(value) {
+export function fetchFailure(value, now = Date.now()) {
   const text = fold(typeof value === "string" ? value : JSON.stringify(value));
   if (/\b(?:401|403)\b|CAPTCHA|ACCESS DENIED|FORBIDDEN|CLOUDFLARE CHALLENGE|VERIFY (?:YOU ARE|THAT YOU)|INICI[AÁ] SESION PARA VER/.test(text)) return { status: "blocked", retryable: false, retryAfterSeconds: null };
   if (/\b429\b|RATE LIMIT|TOO MANY REQUEST/.test(text)) {
-    const seconds = text.match(/RETRY (?:IN|AFTER)\s*:?\s*(\d+)/)?.[1];
-    return { status: "rate_limited", retryable: true, retryAfterSeconds: Math.max(30, Number(seconds) || 60) };
+    const field = metadataEntries(value).find(entry => /(?:^|:)(?:retry[-_]?after(?:[-_]?seconds)?|retryafterseconds)$/.test(entry.key));
+    const retryValue = field?.value ?? text.match(/RETRY (?:IN|AFTER)\s*:?\s*(\d+)/)?.[1];
+    const seconds = retryValue !== undefined && /^\d+(?:\.\d+)?$/.test(String(retryValue)) ? Number(retryValue) : retryValue !== undefined && Number.isFinite(Date.parse(retryValue)) ? Math.max(0, Math.ceil((Date.parse(retryValue) - now) / 1000)) : 60;
+    return { status: "rate_limited", retryable: true, retryAfterSeconds: seconds };
   }
   return { status: /TIMEOUT|TIMED OUT/.test(text) ? "timeout" : "fetch_error", retryable: false, retryAfterSeconds: null };
 }
 
 export function normalizeReference(identity, page, observedAt) {
   const url = canonicalUrl(page.final_url || page.url);
+  const requestedEligibility = classifyCandidateUrl(page.url || page.final_url);
+  const finalEligibility = classifyCandidateUrl(page.final_url || page.url);
+  if ([requestedEligibility, finalEligibility].some(result => result.reason === "purchase_cart_or_mutation_action_url")) return { productId: identity.id, url, requestedUrl: requestedEligibility.url, observedAt, status: "unsafe_action_url", matchExact: false, verifiedProductPrice: false, retryable: false };
   const statusCode = Number(page.status_code ?? page.http_status ?? page.status);
   const failureText = [page.error, page.error ? page.message : null, statusCode >= 400 ? statusCode : null].filter(Boolean).map(value => typeof value === "object" ? JSON.stringify(value) : String(value)).join(" ");
   const blockText = fold([page.title, ...flattenDocument(page.text ?? page.content).slice(0, 5).map(x => x.text)].join(" ")).slice(0, 1500);
   const blocked = /CAPTCHA|ACCESS DENIED|JUST A MOMENT|ACCESS BLOCKED|FORTIGUARD|VERIFY (?:YOU ARE|THAT YOU)|CHECKING YOUR BROWSER|NO SOY UN ROBOT/.test(blockText);
-  if (failureText || blocked) return { productId: identity.id, url, observedAt, ...fetchFailure(failureText + " " + (blocked ? "CAPTCHA " + blockText : page.title || "")), matchExact: false, verifiedProductPrice: false };
-  const finalEligibility = classifyCandidateUrl(url);
+  if (failureText || blocked) return { productId: identity.id, url, observedAt, ...fetchFailure({ ...page, errorDetails: page.error, error: failureText + " " + (blocked ? "CAPTCHA " + blockText : page.title || "") }, Date.parse(observedAt)), matchExact: false, verifiedProductPrice: false };
   if (!finalEligibility.eligible) return { productId: identity.id, url, observedAt, status: "redirected_to_ineligible_url", matchExact: false, verifiedProductPrice: false };
   const scope = productScope(page);
   const price = extractPrice(page, scope);
@@ -265,7 +400,8 @@ export function buildResearchState({ identities, searches, fetchBatches, now = D
       const page = pages.find(x => canonicalUrl(x.url) === key || canonicalUrl(x.final_url) === key);
       const error = errors.find(x => canonicalUrl(x.url) === key) || (!page ? errors[0] : null);
       const observedAt = batch.observedAt || batch.completedAt || batch.generatedAt || new Date(0).toISOString();
-      const value = { page: page || { url: key, error: error?.error || error?.message || error || "missing_url_result" }, observedAt, attempts: batch.attempts || 1 };
+      // Keep the whole error envelope: status and Retry-After can be siblings of error.
+      const value = { page: page || { ...(error && typeof error === "object" ? error : {}), url: key, error: error?.error || error?.message || error || "missing_url_result" }, observedAt, attempts: batch.attempts || 1 };
       const previous = fetched.get(key);
       if (!previous || observedAt >= previous.observedAt) fetched.set(key, value);
     }
@@ -287,7 +423,7 @@ export function buildResearchState({ identities, searches, fetchBatches, now = D
       reference.attempts = observation.attempts;
       references.push(reference);
       if (reference.retryable && observation.attempts <= MAX_RATE_RETRIES) {
-        const retryAt = Date.parse(observation.observedAt) + (reference.retryAfterSeconds || 60) * 1000;
+        const retryAt = Date.parse(observation.observedAt) + (reference.retryAfterSeconds ?? 60) * 1000;
         if (now >= retryAt) {
           if (!queue.has(candidate.url)) queue.set(candidate.url, { url: candidate.url, productIds: [], attempt: observation.attempts + 1 });
           queue.get(candidate.url).productIds.push(identity.id);
@@ -310,7 +446,8 @@ export function loadResearchState(baseDirectory, options = {}) {
 }
 
 export function planFetches(state, limit = 40) {
-  const queue = state.queue.slice(0, Math.max(0, Math.min(Number(limit) || 40, 200)));
+  const eligibleQueue = state.queue.filter(item => classifyCandidateUrl(item.url).eligible);
+  const queue = eligibleQueue.slice(0, Math.max(0, Math.min(Number(limit) || 40, 200)));
   const jobs = [];
   for (const attemptGroup of unique(queue.map(x => x.attempt)).sort()) {
    const attemptQueue = queue.filter(x => x.attempt === attemptGroup);
@@ -322,7 +459,7 @@ export function planFetches(state, limit = 40) {
     jobs.push({ batchId: id, urls, attempts: attempt, productsByUrl: Object.fromEntries(items.map(x => [x.url, x.productIds])), fetchArgs: { urls, format: "json", ttl: 0, per_url_timeout_ms: 20000, links: false, image_links: false, iframe_links: false, page_metadata: true, purpose: "Leer la ficha pública de cada URL. Conservar encabezado de producto, precio final ARS, forma de pago, stock y variante/modelo; separar artículos relacionados. No hacer compras, iniciar sesión ni eludir bloqueos." } });
    }
   }
-  return { version: 1, maxConcurrency: FETCH_CONCURRENCY, allowedTool: "tinyfish_fetch_content", paidAutomationAllowed: false, queueRemaining: state.queue.length, jobs, summary: state.report.summary };
+  return { version: 1, maxConcurrency: FETCH_CONCURRENCY, allowedTool: "tinyfish_fetch_content", paidAutomationAllowed: false, queueRemaining: eligibleQueue.length, jobs, summary: state.report.summary };
 }
 
 /**
@@ -333,6 +470,7 @@ export function planFetches(state, limit = 40) {
 export async function executeFetchPlan(plan, { fetchContent, saveBatch, delay = milliseconds => new Promise(resolveDelay => setTimeout(resolveDelay, milliseconds)), onProgress = () => {}, now = () => new Date().toISOString() }) {
   if (typeof fetchContent !== "function" || typeof saveBatch !== "function") throw new TypeError("Se requieren fetch_content gratuito y un escritor de checkpoints privados.");
   const jobs = [...(plan.jobs || [])];
+  if (jobs.some(job => (job.urls || []).some(url => !classifyCandidateUrl(url).eligible))) throw new Error("El plan contiene una URL de acción o una ficha no elegible; regenerar el plan antes de Fetch.");
   let cursor = 0;
   const stats = { toolCalls: 0, savedBatches: 0, requestedUrls: 0, rateRetries: 0 };
   async function worker() {
@@ -355,13 +493,13 @@ export async function executeFetchPlan(plan, { fetchContent, saveBatch, delay = 
         const errors = unpacked.errors || [];
         const rateErrors = urls.map(url => {
           const page = (unpacked.results || []).find(result => canonicalUrl(result.url) === canonicalUrl(url));
-          if (page && !page.error && !(Number(page.status_code ?? page.http_status) >= 400)) return null;
-          const error = page?.error || errors.find(result => canonicalUrl(result.url) === canonicalUrl(url)) || errors[0];
+          if (page && !page.error && !(Number(page.status_code ?? page.http_status ?? page.status) >= 400)) return null;
+          const error = page || errors.find(result => canonicalUrl(result.url) === canonicalUrl(url)) || errors[0];
           const failure = fetchFailure(error || "missing_url_result");
           return failure.status === "rate_limited" ? { url, waitSeconds: failure.retryAfterSeconds } : null;
         }).filter(Boolean);
         if (!rateErrors.length || attempt >= 1 + MAX_RATE_RETRIES) break;
-        const wait = Math.max(...rateErrors.map(x => x.waitSeconds || 60)) * 1000;
+        const wait = Math.max(...rateErrors.map(x => x.waitSeconds ?? 60)) * 1000;
         // Respect Retry-After with bounded wait slices so hosts can surface progress.
         for (let remaining = wait; remaining > 0; remaining -= 60000) await delay(Math.min(60000, remaining));
         urls = rateErrors.map(x => x.url);

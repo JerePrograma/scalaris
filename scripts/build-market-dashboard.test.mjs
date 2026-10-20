@@ -56,5 +56,7 @@ test("HTML autónomo escapa cierre de script y descarta enlaces peligrosos", () 
   assert.ok(html.includes("connect-src 'none'"));
   assert.ok(!/\b(?:src|href)="https?:/.test(html));
   assert.ok(!/\bfetch\s*\(|\bimport\s*\(|@font-face/.test(html));
+  assert.ok(html.includes('<option value="active">Precio activo</option>'));
+  assert.ok(!/<\/option\s+[^>]/.test(html));
   new Script(html.match(/<script>([\s\S]*)<\/script>/)[1]);
 });

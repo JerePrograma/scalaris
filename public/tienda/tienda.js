@@ -9,6 +9,105 @@ let selection = [];
 let page = 1;
 let focusedProduct = null;
 let queryTimer;
+let marketProgress = null;
+let marketReferences = new Map();
+const MARKET_REFERENCE_MAX_AGE = 24 * 60 * 60 * 1000;
+
+function decodedReferenceComponent(value) {
+  let current = value;
+  for (let pass = 0; pass < 4; pass++) {
+    let decoded;
+    try { decoded = decodeURIComponent(current); } catch { return null; }
+    if (decoded === current) return current;
+    current = decoded;
+  }
+  return /%[0-9a-f]{2}/i.test(current) ? null : current;
+}
+
+function referenceCredentialKey(key) {
+  const decoded = decodedReferenceComponent(key);
+  if (decoded === null) return true;
+  const name = decoded.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return /token|apikey|accesskey|privatekey|clientkey|password|passwd|passphrase|passcode|secret|credential|auth|session|sessid|jwt|csrf|nonce|signature/.test(name) || ["pwd", "sid", "key", "code"].includes(name);
+}
+
+function currentMarketReference(reference) {
+  if (reference?.currency !== "ARS" || typeof reference.priceARS !== "number" || !Number.isFinite(reference.priceARS) || reference.priceARS <= 0) return null;
+  const age = Date.now() - Date.parse(reference.observedAt);
+  if (!Number.isFinite(age) || age < 0 || age > MARKET_REFERENCE_MAX_AGE) return null;
+  let url;
+  try { url = new URL(reference.url); } catch { return null; }
+  const path = decodedReferenceComponent(url.pathname);
+  if (!["http:", "https:"].includes(url.protocol) || url.username || url.password || path === null || path.split(/[;/]/).some(part => part.includes("=") && referenceCredentialKey(part.split("=", 1)[0]))) return null;
+  for (const key of url.searchParams.keys()) if (referenceCredentialKey(key)) return null;
+  return { url, priceARS: reference.priceARS, observedAt: reference.observedAt };
+}
+
+function referenceSection(product) {
+  const references = (marketReferences.get(product.id) || []).map(currentMarketReference).filter(Boolean);
+  if (!references.length) return null;
+  const section = element("section", "market-references");
+  section.append(element("h3", "", "Referencias de otros comercios"), element("p", "", "Mismo producto verificado. Importes por transferencia, sin envío; pueden cambiar."));
+  const list = element("ul");
+  for (const reference of references) {
+    const item = element("li");
+    const link = element("a", "", reference.url.hostname.replace(/^www\./, "") + " ↗");
+    link.href = reference.url.href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.referrerPolicy = "no-referrer";
+    const observed = element("time", "", new Date(reference.observedAt).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" }));
+    observed.dateTime = reference.observedAt;
+    item.append(link, element("strong", "", money(reference.priceARS)), observed);
+    list.append(item);
+  }
+  section.append(list);
+  return section;
+}
+
+function refreshDetailReferences() {
+  if (!productDialog.open || !focusedProduct) return;
+  const product = products.find(product => product.id === focusedProduct);
+  const copy = $("detail-content").querySelector(".detail-copy");
+  if (!copy || !product) return;
+  copy.querySelector(".market-references")?.remove();
+  const references = referenceSection(product);
+  if (references) copy.append(references);
+}
+
+function renderMarketProgress() {
+  const region = $("market-progress");
+  region.hidden = true;
+  marketReferences = new Map();
+  const summary = marketProgress?.summary;
+  const updated = Date.parse(marketProgress?.updatedAt);
+  if (!products.length || marketProgress?.version !== 1 || !Array.isArray(marketProgress.products) || !Number.isFinite(updated) || updated > Date.now() || summary?.totalProducts !== products.length || !Number.isSafeInteger(summary?.researchedProducts) || summary.researchedProducts < 0 || summary.researchedProducts > products.length) { refreshDetailReferences(); return; }
+  const ids = new Set(products.map(product => product.id));
+  for (const product of marketProgress.products) {
+    if (!ids.has(product?.id) || !Array.isArray(product.references)) continue;
+    const unique = new Map();
+    for (const reference of product.references) {
+      const current = currentMarketReference(reference);
+      if (current) unique.set(current.url.href, reference);
+    }
+    if (unique.size) marketReferences.set(product.id, [...unique.values()]);
+  }
+  $("market-progress-count").textContent = `${summary.researchedProducts.toLocaleString("es-AR")} de ${products.length.toLocaleString("es-AR")} productos relevados`;
+  $("market-progress-bar").max = products.length;
+  $("market-progress-bar").value = summary.researchedProducts;
+  $("market-progress-date").textContent = "Actualizado el " + new Date(updated).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" });
+  region.hidden = false;
+  refreshDetailReferences();
+}
+
+async function loadMarketProgress() {
+  try {
+    const response = await fetch("./market-progress.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Avance no disponible");
+    marketProgress = await response.json();
+  } catch { marketProgress = null; }
+  renderMarketProgress();
+}
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -122,10 +221,12 @@ function renderDetail(product) {
   const layout = element("div", "detail-layout");
   const visual = element("div", "detail-picture");
   picture(product, visual, true);
-  const copy = element("div");
+  const copy = element("div", "detail-copy");
   const title = element("h2", "", product.name);
   title.id = "detail-title";
   copy.append(element("span", "product-category", product.category), title, element("p", "", product.description), element("p", "detail-ref", "Referencia: " + product.id), element("span", "availability", canOrder(product) ? "Contra pedido" : "Fuera de la venta activa"), element("strong", "product-price", displayPrice(product)), element("p", "", canOrder(product) ? "Precio por transferencia. El envío se cotiza por código postal antes del pago. Confirmamos disponibilidad y plazo de entrega." : "Esta referencia no está habilitada para nuevos pedidos."), addButton(product));
+  const references = referenceSection(product);
+  if (references) copy.append(references);
   layout.append(visual, copy);
   $("detail-content").replaceChildren(layout);
 }
@@ -225,6 +326,7 @@ async function loadCatalog() {
     try { selection = sanitizeSelection(JSON.parse(sessionStorage.getItem("scalaris-product-inquiry") || "[]"), products); } catch { selection = []; }
     renderProducts();
     updateSelection();
+    renderMarketProgress();
     const id = new URL(location.href).searchParams.get("producto");
     const product = products.find(product => product.id === id);
     if (product) openProduct(product);
@@ -264,3 +366,5 @@ productDialog.addEventListener("close", () => {
   if (focusedProduct) focusedProduct = null;
 });
 loadCatalog();
+loadMarketProgress();
+document.addEventListener("visibilitychange", () => { if (!document.hidden) renderMarketProgress(); });

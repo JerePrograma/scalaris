@@ -1,6 +1,6 @@
 # Corridas de referencias de precios
 
-El usuario autorizó mostrar los precios calculados ahora y completar las referencias públicas por lotes. El heartbeat nativo existente es `completar-referencias-de-precios-de-scalaris`, cada 15 minutos, en `America/Buenos_Aires`. No crear otra automatización ni dejar un proceso permanente entre corridas.
+El usuario autorizó mostrar los precios calculados ahora, completar las referencias públicas por lotes y publicar lo terminado en `main`, también al cerrar las siguientes tandas. El heartbeat nativo existente es `completar-referencias-de-precios-de-scalaris`, en `America/Buenos_Aires`; conservar su programación guardada. No crear otra automatización ni dejar un proceso permanente entre corridas.
 
 La configuración operativa está en `.private/market-research/search-run-config.json`. Cada corrida retoma checkpoints, realiza un lote acotado y guarda el progreso. No necesita una nueva autorización para continuar dentro de ese alcance. Si el usuario desactiva la configuración o pausa el heartbeat, respetar ese estado.
 
@@ -12,7 +12,7 @@ Leer la configuración, `product-identities.json` y el estado de la cola. No env
 
 ```powershell
 python .private/market-research/search-queue.py summary
-python .private/market-research/search-queue.py next --retry-errors --limit 100
+python .private/market-research/search-queue.py next --retry-errors --limit 80
 ```
 
 El helper devuelve el próximo `batchNumber` y los IDs todavía pendientes. `--retry-errors` incluye los errores reintentables junto a los productos nunca consultados. Un resultado válido nuevo puede reemplazar el último error del mismo ID en otro checkpoint; no se deben volver a registrar como nuevos los IDs ya resueltos.
@@ -78,6 +78,8 @@ node scripts/market-references.mjs plan --limit 40
 
 `plan` no llama a Internet: devuelve `jobs[].fetchArgs` para el tool gratuito `tinyfish_fetch_content`. Ejecutar esos argumentos con máximo cuatro lotes concurrentes y diez URLs por llamada, `format: "json"`, `ttl: 0` y metadatos de página. La función exportada `executeFetchPlan` admite el tool y un escritor de checkpoints inyectados; sus límites y reintentos no reemplazan el limitador global de solicitudes.
 
+Antes de cualquier lectura, rechazar URLs de acciones de compra, carrito, checkout y credenciales o sesiones, incluidas sus formas codificadas. No limpiar una URL de acción para reutilizar la respuesta como ficha segura. Conservar incidentes anteriores como observaciones excluidas de evidencia, sin repetir la acción.
+
 Guardar la respuesta completa de cada llamada, incluso errores, en `.private/market-research/fetch-batches/<batchId>.json`:
 
 ```json
@@ -105,4 +107,19 @@ Ese comando genera `.private/market-research/market-evidence-dashboard.html`; no
 
 Revisar el resumen final de la cola y del reporte. Los errores no cuentan como completados y los índices no cuentan como precios verificados. Mantener separados los productos investigados sin coincidencia, los pendientes de lectura y los que tienen evidencia estricta. Los comandos de esta guía escriben salidas privadas; una actualización pública de precios debe seguir la política comercial y la autorización vigentes, nunca una cifra extraída de un snippet.
 
-El heartbeat debe seguir su política de avisos existente: permanecer en silencio si no cambió nada relevante y avisar sólo ante avance significativo, finalización, fallo o intervención necesaria. No declarar terminado el universo mientras queden búsquedas sin resolver o fichas pendientes. Ver [MERCADO.md](MERCADO.md) para el contrato de validación de referencias.
+## Publicar cada tanda terminada
+
+La autorización del usuario del 20/10/2026 permite publicar en `main` el avance y las referencias aceptadas, conservando privados los costos, márgenes, proveedores y reportes completos. El resumen público cuenta búsquedas completadas; no afirma que esas búsquedas sean precios verificados.
+
+```powershell
+node scripts/build-store-prices.mjs --apply-public
+node scripts/build-public-market-progress.mjs
+npm run check
+git diff --check
+```
+
+El cálculo mantiene el piso rentable, transferencia y envío separado; nunca renueva la fecha del costo fuente al recalcular. Sólo `normalized-seeds.json` con evidencia estricta vigente puede alimentar referencias o ajustes de mercado. Los estados parciales de `market-references.json` y los snippets no habilitan esos ajustes. `market-progress.json` contiene exclusivamente agregados públicos e IDs con fuentes estrictas aceptadas; el exportador aplica una lista explícita de campos y descarta enlaces de acción, sesiones o credenciales.
+
+Revisar los cambios y la lista exacta de archivos antes de hacer commit. Incluir únicamente el catálogo y resumen públicos de la tanda y cambios de código propios comprobados; nunca `.private/`, respaldos, reportes o cambios ajenos. Si hay un cambio público útil, hacer commit y push normal a `origin/main`, sin force, y verificar el despliegue de `https://scalaris.pages.dev/tienda/` y su `market-progress.json`. No crear commits vacíos. Si cambió el remoto, integrar sus cambios sin descartar trabajo local. Registrar el commit y la verificación en el checkpoint privado.
+
+El heartbeat debe seguir su política de avisos existente: permanecer en silencio en avances rutinarios y avisar sólo ante finalización, hallazgo comercial importante o intervención necesaria. No declarar terminado el universo mientras queden búsquedas sin resolver o fichas pendientes. Ver [MERCADO.md](MERCADO.md) para el contrato de validación de referencias.
