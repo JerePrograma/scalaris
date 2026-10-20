@@ -1,12 +1,12 @@
 # Scalaris
 
-Web estática de Scalaris: soporte informático local y desarrollo de software a medida.
+Web estática de Scalaris: soporte informático, desarrollo de software, galería de proyectos y tienda contra pedido.
 
 Sitio público: https://scalaris.pages.dev
 
 ## Archivos
 
-`public/` contiene la web portable de HTML, CSS, JavaScript del formulario, imágenes, logos y fuentes Inter con su licencia. No necesita dependencias ni compilación.
+`public/` contiene la web portable de HTML, CSS, JavaScript, catálogo público, imágenes, logos y fuentes Inter con su licencia. No necesita dependencias ni compilación. Los costos mayoristas y el cotizador personal quedan en `.private/`, fuera de la publicación y excluidos de Git.
 
 Fuente visual original: `Scalaris_01_Identidad_Complementos_Web_2026-09-30.zip`, carpeta `05_Web_Estatica`. La importación inicial de los 12 archivos se verificó byte por byte contra el ZIP; la portada y el formulario se mantienen ahora en este repositorio. El Site original de ChatGPT permanece independiente y sin modificaciones.
 
@@ -16,10 +16,29 @@ La portada prioriza la consulta guiada en la navegación, el inicio, los servici
 
 ```powershell
 node scripts/check.mjs
-python -m http.server 8080 --directory public
+node scripts/serve.mjs
 ```
 
-Abrir http://localhost:8080. También puede abrirse `public/index.html` directamente.
+Abrir http://127.0.0.1:8080. Para abrirlo con doble clic, usar `VerSitio.cmd` y mantener su ventana abierta. La portada y la galería también pueden abrirse directamente; la tienda requiere la vista local o un hosting HTTP para cargar su catálogo.
+
+## Galería y tienda
+
+- `public/proyectos/` muestra Remodelaya, Shekinah y Burger House 3 con miniaturas, descripciones y enlaces a sus URL reales. Shekinah usa una captura local identificada porque el acceso público fue bloqueado por FortiGuard en este entorno; Burger House es una demo con pagos simulados.
+- `public/tienda/` permite buscar por modelo/marca, filtrar por categoría, ordenar por precio, revisar fichas y agregar hasta 12 productos distintos a un pedido. Muestra precios unitarios, subtotales y total por transferencia; el envío se cotiza aparte por código postal. Las cantidades, referencias y el total se preparan en un enlace de WhatsApp; la persona revisa y envía el mensaje. No hay cobro automático ni reserva de stock. La selección se conserva en la sesión del navegador, sin datos personales.
+- Importación del 20/10/2026: 7.305 productos (NB 1.409, DistriLand 2.796 y TecnoPrices 3.100). Las fotos de NB usan sus URL originales; las de TecnoPrices se extrajeron del PDF y se alojan localmente (2.730 archivos únicos, 12,3 MB). DistriLand queda con un marcador explícito de imagen pendiente. Las descripciones son las referencias disponibles en las fuentes; no se inventan especificaciones.
+- El catálogo público contiene nombres, categorías, fotos y referencias; no expone costo, escalas mayoristas, stock histórico ni información interna. El importador y los controles usan una lista explícita de campos públicos. Los nombres iguales entre proveedores conservan sus referencias: no se asume que variantes diferentes sean el mismo producto.
+- Hay 7.292 productos habilitados con precio de venta ARS por transferencia. Otros 13 quedan fuera de venta: 12 titulados “VENCIDO” y una referencia NB sin costo actual. Un precio público sólo se muestra si es positivo y tiene `priceValidUntil` vigente; al vencer aparece “No disponible” y se impide agregarlo al pedido. La vigencia queda limitada a siete días desde el costo de origen, sin renovarse por regenerar archivos. Confirmar disponibilidad, envío y plazo antes de cobrar sigue siendo parte de la operación contra pedido.
+- Los precios iniciales se calculan desde los costos finales y una política comercial explícita. No se presentan como un promedio verificado del mercado. El relevamiento completo de tiendas argentinas y Mercado Libre continúa por lotes; conserva una fila por cada ID y separa resultados indexados, fichas leídas y precios comprobados. Ver [estrategia de venta](scripts/ESTRATEGIA-PRECIOS.md) y [validación de referencias](scripts/MERCADO.md).
+
+Para actualizar listas, fotos o costos NB en pesos, seguir [Importar catálogos](scripts/IMPORTAR-CATALOGOS.md). La actualización NB del 20/10/2026 (`NB-Lista-Precios-20_10_2026_01_55-84844.xls`) aporta **1.408 costos finales en ARS**, unidos por identificador de URL al código NB original. Se usa la columna `Costo`; las fotos y referencias provienen del catálogo anterior. El producto `nb-124029` (Kit Gigabyte promoción) no figura en esta lista: conserva su costo histórico USD y requiere confirmación antes de cotizar. El XLSX anterior se conserva como procedencia histórica, sin convertir sus importes automáticamente. El CSV opcional `id,costARS` sigue disponible para actualizaciones manuales.
+
+## Cotizador personal
+
+Abrir `.private/cotizador.html` con doble clic. Es una herramienta local autónoma, con búsqueda por producto y cálculo de precio, envío absorbido, comisión de cobro, reserva, margen, ganancia mínima y comparación de mercado. Los 1.408 costos NB en pesos se precargan al elegir el producto, con IVA ya incluido. DistriLand usa los importes finales confirmados por el propietario. Para una referencia ausente en la última lista o todavía en USD, se requiere confirmar el costo final. El envío proveedor → Scalaris se carga en $0 según el acuerdo confirmado; el envío al cliente se cobra por separado en la tienda.
+
+Para regenerarlo después de importar listas: `node scripts/build-price-calculator.mjs`. Ver [Criterio de precios y uso](scripts/PRECIOS.md). El cotizador permite simular condiciones distintas; no publica datos en la tienda. `build-store-prices.mjs` genera la propuesta y requiere `--apply-public` para actualizar el catálogo público. `.private/` necesita respaldo local independiente si se quiere conservar.
+
+El control de publicación verifica recursos de todas las páginas, sintaxis, campos del catálogo y las pruebas de consultas y precios: `node scripts/check.mjs`. Las pruebas del importador se ejecutan con Python según su documentación.
 
 ## Cloudflare Pages
 

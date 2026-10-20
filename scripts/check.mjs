@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
@@ -71,6 +71,62 @@ if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);
 }
+// Validate all public pages and assets, including the gallery and shop.
+function walk(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+    const file = resolve(directory, entry.name);
+    return entry.isDirectory() ? walk(file) : [file];
+  });
+}
+const publicFiles = walk(root);
+for (const file of publicFiles.filter(file => /\.(html|css)$/.test(file))) {
+  const text = readFileSync(file, "utf8");
+  const pageIds = new Set([...text.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]));
+  const pageRefs = [
+    ...[...text.matchAll(/\b(?:href|src)="([^"]+)"/g)].map(match => match[1]),
+    ...[...text.matchAll(/url\(['"]?([^)'"\s]+)['"]?\)/g)].map(match => match[1]),
+  ];
+  for (const ref of pageRefs) {
+    if (ref.startsWith("#")) {
+      if (ref.length > 1 && !pageIds.has(ref.slice(1))) errors.push(`Ancla inexistente en ${file}: ${ref}`);
+      continue;
+    }
+    if (/^[a-z][a-z0-9+.-]*:/i.test(ref)) continue;
+    const target = resolve(dirname(file), ref.split(/[?#]/)[0]);
+    if (!target.startsWith(root + sep) || !existsSync(target)) errors.push(`Recurso inexistente en ${file}: ${ref}`);
+  }
+}
+for (const file of publicFiles.filter(file => file.endsWith(".js"))) execFileSync(process.execPath, ["--check", file], { stdio: "pipe" });
+for (const file of ["proyectos/index.html", "tienda/index.html"]) {
+  if (!existsSync(resolve(root, file))) errors.push(`Página inexistente: ${file}`);
+}
+const catalog = JSON.parse(readFileSync(resolve(root, "tienda/catalog.json"), "utf8"));
+if (catalog.version !== 1 || !Array.isArray(catalog.products) || !catalog.products.length) errors.push("Catálogo público inválido");
+const productIds = new Set();
+const allowedKeys = new Set(["id", "name", "category", "brand", "image", "description", "price", "currency", "priceValidUntil", "priceUpdatedAt", "priceBasis", "orderable", "availabilityNote"]);
+for (const product of catalog.products || []) {
+  if (!product.id || productIds.has(product.id)) errors.push(`Referencia de producto repetida o ausente: ${product.id}`);
+  productIds.add(product.id);
+  if (!product.name || !product.category || !product.description || product.currency !== "ARS") errors.push(`Producto incompleto: ${product.id}`);
+  for (const key of Object.keys(product)) if (!allowedKeys.has(key)) errors.push(`Campo no público en catálogo: ${product.id}.${key}`);
+  if (product.price !== null && (!Number.isFinite(product.price) || product.price <= 0 || !Number.isFinite(Date.parse(product.priceValidUntil)))) errors.push(`Precio sin vigencia explícita: ${product.id}`);
+  if (product.orderable === false && product.price !== null) errors.push(`Referencia bloqueada con precio público activo: ${product.id}`);
+  if (product.orderable === true && !(Number.isFinite(product.price) && product.price > 0)) errors.push(`Referencia comprable sin precio: ${product.id}`);
+  if (product.image) {
+    if (product.image.startsWith("https://")) continue;
+    const image = resolve(root, "tienda", product.image);
+    if (!image.startsWith(root + sep) || !existsSync(image) || !/\.(png|jpe?g|webp)$/i.test(image)) errors.push(`Imagen inválida: ${product.id}`);
+  }
+}
+for (const file of publicFiles) {
+  if (/catalog-costs|cotizador|pricing|\.xlsx$|\.pdf$/i.test(file)) errors.push(`Archivo interno dentro del sitio público: ${file}`);
+  if (statSync(file).size > 25 * 1024 * 1024) errors.push(`Archivo público demasiado grande: ${file}`);
+}
+if (errors.length) {
+  console.error(errors.join("\n"));
+  process.exit(1);
+}
+execFileSync(process.execPath, ["--test", ...walk(resolve(root, "../scripts")).filter(file => file.endsWith(".test.mjs"))], { stdio: "inherit" });
 console.log(
-  `OK: ${localFiles} referencias a recursos, anclas, teléfono, consulta guiada, 1 enlace WhatsApp directo, 4 FAQ y fuentes/licencia Inter.`,
+  `OK: portada, consulta guiada, galería, tienda, recursos locales y ${productIds.size} productos sin costos privados.`,
 );
