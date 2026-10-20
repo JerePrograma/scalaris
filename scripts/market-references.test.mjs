@@ -7,6 +7,39 @@ const identity = { id: "test-1", name: "MOUSE LOGITECH M170 NEGRO", brand: "LOGI
 const page = (blocks = [], extra = {}) => ({ url: "https://tienda.com.ar/productos/logitech-m170-negro", title: "Mouse Logitech M170 Negro", text: { type: "document", children: [{ type: "heading", level: 1, text: "Mouse Logitech M170 Negro" }, ...blocks] }, page_metadata: { other: { "product:price:currency": "ARS" } }, ...extra });
 const paragraph = text => ({ type: "paragraph", text });
 
+test("lectura HTML de revisión no reemplaza hechos JSON ni cierra una lectura pendiente", () => {
+  const url = page().url;
+  const searches = [{ records: [{ id: identity.id, status: "indexed", results: [{ url }] }] }];
+  const original = { urls: [url], observedAt: "2026-10-20T19:00:00Z", response: { results: [page([paragraph("ARS $ 10.000"), paragraph("En stock")])] } };
+  const supplemental = { evidenceOnly: true, urls: [url], observedAt: "2026-10-20T20:00:00Z", response: { results: [{ url, format: "html", text: "<h1>Otro producto</h1><p>$ 1</p>" }] } };
+  const before = buildResearchState({ identities: [identity], searches, fetchBatches: [original] });
+  const after = buildResearchState({ identities: [identity], searches, fetchBatches: [original, supplemental] });
+  assert.deepEqual(after.report.products[0].references, before.report.products[0].references);
+  const alone = buildResearchState({ identities: [identity], searches, fetchBatches: [supplemental] });
+  assert.equal(alone.report.products[0].references[0].status, "fetch_pending");
+  assert.equal(alone.queue.length, 1);
+});
+
+const intelaidIdentity = { id: "nb-100674", name: "SOPORTE DE ESCRITORIO INTELAID 13/27 VESA 100X100 IT-DBGS", brand: null, identifiers: { manufacturerPartNumber: "IT-DBGS", barcodes: [{ value: "730143314558", valid: true }] }, variant: { identityLocks: { modelTokens: ["100X100", "IT-DBGS"] } } };
+const intelaidScope = (title, extra = "") => productScope(page([], { text: { children: [{ type: "heading", level: 1, text: title }, paragraph("VESA 100X100. ARS $ 110.689. En stock."), paragraph(extra)] } }));
+
+test("Intelaid: DBGS y DBSL permanecen distintos aun con tamaño VESA, MPN o GTIN compartido en descripción", () => {
+  const result = matchIdentity(intelaidIdentity, intelaidScope("Soporte de escritorio Intelaid 13/27 VESA 100x100 IT-DBSL", "MPN: IT-DBGS\n730143314558"));
+  assert.equal(result.matchExact, false);
+  assert.ok(result.conflicts.includes("manufacturerPartNumber:IT-DBSL"));
+  assert.equal(matchIdentity(intelaidIdentity, intelaidScope("Soporte de escritorio Intelaid 13/27 VESA 100x100 IT-DBGS")).matchExact, true);
+  assert.ok(matchIdentity(intelaidIdentity, intelaidScope("Soporte Intelaid IT-DBGS / IT-DBSL")).missing.includes("multiple_primary_manufacturer_models"));
+});
+
+test("VESA y resolución genéricos no identifican por sí solos un producto", () => {
+  for (const size of ["100X100", "400X400", "1920X1080", "VESA100X100"]) {
+    const generic = { ...intelaidIdentity, identifiers: {}, variant: { identityLocks: { modelTokens: [size] } } };
+    const result = matchIdentity(generic, intelaidScope("Soporte Intelaid " + size));
+    assert.equal(result.matchExact, false);
+    assert.ok(result.missing.includes("unique_product_identifier"));
+  }
+});
+
 const cpuIdentity = (name = "PROCESADOR AMD (AM5) RYZEN 9 7900 (S/COOLER)") => ({ id: "nb-118094", name, brand: name.includes("INTEL") ? "INTEL" : "AMD", identifiers: { barcodes: [{ value: "730143314558", valid: true }] }, variant: { identityLocks: { modelTokens: name.includes("INTEL") ? ["LGA1700", "I7"] : ["AM5"] } } });
 const cpuScope = title => productScope(page([], { text: { children: [{ type: "heading", level: 1, text: title }, paragraph("ARS $ 633.650"), paragraph("En stock. 730143314558")] } }));
 

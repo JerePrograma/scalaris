@@ -261,6 +261,7 @@ function isUniqueModelToken(value) {
   const token = fold(value);
   if (!/[A-Z].*\d|\d.*[A-Z]/.test(token)) return false;
   if (/^(?:LPDDR[2-9]X?|DDR[2-9]L?|GDDR[2-9]X?|(?:SO[- ]?)?DIMM|SDRAM|PCI(?:E)?\d(?:\.\d)?|USB\d(?:\.\d)?)$/.test(token)) return false;
+  if (/^(?:VESA)?\d+(?:[.,]\d+)?X\d+(?:[.,]\d+)?(?:X\d+(?:[.,]\d+)?)?$/.test(token)) return false;
   return !/^(?:\d+(?:[.,]\d+)?(?:[GMK]?BPS|G|W|A|V|GB|TB|M|CM|MM|LM|L|KG|MAH|MHZ|GHZ|OHM|DBI))$/.test(token);
 }
 
@@ -367,6 +368,15 @@ export function matchIdentity(identity, scope) {
   if (primaryBranch?.unconfirmed) missing.push("primary_manufacturer_part_number");
   const primarySuffix = mpn && (/[+]$|\s+(?:GEN\s*\d+|V\d+(?:\.\d+)?|R\d+(?:\.\d+)?|REV(?:ISION)?\.?\s*\d+(?:\.\d+)?|PLUS)$/.test(fold(mpn)));
   if (primarySuffix && !titleCodes.some(code => compactPartNumber(code) === compactPartNumber(mpn)) && !manufacturerCodes.some(code => code.matches)) missing.push("primary_manufacturer_part_number");
+  // Intelaid's short IT-* models are distinct even when they share VESA sizes.
+  // A complete conflicting primary code outranks identifiers elsewhere on a page.
+  if (/^IT-[A-Z0-9]+$/i.test(mpn || "") && /\bINTELAID?\b/.test(fold(identity.name))) {
+    const primaryModels = unique([...fold(title).matchAll(/\bIT[-_ ]+([A-Z0-9]+)(?=$|[^A-Z0-9])/g)].map(match => "IT-" + match[1]));
+    const matches = primaryModels.filter(code => compactPartNumber(code) === compactPartNumber(mpn));
+    const others = primaryModels.filter(code => compactPartNumber(code) !== compactPartNumber(mpn));
+    if (!matches.length) conflicts.push(...others.map(code => "manufacturerPartNumber:" + code));
+    else if (others.length) missing.push("multiple_primary_manufacturer_models");
+  }
   const uniqueModels = (locks.modelTokens || []).filter(isUniqueModelToken);
   const anchors = [...gtins, ...(locks.deviceCodes || []), ...uniqueModels];
   const matchedIdentifiers = unique(anchors.filter(value => hasToken(text, value)));
@@ -430,6 +440,9 @@ export function buildResearchState({ identities, searches, fetchBatches, now = D
   }
   const fetched = new Map();
   for (const batch of fetchBatches) {
+    // Additional HTML reads are retained for manual review. They neither replace
+    // structured observations nor resolve the normal JSON fetch queue by themselves.
+    if (batch.evidenceOnly === true) continue;
     const response = unwrapToolResponse(batch.response ?? batch.result ?? batch);
     const pages = response.results || [];
     const errors = response.errors || [];

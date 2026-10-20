@@ -1,11 +1,23 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-20T19:23:52.612Z",
+  "updatedAt": "2026-10-20T19:54:13.379Z",
   "summary": {
     "totalProducts": 7305,
-    "researchedProducts": 1133,
-    "productsWithVerifiedReferences": 0,
-    "verifiedReferences": 0
+    "researchedProducts": 1213,
+    "productsWithVerifiedReferences": 1,
+    "verifiedReferences": 1
   },
-  "products": []
+  "products": [
+    {
+      "id": "nb-119848",
+      "references": [
+        {
+          "url": "https://try.com.ar/soporte-portatil-plegable-apto-dispositivos-17-intelaid-5kg-it-bnf/",
+          "priceARS": 31359,
+          "currency": "ARS",
+          "observedAt": "2026-10-20T19:47:45.725Z"
+        }
+      ]
+    }
+  ]
 }
