@@ -264,6 +264,27 @@ function isUniqueModelToken(value) {
   return !/^(?:\d+(?:[.,]\d+)?(?:[GMK]?BPS|G|W|A|V|GB|TB|M|CM|MM|LM|L|KG|MAH|MHZ|GHZ|OHM|DBI))$/.test(token);
 }
 
+function processorModel(value) {
+  const text = fold(value);
+  const patterns = [
+    ["RYZEN", /\bRYZEN\s+([3579])\s+(\d{4,5}[A-Z0-9]*)(?:\s+(PLUS))?\b/],
+    ["CORE_ULTRA", /\bCORE\s+ULTRA\s*([3579])\s+(\d{3}[A-Z0-9]*)(?:\s+(PLUS))?\b/],
+    ["CORE_I", /\bCORE\s+I([3579])[\s-]+(\d{4,5}[A-Z0-9]*)\b/],
+  ];
+  for (const [family, pattern] of patterns) {
+    const match = text.match(pattern);
+    if (match) return `${family}:${match[1]}:${match[2]}${match[3] ? ":PLUS" : ""}`;
+  }
+  return null;
+}
+
+function processorCooler(value) {
+  const text = fold(value);
+  if (/\b(?:SIN|S\s*\/|NO\s+INCLUYE)\s*(?:EL\s+)?COOLER\b/.test(text)) return "without";
+  if (/\b(?:CON|C\s*\/|INCLUYE)\s*(?:EL\s+)?COOLER\b/.test(text)) return "with";
+  return "unspecified";
+}
+
 export function matchIdentity(identity, scope) {
   const title = scope.title || "";
   const text = scope.text || "";
@@ -273,6 +294,24 @@ export function matchIdentity(identity, scope) {
   const missing = [], conflicts = [], evidence = [];
   if (!scope.proven) missing.push("product_scope");
   if (identity.brand && !hasToken(title, identity.brand)) missing.push("brand_in_product_title");
+  // A shared socket (AM5/LGA1700) or family (Core i7) does not identify a CPU.
+  // Read its complete primary model, including numeric-only SKUs and suffixes.
+  const isProcessor = /\b(?:PROCESADOR|MICROPROCESADOR|MICRO|CPU)\b/.test(fold(identity.name));
+  const expectedProcessor = isProcessor && processorModel(identity.name);
+  if (expectedProcessor) {
+    const observedProcessor = processorModel(title);
+    if (!observedProcessor) missing.push("processor_model_in_primary_title");
+    else if (observedProcessor !== expectedProcessor) conflicts.push("processor_model:" + observedProcessor);
+    else evidence.push({ attribute: "processorModel", value: expectedProcessor });
+  }
+  if (isProcessor) {
+    const wantedCooler = processorCooler(identity.name), observedCooler = processorCooler(title);
+    if (wantedCooler !== "unspecified") {
+      if (observedCooler === "unspecified") missing.push("processor_cooler:" + wantedCooler);
+      else if (observedCooler !== wantedCooler) conflicts.push("processor_cooler:" + observedCooler);
+      else evidence.push({ attribute: "processorCooler", value: wantedCooler });
+    }
+  }
   for (const key of ["displayTechnologies", "qualityClaims", "networks", "modelTokens", "deviceCodes", "capacitiesAndElectricalRatings", "batteryFormats"]) {
     for (const value of locks[key] || []) {
       // An exact complete MPN also proves a literal component such as M.2;
@@ -341,7 +380,7 @@ export function matchIdentity(identity, scope) {
 
 export function fetchFailure(value, now = Date.now()) {
   const text = fold(typeof value === "string" ? value : JSON.stringify(value));
-  if (/\b(?:401|403)\b|CAPTCHA|ACCESS DENIED|FORBIDDEN|CLOUDFLARE CHALLENGE|VERIFY (?:YOU ARE|THAT YOU)|INICI[AÁ] SESION PARA VER/.test(text)) return { status: "blocked", retryable: false, retryAfterSeconds: null };
+  if (/\b(?:401|403)\b|BOT[_ -]?BLOCKED|CAPTCHA|ACCESS DENIED|FORBIDDEN|CLOUDFLARE CHALLENGE|VERIFY (?:YOU ARE|THAT YOU)|INICI[AÁ] SESION PARA VER/.test(text)) return { status: "blocked", retryable: false, retryAfterSeconds: null };
   if (/\b429\b|RATE LIMIT|TOO MANY REQUEST/.test(text)) {
     const field = metadataEntries(value).find(entry => /(?:^|:)(?:retry[-_]?after(?:[-_]?seconds)?|retryafterseconds)$/.test(entry.key));
     const retryValue = field?.value ?? text.match(/RETRY (?:IN|AFTER)\s*:?\s*(\d+)/)?.[1];

@@ -7,6 +7,49 @@ const identity = { id: "test-1", name: "MOUSE LOGITECH M170 NEGRO", brand: "LOGI
 const page = (blocks = [], extra = {}) => ({ url: "https://tienda.com.ar/productos/logitech-m170-negro", title: "Mouse Logitech M170 Negro", text: { type: "document", children: [{ type: "heading", level: 1, text: "Mouse Logitech M170 Negro" }, ...blocks] }, page_metadata: { other: { "product:price:currency": "ARS" } }, ...extra });
 const paragraph = text => ({ type: "paragraph", text });
 
+const cpuIdentity = (name = "PROCESADOR AMD (AM5) RYZEN 9 7900 (S/COOLER)") => ({ id: "nb-118094", name, brand: name.includes("INTEL") ? "INTEL" : "AMD", identifiers: { barcodes: [{ value: "730143314558", valid: true }] }, variant: { identityLocks: { modelTokens: name.includes("INTEL") ? ["LGA1700", "I7"] : ["AM5"] } } });
+const cpuScope = title => productScope(page([], { text: { children: [{ type: "heading", level: 1, text: title }, paragraph("ARS $ 633.650"), paragraph("En stock. 730143314558")] } }));
+
+test("CPU: cooler incluido no coincide con el 7900 sin cooler aunque comparta socket y GTIN", () => {
+  const mismatch = matchIdentity(cpuIdentity(), cpuScope("Procesador AMD Ryzen 9 7900 AM5 Con Cooler"));
+  assert.equal(mismatch.matchExact, false);
+  assert.ok(mismatch.conflicts.includes("processor_cooler:with"));
+  for (const phrase of ["Sin Cooler", "S/COOLER", "No incluye cooler"]) assert.equal(matchIdentity(cpuIdentity(), cpuScope("Procesador AMD Ryzen 9 7900 AM5 " + phrase)).matchExact, true);
+  assert.ok(matchIdentity(cpuIdentity(), cpuScope("Procesador AMD Ryzen 9 7900 AM5")).missing.includes("processor_cooler:without"));
+  assert.equal(matchIdentity(cpuIdentity("PROCESADOR AMD (AM5) RYZEN 9 7900 C/COOLER"), cpuScope("Procesador AMD Ryzen 9 7900 AM5 Sin Cooler")).matchExact, false);
+});
+
+test("CPU: modelo numérico completo y sufijo no se prueban sólo por AM5 o Core i7", () => {
+  for (const observed of ["Ryzen 9 7950", "Ryzen 9 7900X", "Ryzen 7 7900"]) assert.ok(matchIdentity(cpuIdentity(), cpuScope(`Procesador AMD ${observed} AM5 Sin Cooler`)).conflicts.some(value => value.startsWith("processor_model:")));
+  assert.ok(matchIdentity(cpuIdentity(), cpuScope("Procesador AMD AM5 Sin Cooler")).missing.includes("processor_model_in_primary_title"));
+  const intel = cpuIdentity("PROCESADOR INTEL (LGA1700) CORE I7 12700");
+  assert.equal(matchIdentity(intel, cpuScope("Procesador Intel Core i7-12700 LGA1700")).matchExact, true);
+  assert.equal(matchIdentity(intel, cpuScope("Procesador Intel Core i7 12700F LGA1700")).matchExact, false);
+  assert.equal(matchIdentity(intel, cpuScope("Procesador Intel Core i7 LGA1700")).matchExact, false);
+});
+
+test("CPU: Core Ultra Plus es parte del modelo y una ficha sin Plus queda en conflicto", () => {
+  const ultra = { ...cpuIdentity("PROCESADOR INTEL (LGA1851) CORE ULTRA 5 250K PLUS"), variant: { identityLocks: {} } };
+  assert.equal(matchIdentity(ultra, cpuScope("Procesador Intel Core Ultra 5 250K Plus LGA1851")).matchExact, true);
+  assert.equal(matchIdentity(ultra, cpuScope("Procesador Intel Core Ultra 5 250K LGA1851")).matchExact, false);
+});
+
+test("CPU: la condición del cooler también se comprueba para Pentium", () => {
+  const pentium = { ...cpuIdentity("PROCESADOR INTEL PENTIUM DUAL CORE G4400 (SIN COOLER)"), variant: { identityLocks: { modelTokens: ["G4400"] } } };
+  assert.equal(matchIdentity(pentium, cpuScope("Procesador Intel Pentium G4400 Sin Cooler")).matchExact, true);
+  const mismatch = matchIdentity(pentium, cpuScope("Procesador Intel Pentium G4400 Con Cooler"));
+  assert.equal(mismatch.matchExact, false);
+  assert.ok(mismatch.conflicts.includes("processor_cooler:with"));
+});
+
+test("wrapper bot_blocked es bloqueo definitivo, sin reintento ni precio", () => {
+  assert.deepEqual(fetchFailure({ error: "bot_blocked" }), { status: "blocked", retryable: false, retryAfterSeconds: null });
+  const result = normalizeReference(identity, { url: "https://tienda.com.ar/producto/m170", error: "bot_blocked" }, "2026-10-20T19:15:00Z");
+  assert.equal(result.status, "blocked");
+  assert.equal(result.retryable, false);
+  assert.equal(result.verifiedProductPrice, false);
+});
+
 test("URLs públicas y parámetros de variante se conservan; rastreo se elimina", () => {
   assert.equal(canonicalUrl("https://tienda.com.ar/producto?a=1&variant=2&utm_source=x&srsltid=z#info"), "https://tienda.com.ar/producto?a=1&variant=2");
   for (const url of ["http://127.0.0.1/x", "file:///c:/x", "https://user:password@tienda.com.ar/p"]) assert.equal(canonicalUrl(url), null);
