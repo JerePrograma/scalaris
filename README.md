@@ -2,7 +2,9 @@
 
 Web estática de Scalaris: soporte informático, desarrollo de software, galería de proyectos y tienda contra pedido.
 
-Sitio público: https://scalaris.pages.dev
+Dominio principal previsto: https://scalaris.com.ar (activación DNS pendiente).
+
+Dirección de Pages durante la migración: https://scalaris.pages.dev
 
 ## Archivos
 
@@ -49,9 +51,20 @@ El control de publicación verifica recursos de todas las páginas, sintaxis, ca
 - Directorio de salida: `public`.
 - Directorio raíz: raíz del repositorio.
 - Despliegues automáticos de producción habilitados.
-- No requiere secretos, variables de entorno ni dominio personalizado.
+- No requiere secretos ni variables de entorno.
+- Dominio principal: `scalaris.com.ar`; `www.scalaris.com.ar` debe redirigir a la misma ruta del dominio principal, conservando los parámetros.
 
 La integración Git de Pages debe estar configurada desde la cuenta Cloudflare. Cada push a `main` publicará los archivos de `public/` después de la verificación.
+
+### Dominio propio
+
+La zona `scalaris.com.ar` debe estar en la misma cuenta Cloudflare que el proyecto Pages `scalaris`. En NIC Argentina se cargan los dos servidores de nombres exactos asignados por Cloudflare mediante **Agregar una nueva delegación**, se guarda cada uno y se confirma con **Ejecutar Cambios**. Para servidores externos de Cloudflare no se usa Autodelegar ni se cargan IPv4/IPv6.
+
+Además de la delegación, el dominio debe asociarse en **Pages → scalaris → Custom domains**. Crear sólo un CNAME no completa esa asociación. La redirección de `www` se configura en Cloudflare, preservando ruta y parámetros; los redirects por dominio no se configuran en un archivo Pages `_redirects`. La dirección `scalaris.pages.dev` se mantiene operativa hasta comprobar DNS, certificado HTTPS, portada, consulta, proyectos y tienda en el dominio nuevo. Después se puede activar su redirección permanente mediante Bulk Redirects.
+
+Las cuatro páginas publican canonical y OpenGraph con el dominio principal. `public/robots.txt` referencia `https://scalaris.com.ar/sitemap.xml`, que enumera las cuatro rutas públicas. Los enlaces internos y recursos siguen siendo relativos para conservar la vista local.
+
+Referencias: [dominios de Pages](https://developers.cloudflare.com/pages/configuration/custom-domains/), [redirecciones de Pages](https://developers.cloudflare.com/pages/configuration/redirects/) y [delegación en NIC Argentina](https://www.punto.gov.ar/ayuda/instructivos/delegacion-de-dominios).
 
 Contacto: [WhatsApp](https://wa.me/5491172789289), 1172789289.
 
