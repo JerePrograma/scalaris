@@ -37,7 +37,7 @@ test("sólo seeds estrictos, vigentes, por transferencia y elegibles se publican
 });
 
 test("rechaza URL de acción, credenciales/sesión, privada, proveedor, marketplace o categoría", () => {
-  const invalid = ["javascript:alert(1)", "https://user:password@comercio.com.ar/producto/x", "http://127.0.0.1/producto/x", "https://comercio.com.ar/checkout/", "https://comercio.com.ar/producto/x?add-to-cart=123", "https://comercio.com.ar/cart/?action=buy", "https://www.nb.com.ar/producto/x", "https://articulo.mercadolibre.com.ar/MLA-123", "https://comercio.com.ar/categoria-producto/equipos"];
+  const invalid = ["javascript:alert(1)", "https://user:password@comercio.com.ar/producto/x", "http://127.0.0.1/producto/x", "https://comercio.com.ar/checkout/", "https://comercio.com.ar/producto/x?add-to-cart=123", "https://comercio.com.ar/cart/?action=buy", "https://comercio.com.ar/back_in_stock/123?variant_id=123", "https://www.nb.com.ar/producto/x", "https://articulo.mercadolibre.com.ar/MLA-123", "https://comercio.com.ar/categoria-producto/equipos"];
   for (const key of ["token", "access_token", "api_key", "Password", "auth", "auth-token", "session_id", "PHPSESSID", "X-Amz-Signature", "client_secret", "sid", "code"]) invalid.push(`https://comercio.com.ar/producto/x?${key}=PRIVATE_SENTINEL`);
   invalid.push("https://comercio.com.ar/producto/x?%2574oken=PRIVATE_SENTINEL", "https://comercio.com.ar/producto/x;%73essionid=PRIVATE_SENTINEL", "https://comercio.com.ar/producto/x%3Bjsessionid%3DPRIVATE_SENTINEL", "https://comercio.com.ar/producto/x?%2525252574oken=PRIVATE_SENTINEL");
   for (const url of invalid) {

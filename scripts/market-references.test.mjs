@@ -162,6 +162,14 @@ test("URLs públicas y parámetros de variante se conservan; rastreo se elimina"
 
 const purchaseUrls = ["https://pccompra.com.ar/outlet-memoria-generica-ddr-1gb/?add-to-cart=26772", "https://pccompra.com.ar/outlet-auricular-gamer-razer-tiamat-2-2-v2-analog/?add-to-cart=26680"];
 
+test("formularios de aviso de stock no son fichas elegibles ni evidencia pública", () => {
+  for (const url of ["https://www.zonamovilexpress.com/back_in_stock/19716590?variant_id=19716590", "https://tienda.com.ar/back-in-stock/123", "https://tienda.com.ar/%2562ack%255fin%255fstock/123", "https://tienda.com.ar/producto/x?back_in_stock=1"]) {
+    assert.equal(classifyCandidateUrl(url).reason, "purchase_cart_or_mutation_action_url");
+    assert.equal(selectCandidates({ results: [{ url }] }).accepted.length, 0);
+    assert.equal(normalizeReference(identity, page([paragraph("ARS $ 5.000\n1 disponibles")], { url })).status, "unsafe_action_url");
+  }
+});
+
 test("regresión PCCompra: rechaza ambos add-to-cart íntegros sin convertirlos a fichas limpias", () => {
   for (const url of purchaseUrls) {
     const classified = classifyCandidateUrl(url);

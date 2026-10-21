@@ -35,7 +35,7 @@ function decodedUrlPart(value) {
 
 function hasPurchaseOrMutationAction(url) {
   const compact = value => decodedUrlPart(value).replace(/[^a-z0-9]/g, "");
-  const actions = new Set(["addtocart", "addtobasket", "buynow", "removeitem", "removefromcart", "deleteitem", "emptycart", "clearcart", "updatecart", "wcajax", "action", "cart", "checkout"]);
+  const actions = new Set(["addtocart", "addtobasket", "buynow", "removeitem", "removefromcart", "deleteitem", "emptycart", "clearcart", "updatecart", "wcajax", "action", "cart", "checkout", "backinstock"]);
   for (const key of url.searchParams.keys()) if (actions.has(compact(decodedUrlPart(key).split("[")[0]))) return true;
   const endpoints = new Set([...actions, "basket", "carrito", "finalizarcompra", "orderpay", "orderreceived", "cartphp", "checkoutphp"]);
   return decodedUrlPart(url.pathname).split(/[\\/]+/).some(part => endpoints.has(compact(part)));
