@@ -7,6 +7,41 @@ const identity = { id: "test-1", name: "MOUSE LOGITECH M170 NEGRO", brand: "LOGI
 const page = (blocks = [], extra = {}) => ({ url: "https://tienda.com.ar/productos/logitech-m170-negro", title: "Mouse Logitech M170 Negro", text: { type: "document", children: [{ type: "heading", level: 1, text: "Mouse Logitech M170 Negro" }, ...blocks] }, page_metadata: { other: { "product:price:currency": "ARS" } }, ...extra });
 const paragraph = text => ({ type: "paragraph", text });
 
+const repairIdentity = name => ({ id: "repair", name, identifiers: { barcodes: [{ value: "730143314558", valid: true }] }, variant: { isRepairPart: true, identityLocks: {} } });
+const repairScope = (title, description = "") => productScope(page([], { text: { children: [{ type: "heading", level: 1, text: title }, paragraph("730143314558\nARS $ 5.000\n1 disponibles\n" + description)] } }));
+
+test("repuestos Motorola distinguen Power, Lite, Plus y generación aun con GTIN compartido", () => {
+  for (const [wanted, observed] of [["G9 Plus", "G9 Power"], ["G8 Power", "G8 Power Lite"], ["G8 Power", "G8 Comun"], ["G8 Plus", "G8 Power"], ["E6 Plus", "E7 Plus"], ["Edge 70", "Edge 70 Fusion"]]) {
+    const source = repairIdentity("Placa de Carga Motorola Moto " + wanted);
+    const result = matchIdentity(source, repairScope("Placa de Carga Motorola " + observed, source.name));
+    assert.equal(result.matchExact, false);
+    assert.ok(result.conflicts.some(value => value.startsWith("repair_device_model:")));
+  }
+  const source = repairIdentity("Placa de Carga Motorola Moto G8 Power Lite");
+  assert.equal(matchIdentity(source, repairScope(source.name)).matchExact, true);
+});
+
+test("repuestos conservan compatibilidades explícitas y no confunden One Vision con Fusion", () => {
+  const source = repairIdentity("Placa de Carga Motorola Moto E14 G04");
+  assert.equal(matchIdentity(source, repairScope("Placa de Carga Motorola G04 / G04S / E14")).matchExact, true);
+  assert.equal(matchIdentity(source, repairScope("Placa de Carga Motorola G04")).matchExact, false);
+  const vision = repairIdentity("Placa de Carga Motorola Moto One Vision");
+  assert.equal(matchIdentity(vision, repairScope("Placa de Carga Motorola One Fusion", vision.name)).matchExact, false);
+  assert.equal(matchIdentity(vision, repairScope("Placa de Carga Motorola One Vision / One Action")).matchExact, true);
+  assert.ok(matchIdentity(vision, repairScope("Placa de Carga Motorola", vision.name)).missing.includes("repair_device_model_in_primary_title"));
+});
+
+test("repuestos iPhone exigen generación completa y Pro/Max/Plus en la ficha primaria", () => {
+  for (const [wanted, observed] of [["16 Pro", "13 Pro"], ["15 Pro", "15 Pro Max"], ["15", "15 Pro"], ["12 Pro Max", "12 / 12 Pro"], ["6S Plus", "6 Plus"]]) {
+    const source = repairIdentity("Bateria iPhone " + wanted + " Foxconn");
+    const result = matchIdentity(source, repairScope("Bateria iPhone " + observed + " Foxconn", source.name));
+    assert.equal(result.matchExact, false);
+    assert.ok(result.conflicts.some(value => value.startsWith("repair_device_model:")));
+  }
+  const source = repairIdentity("Bateria iPhone 15 Pro Max Foxconn");
+  assert.equal(matchIdentity(source, repairScope(source.name)).matchExact, true);
+});
+
 test("teclado TKL no hereda una ficha Mini aunque comparta versión, frecuencia, MPN o GTIN", () => {
   const keyboard = { id: "nb-123830", name: "TECLADO GAMER RAZER HUNTSMAN V3 HE MAGNETIC SWITCH 8KHz TKL", identifiers: { manufacturerPartNumber: "RZ03-05920200-R3U1", barcodes: [{ value: "730143314558", valid: true }] }, variant: { identityLocks: { modelTokens: ["V3", "8KHZ"] } } };
   const keyboardPage = title => page([], { text: { children: [{ type: "heading", level: 1, text: title }, paragraph("MPN: RZ03-05920200-R3U1\n730143314558\nARS $ 189.211\n5 disponibles")] } });

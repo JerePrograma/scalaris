@@ -90,6 +90,8 @@ No usar snippets como precios. Las fichas requieren coincidencia visible de prod
 
 En teclados, comprobar el formato Mini/TKL/SF y el idioma explícitos del encabezado. Una ficha US no confirma una variante española; una frecuencia como 8 kHz o una versión como V3 no identifica por sí sola un modelo. Un MPN o GTIN repetido en otra parte de la página no anula esas contradicciones. Los estados parciales siguen requiriendo revisión manual antes de alimentar precios públicos.
 
+En repuestos, comprobar el dispositivo completo en el encabezado: G8 Power, G8 Power Lite y G8 Plus son variantes diferentes, al igual que One Vision/Fusion y las generaciones y terminaciones Pro/Max/Plus de iPhone. Las compatibilidades múltiples deben estar expresas; no completarlas con códigos o GTIN de otra sección. La calidad, capacidad, marco y funciones del repuesto siguen requiriendo su propia revisión.
+
 Si el JSON omite el importe final visible, puede leerse la misma ficha de los IDs de la tanda con Fetch gratuito en `format: "html"`. Guardar la respuesta íntegra en `fetch-batches` con `evidenceOnly: true`: es evidencia adicional para revisión, no reemplaza el JSON ni cierra por sí sola una lectura pendiente. Antes de aceptar un seed, leer el encabezado y modelo completos, total ARS, rótulo de transferencia y stock del producto. Separar impuestos excluidos, cuotas, importes anteriores o ambiguos y relacionados. Documentar archivo y fecha de lectura, fragmentos y comprobaciones en la revisión privada; nunca convertir automáticamente metadatos o estados parciales en seeds estrictos. La condición comercial se revisa por ID; no se equiparan publicaciones usadas/outlet con productos ordinarios.
 
 ## Cerrar la corrida y actualizar los paneles

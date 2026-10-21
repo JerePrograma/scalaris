@@ -278,6 +278,17 @@ function keyboardLanguage(value) {
   return spanish === english ? null : spanish ? "ES" : "US";
 }
 
+function repairDeviceModels(value, family) {
+  const text = fold(value);
+  if (family === "IPHONE") return unique([...text.matchAll(/(?:\bIPHONE\s+|\/\s*)(\d{1,2}S?)(?:\s+(PRO(?:\s+MAX)?|PLUS|MINI|AIR))?\b/g)].map(match => `IPHONE:${match[1]}:${match[2] || "BASE"}`));
+  if (family === "MOTOROLA") return unique([
+    ...[...text.matchAll(/\b([GE]\d+[A-Z]?)(?:\s+(POWER(?:\s+LITE)?|PLUS|PLAY|PRO|ULTRA|FUSION|LITE))?\b/g)].map(match => `MOTOROLA:${match[1]}:${match[2] || "BASE"}`),
+    ...[...text.matchAll(/\bEDGE\s+(\d+)(?:\s+(PRO|ULTRA|FUSION|LITE|NEO|PLUS))?\b/g)].map(match => `EDGE:${match[1]}:${match[2] || "BASE"}`),
+    ...[...text.matchAll(/\bONE\s+(VISION|FUSION|ACTION|MACRO)\b/g)].map(match => `ONE:${match[1]}`),
+  ]);
+  return [];
+}
+
 function processorModel(value) {
   const text = fold(value);
   const patterns = [
@@ -308,6 +319,18 @@ export function matchIdentity(identity, scope) {
   const missing = [], conflicts = [], evidence = [];
   if (!scope.proven) missing.push("product_scope");
   if (identity.brand && !hasToken(title, identity.brand)) missing.push("brand_in_product_title");
+  // Repair parts must name the complete device in the primary title. Shared
+  // G8/G9 prefixes, device codes or barcodes elsewhere cannot prove Power/Lite
+  // variants, nor a different iPhone generation or Pro/Max model.
+  if (identity.variant?.isRepairPart) {
+    const family = /\bIPHONE\b/.test(fold(identity.name)) ? "IPHONE" : /\b(?:MOTOROLA|MOTO)\b/.test(fold(identity.name)) ? "MOTOROLA" : null;
+    const wanted = repairDeviceModels(identity.name, family), observed = repairDeviceModels(title, family);
+    if (wanted.length) {
+      if (!observed.length) missing.push("repair_device_model_in_primary_title");
+      else if (wanted.some(model => !observed.includes(model))) conflicts.push("repair_device_model:" + observed.join("/"));
+      else evidence.push({ attribute: "repairDeviceModels", value: wanted.join("/") });
+    }
+  }
   // A polling rate or version does not establish a keyboard's physical variant.
   // Explicit primary Mini/TKL/SF and language claims outrank shared identifiers.
   const isKeyboard = /\b(?:TECLADO|KEYBOARD)\b/.test(fold(identity.name));
