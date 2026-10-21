@@ -98,6 +98,33 @@ los orígenes `https://scalaris.com.ar` y `https://jereprograma.github.io`.
 La compilación de Pages sigue usando `node scripts/check.mjs` y `public`; Cloudflare
 también compila la carpeta `functions/`. No requiere secretos adicionales.
 
+## Tu Comida
+
+La ruta `https://scalaris.com.ar/tu-comida/` utiliza la misma integración de
+Cloudflare Pages Functions que E-MEDICAPP, con publicaciones y datos independientes:
+
+- `/tu-comida/` y `/tu-comida/editar/` sirven los archivos estáticos del Worker
+  `tu-comida-web`, compilados con la base pública `/tu-comida/`.
+- `/tu-comida/gestion/` sirve la aplicación de gestión de `tu-comida-management`.
+- `/tu-comida/backend/` conecta con `tu-comida-api`, conservando sus rutas
+  `/api/...` y `/admin/login`.
+- `/tu-comida/editor-api/` conecta con el servicio `tu-comida-catalog-editor`.
+
+`functions/tu-comida/[[path]].js` sólo utiliza esos cuatro orígenes fijos. Los
+recursos y las redirecciones permanecen bajo la ruta pública. El proxy no envía
+cookies de Scalaris; únicamente reenvía la sesión Bearer de la aplicación a sus
+dos APIs. `public/_routes.json` conserva E-MEDICAPP y limita la nueva función a
+`/tu-comida` y sus subrutas. El resto de las páginas continúa siendo estático.
+
+`wrangler.jsonc` conserva el proyecto Pages `scalaris`, su salida `public` y
+habilita `global_fetch_strictly_public`, necesario para consultar las publicaciones
+Workers de la misma cuenta a través de sus direcciones públicas. La comprobación
+previa al despliegue sigue siendo `node scripts/check.mjs`.
+
+El catálogo y los servicios de Tu Comida se publican en Cloudflare; no requieren
+que esta computadora permanezca encendida. La integración no modifica los datos
+ni el funcionamiento de E-MEDICAPP, la tienda o el backoffice local de Scalaris.
+
 ## Backoffice local y formulario guiado
 
 El backoffice Java/Spring Boot + React/TypeScript + PostgreSQL está separado en `backoffice/`. Ver [uso, configuración local/LAN, cálculos, archivos y respaldos](backoffice/README.md). No se publica en Cloudflare Pages, no tiene login y no se conecta al sitio público.

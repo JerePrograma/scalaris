@@ -1,0 +1,8 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "scalaris",
+  "account_id": "de1ec344dec57f522c0d70dc8616f4a5",
+  "pages_build_output_dir": "./public",
+  "compatibility_date": "2026-10-21",
+  "compatibility_flags": ["global_fetch_strictly_public"]
+}

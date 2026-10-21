@@ -1,5 +1,5 @@
 {
   "version": 1,
-  "include": ["/e-medicapp", "/e-medicapp/*"],
+  "include": ["/e-medicapp", "/e-medicapp/*", "/tu-comida", "/tu-comida/*"],
   "exclude": []
 }

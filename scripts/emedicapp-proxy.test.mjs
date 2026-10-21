@@ -50,6 +50,7 @@ test("E-MEDICAPP limits methods and handles publication failures", async (t) => 
   assert.equal((await onRequest({ request: new Request("https://scalaris.com.ar/tienda/") })).status, 404);
   assert.equal((await onRequest({ request: new Request("https://scalaris.com.ar/e-medicapp/") })).status, 502);
   const routes = JSON.parse(readFileSync(new URL("../public/_routes.json", import.meta.url)));
-  assert.deepEqual(routes.include, ["/e-medicapp", "/e-medicapp/*"]);
+  assert.ok(routes.include.includes("/e-medicapp"));
+  assert.ok(routes.include.includes("/e-medicapp/*"));
   assert.deepEqual(routes.exclude, []);
 });
