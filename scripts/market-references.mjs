@@ -262,7 +262,20 @@ function isUniqueModelToken(value) {
   if (!/[A-Z].*\d|\d.*[A-Z]/.test(token)) return false;
   if (/^(?:LPDDR[2-9]X?|DDR[2-9]L?|GDDR[2-9]X?|(?:SO[- ]?)?DIMM|SDRAM|PCI(?:E)?\d(?:\.\d)?|USB\d(?:\.\d)?)$/.test(token)) return false;
   if (/^(?:VESA)?\d+(?:[.,]\d+)?X\d+(?:[.,]\d+)?(?:X\d+(?:[.,]\d+)?)?$/.test(token)) return false;
-  return !/^(?:\d+(?:[.,]\d+)?(?:[GMK]?BPS|G|W|A|V|GB|TB|M|CM|MM|LM|L|KG|MAH|MHZ|GHZ|OHM|DBI))$/.test(token);
+  return !/^(?:\d+(?:[.,]\d+)?(?:[GMK]?BPS|G|W|A|V|GB|TB|M|CM|MM|LM|L|KG|MAH|[GMK]?HZ|OHM|DBI))$/.test(token);
+}
+
+function keyboardFormFactor(value) {
+  const text = fold(value);
+  const formats = ["TKL", "MINI", "SF"].filter(format => hasToken(text, format));
+  return formats.length === 1 ? formats[0] : null;
+}
+
+function keyboardLanguage(value) {
+  const text = fold(value);
+  const spanish = /\b(?:ES|ESP|ESPANOL|SPANISH)\b/.test(text);
+  const english = /\b(?:US(?:[- ]EN)?|INGLES|ENGLISH)\b/.test(text);
+  return spanish === english ? null : spanish ? "ES" : "US";
 }
 
 function processorModel(value) {
@@ -295,6 +308,18 @@ export function matchIdentity(identity, scope) {
   const missing = [], conflicts = [], evidence = [];
   if (!scope.proven) missing.push("product_scope");
   if (identity.brand && !hasToken(title, identity.brand)) missing.push("brand_in_product_title");
+  // A polling rate or version does not establish a keyboard's physical variant.
+  // Explicit primary Mini/TKL/SF and language claims outrank shared identifiers.
+  const isKeyboard = /\b(?:TECLADO|KEYBOARD)\b/.test(fold(identity.name));
+  if (isKeyboard) {
+    for (const [attribute, read] of [["keyboard_form_factor", keyboardFormFactor], ["keyboard_language", keyboardLanguage]]) {
+      const wanted = read(identity.name), observed = read(title);
+      if (!wanted) continue;
+      if (!observed) missing.push(attribute + ":" + wanted);
+      else if (observed !== wanted) conflicts.push(attribute + ":" + observed);
+      else evidence.push({ attribute, value: wanted });
+    }
+  }
   // A shared socket (AM5/LGA1700) or family (Core i7) does not identify a CPU.
   // Read its complete primary model, including numeric-only SKUs and suffixes.
   const isProcessor = /\b(?:PROCESADOR|MICROPROCESADOR|MICRO|CPU)\b/.test(fold(identity.name));
@@ -377,7 +402,7 @@ export function matchIdentity(identity, scope) {
     if (!matches.length) conflicts.push(...others.map(code => "manufacturerPartNumber:" + code));
     else if (others.length) missing.push("multiple_primary_manufacturer_models");
   }
-  const uniqueModels = (locks.modelTokens || []).filter(isUniqueModelToken);
+  const uniqueModels = (locks.modelTokens || []).filter(value => isUniqueModelToken(value) && !(isKeyboard && /^V\d+(?:\.\d+)?$/i.test(value)));
   const anchors = [...gtins, ...(locks.deviceCodes || []), ...uniqueModels];
   const matchedIdentifiers = unique(anchors.filter(value => hasToken(text, value)));
   if (visibleExactMpn && !matchedIdentifiers.includes(mpn)) matchedIdentifiers.push(mpn);

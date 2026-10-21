@@ -88,6 +88,8 @@ Guardar la respuesta completa de cada llamada, incluso errores, en `.private/mar
 
 No usar snippets como precios. Las fichas requieren coincidencia visible de producto y atributos, importe ARS, condiciones y disponibilidad. El parser separa cuotas, impuestos excluidos, relacionados y envío; si falta un dato, conserva el estado incompleto. Los bloqueos de Mercado Libre permanecen registrados sin elusión. Las lecturas compartidas se reutilizan por URL, pero se evalúan por separado para cada ID.
 
+En teclados, comprobar el formato Mini/TKL/SF y el idioma explícitos del encabezado. Una ficha US no confirma una variante española; una frecuencia como 8 kHz o una versión como V3 no identifica por sí sola un modelo. Un MPN o GTIN repetido en otra parte de la página no anula esas contradicciones. Los estados parciales siguen requiriendo revisión manual antes de alimentar precios públicos.
+
 Si el JSON omite el importe final visible, puede leerse la misma ficha de los IDs de la tanda con Fetch gratuito en `format: "html"`. Guardar la respuesta íntegra en `fetch-batches` con `evidenceOnly: true`: es evidencia adicional para revisión, no reemplaza el JSON ni cierra por sí sola una lectura pendiente. Antes de aceptar un seed, leer el encabezado y modelo completos, total ARS, rótulo de transferencia y stock del producto. Separar impuestos excluidos, cuotas, importes anteriores o ambiguos y relacionados. Documentar archivo y fecha de lectura, fragmentos y comprobaciones en la revisión privada; nunca convertir automáticamente metadatos o estados parciales en seeds estrictos. La condición comercial se revisa por ID; no se equiparan publicaciones usadas/outlet con productos ordinarios.
 
 ## Cerrar la corrida y actualizar los paneles

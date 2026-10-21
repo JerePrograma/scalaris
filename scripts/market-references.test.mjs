@@ -7,6 +7,40 @@ const identity = { id: "test-1", name: "MOUSE LOGITECH M170 NEGRO", brand: "LOGI
 const page = (blocks = [], extra = {}) => ({ url: "https://tienda.com.ar/productos/logitech-m170-negro", title: "Mouse Logitech M170 Negro", text: { type: "document", children: [{ type: "heading", level: 1, text: "Mouse Logitech M170 Negro" }, ...blocks] }, page_metadata: { other: { "product:price:currency": "ARS" } }, ...extra });
 const paragraph = text => ({ type: "paragraph", text });
 
+test("teclado TKL no hereda una ficha Mini aunque comparta versión, frecuencia, MPN o GTIN", () => {
+  const keyboard = { id: "nb-123830", name: "TECLADO GAMER RAZER HUNTSMAN V3 HE MAGNETIC SWITCH 8KHz TKL", identifiers: { manufacturerPartNumber: "RZ03-05920200-R3U1", barcodes: [{ value: "730143314558", valid: true }] }, variant: { identityLocks: { modelTokens: ["V3", "8KHZ"] } } };
+  const keyboardPage = title => page([], { text: { children: [{ type: "heading", level: 1, text: title }, paragraph("MPN: RZ03-05920200-R3U1\n730143314558\nARS $ 189.211\n5 disponibles")] } });
+  const wrong = normalizeReference(keyboard, keyboardPage("TECLADO RAZER HUNTSMAN V3 HE 8KHz MINI"));
+  assert.equal(wrong.matchEvidence.matchExact, false);
+  assert.ok(wrong.matchEvidence.conflicts.includes("keyboard_form_factor:MINI"));
+  assert.equal(wrong.verifiedProductPrice, false);
+  assert.equal(matchIdentity(keyboard, productScope(keyboardPage("TECLADO RAZER HUNTSMAN V3 HE 8KHz TKL"))).matchExact, true);
+  const sf = { ...keyboard, name: "TECLADO DUCKY ONE 3 SF", variant: { identityLocks: {} } };
+  assert.ok(matchIdentity(sf, productScope(keyboardPage("TECLADO DUCKY ONE 3 TKL"))).conflicts.includes("keyboard_form_factor:TKL"));
+});
+
+test("idioma explícito de teclado distingue español de US sin inferirlo de un código", () => {
+  const keyboard = { id: "nb-121587", name: "TECLADO TRUST KEYRA ERGO MULTI WIRELESS ES", identifiers: { manufacturerPartNumber: "25704" }, variant: { identityLocks: {} } };
+  const scope = title => productScope(page([], { text: { children: [{ type: "heading", level: 1, text: title }, paragraph("MPN: 25704")] } }));
+  const wrong = matchIdentity(keyboard, scope("TECLADO TRUST KEYRA ERGO MULTI WIRELESS US"));
+  assert.ok(wrong.conflicts.includes("keyboard_language:US"));
+  assert.equal(wrong.matchExact, false);
+  for (const language of ["ES", "Español", "SPANISH"]) assert.equal(matchIdentity(keyboard, scope("TECLADO TRUST KEYRA ERGO " + language)).matchExact, true);
+  for (const language of ["US", "US-EN", "INGLÉS", "ENGLISH"]) assert.equal(matchIdentity({ ...keyboard, name: "TECLADO TRUST KEYRA US" }, scope("TECLADO TRUST KEYRA " + language)).matchExact, true);
+  assert.ok(matchIdentity(keyboard, scope("TECLADO TRUST KEYRA ERGO")).missing.includes("keyboard_language:ES"));
+});
+
+test("frecuencia y versión genéricas no identifican un teclado sin modelo único", () => {
+  for (const rating of ["120HZ", "8KHZ", "1000HZ"]) {
+    const keyboard = { id: "generic", name: "TECLADO GAMER V3 " + rating, identifiers: {}, variant: { identityLocks: { modelTokens: ["V3", rating] } } };
+    const scope = productScope(page([], { text: { children: [{ type: "heading", level: 1, text: keyboard.name }] } }));
+    assert.ok(matchIdentity(keyboard, scope).missing.includes("unique_product_identifier"));
+    const named = { ...keyboard, name: "TECLADO TRUST GXT868 US " + rating, variant: { identityLocks: { modelTokens: ["GXT868", rating] } } };
+    const namedScope = productScope(page([], { text: { children: [{ type: "heading", level: 1, text: named.name }] } }));
+    assert.equal(matchIdentity(named, namedScope).matchExact, true);
+  }
+});
+
 test("lectura HTML de revisión no reemplaza hechos JSON ni cierra una lectura pendiente", () => {
   const url = page().url;
   const searches = [{ records: [{ id: identity.id, status: "indexed", results: [{ url }] }] }];

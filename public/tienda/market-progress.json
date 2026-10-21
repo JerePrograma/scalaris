@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-21T00:15:39.134Z",
+  "updatedAt": "2026-10-21T00:38:45.893Z",
   "summary": {
     "totalProducts": 7305,
-    "researchedProducts": 1293,
-    "productsWithVerifiedReferences": 2,
-    "verifiedReferences": 2
+    "researchedProducts": 1373,
+    "productsWithVerifiedReferences": 6,
+    "verifiedReferences": 6
   },
   "products": [
     {
@@ -27,6 +27,50 @@
           "priceARS": 53939,
           "currency": "ARS",
           "observedAt": "2026-10-21T00:11:30.870Z"
+        }
+      ]
+    },
+    {
+      "id": "nb-118551",
+      "references": [
+        {
+          "url": "https://try.com.ar/switch-kit-ducky-ttc-golden-pink/",
+          "priceARS": 53939,
+          "currency": "ARS",
+          "observedAt": "2026-10-21T00:34:24.694Z"
+        }
+      ]
+    },
+    {
+      "id": "nb-118556",
+      "references": [
+        {
+          "url": "https://try.com.ar/switch-kit-ducky-gateron-g-pro-silver/",
+          "priceARS": 53939,
+          "currency": "ARS",
+          "observedAt": "2026-10-21T00:34:24.694Z"
+        }
+      ]
+    },
+    {
+      "id": "nb-120447",
+      "references": [
+        {
+          "url": "https://katech.com.ar/producto/teclado-trust-torix-wireless-mechanical-us-gxt868/",
+          "priceARS": 94290,
+          "currency": "ARS",
+          "observedAt": "2026-10-21T00:34:24.694Z"
+        }
+      ]
+    },
+    {
+      "id": "nb-118559",
+      "references": [
+        {
+          "url": "https://try.com.ar/switch-kit-ducky-gateron-g-pro-white/",
+          "priceARS": 53939,
+          "currency": "ARS",
+          "observedAt": "2026-10-21T00:34:24.694Z"
         }
       ]
     }
