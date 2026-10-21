@@ -1,5 +1,7 @@
 # Corridas de referencias de precios
 
+**Estado al 21/10/2026: búsquedas finalizadas por pedido del usuario.** Se eliminó el heartbeat y `search-run-config.json` quedó deshabilitado. No retomar consultas ni crear un seguimiento nuevo sin otra solicitud explícita. La tienda usa el patrón final de recargos guardado en la configuración privada; las instrucciones siguientes quedan como procedimiento histórico/manual.
+
 El usuario autorizó mostrar los precios calculados ahora, completar las referencias públicas por lotes y publicar lo terminado en `main`, también al cerrar las siguientes tandas. El heartbeat nativo existente es `completar-referencias-de-precios-de-scalaris`, en `America/Buenos_Aires`; conservar su programación guardada. No crear otra automatización ni dejar un proceso permanente entre corridas.
 
 La configuración operativa está en `.private/market-research/search-run-config.json`. Cada corrida retoma checkpoints, realiza un lote acotado y guarda el progreso. No necesita una nueva autorización para continuar dentro de ese alcance. Si el usuario desactiva la configuración o pausa el heartbeat, respetar ese estado.

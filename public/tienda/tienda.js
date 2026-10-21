@@ -76,8 +76,6 @@ function refreshDetailReferences() {
 }
 
 function renderMarketProgress() {
-  const region = $("market-progress");
-  region.hidden = true;
   marketReferences = new Map();
   const summary = marketProgress?.summary;
   const updated = Date.parse(marketProgress?.updatedAt);
@@ -92,11 +90,6 @@ function renderMarketProgress() {
     }
     if (unique.size) marketReferences.set(product.id, [...unique.values()]);
   }
-  $("market-progress-count").textContent = `${summary.researchedProducts.toLocaleString("es-AR")} de ${products.length.toLocaleString("es-AR")} productos relevados`;
-  $("market-progress-bar").max = products.length;
-  $("market-progress-bar").value = summary.researchedProducts;
-  $("market-progress-date").textContent = "Actualizado el " + new Date(updated).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" });
-  region.hidden = false;
   refreshDetailReferences();
 }
 

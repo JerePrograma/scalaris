@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createPricingPolicy, normalizeMarketEvidence } from "./build-store-prices.mjs";
+import { createEvidencePolicy, normalizeMarketEvidence } from "./build-store-prices.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const positive = (value) => typeof value === "number" && Number.isFinite(value) && value > 0;
@@ -33,7 +33,7 @@ function compactReference(reference, origin, strict = false) {
 export function buildMarketDashboardData({ catalog, proposal, marketReferences = {}, searchBatches = [], rawResearch = [], normalizedSeeds = [], policy, generatedAt = new Date().toISOString() }) {
   if (!Array.isArray(catalog?.products) || !Array.isArray(proposal?.products)) throw new TypeError("Se necesitan catálogo y propuesta privados.");
   if (!Number.isFinite(Date.parse(generatedAt))) throw new TypeError("Fecha de generación inválida.");
-  const evaluationPolicy = { ...(policy || createPricingPolicy(generatedAt)), generatedAt };
+  const evaluationPolicy = { ...(policy || createEvidencePolicy(generatedAt)), generatedAt };
   const quotes = new Map(proposal.products.map((product) => [product.id, product]));
   if (quotes.size !== proposal.products.length) throw new Error("La propuesta tiene IDs duplicados.");
   const market = new Map((marketReferences.products || []).map((product) => [product.id, product]));

@@ -5,81 +5,42 @@ import { calculatePrice } from "./pricing.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const DAY_MS = 24 * 60 * 60 * 1000;
-const MARGINS = {
-  "Notebooks y computadoras": 0.20,
-  "Componentes de PC": 0.20,
-  "Almacenamiento y memorias": 0.20,
-  "Monitores y pantallas": 0.20,
-  "Celulares y tablets": 0.20,
-  "Componentes electrónicos": 0.20,
-  "Accesorios": 0.25,
-  "Periféricos": 0.25,
-  "Audio": 0.25,
-  "Redes y conectividad": 0.25,
-  "Impresión": 0.25,
-  "Hogar y seguridad": 0.25,
-  "Consolas y accesorios": 0.25,
-  "Accesorios para celulares y tablets": 0.25,
-  "Repuestos de celulares": 0.30,
-  "Repuestos de tablets": 0.30,
-  "Repuestos de consolas": 0.30,
-  "Herramientas e insumos": 0.30,
-  "Accesorios y repuestos de notebooks": 0.30,
-  "Repuestos y accesorios": 0.30,
-  "Repuestos y accesorios de periféricos": 0.30,
-  "Outlet": 0.25,
-};
 const fold = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
 const finitePositive = (value) => typeof value === "number" && Number.isFinite(value) && value > 0;
 
-export function createPricingPolicy(generatedAt = new Date().toISOString()) {
+export function createEvidencePolicy(generatedAt = new Date().toISOString()) {
   const at = new Date(generatedAt);
   if (!Number.isFinite(at.getTime())) throw new TypeError("generatedAt debe ser una fecha válida.");
+  return { generatedAt: at.toISOString(), proposal: { maximumEvidenceAgeHours: 24 } };
+}
+
+/** Business rates live only in the ignored, local pricing settings. */
+export function createPricingPolicy(generatedAt = new Date().toISOString(), settings) {
+  const { generatedAt: at } = createEvidencePolicy(generatedAt);
+  if (!settings?.proposal || !settings.confirmedChoices) throw new TypeError("Falta la configuración privada explícita de precios.");
   return {
     version: 1,
-    status: "proposed",
-    generatedAt: at.toISOString(),
-    priceValidUntil: new Date(at.getTime() + 7 * DAY_MS).toISOString(),
-    confirmedChoices: { payment: "transferencia", customerShipping: "separate", supplierInboundShipping: "free" },
-    proposal: {
-      categoryTargetMarginRates: { ...MARGINS },
-      sourceCategoryTargetMarginRates: { "PROCESADORES OUTLET": 0.20 },
-      fallbackTargetMarginRate: 0.25,
-      reserveRate: 0.03,
-      paymentFeeRate: 0,
-      inboundShippingInProductPriceARS: 0,
-      outboundShippingInProductPriceARS: 0,
-      packagingAllowanceInProductPriceARS: 0,
-      packagingTreatment: "Provisión presupuestada dentro de la reserva. El costo real no fue informado ni se presume igual a cero.",
-      minimumProfitPerUnitARS: 0,
-      minimumProfitPerOrderMetricARS: 3000,
-      proposedMinimumOrderARS: 15000,
-      minimumOrderEnforced: false,
-      minimumOrderNote: "Propuesta para evaluar el ticket; no es una garantía de ganancia neta ni un mínimo impuesto al cliente.",
-      roundingByCostARS: [
-        { fromInclusive: 0, toExclusive: 10000, step: 50 },
-        { fromInclusive: 10000, toInclusive: 100000, step: 100 },
-        { above: 100000, step: 500 },
-      ],
-      marketTargetFactor: 0.98,
-      maximumEvidenceAgeHours: 24,
-      supplierMaxAgeDays: 7,
-      supplierFreshnessNote: "No se renueva un costo por regenerar precios. La validez individual queda limitada por la fecha del costo o confirmación; fecha de fuente tiene prioridad sobre reimportación.",
-      marketReferenceSource: "normalized-seeds.json only; raw references remain candidates",
-      marketNote: "Mediana de precios exactos comparables por transferencia, sin envío. Nunca se reduce el precio por debajo del piso rentable.",
-      availabilityNote: "A pedido: orderable permite solicitar el producto; no afirma stock propio ni disponibilidad inmediata. Confirmar disponibilidad y plazo antes de cobrar.",
-      profitNote: "Contribución después del costo, comisión y reserva presupuestados. No es ganancia contable neta de todos los gastos del negocio.",
-    },
+    status: settings.status,
+    generatedAt: at,
+    priceValidUntil: new Date(Date.parse(at) + settings.proposal.supplierMaxAgeDays * DAY_MS).toISOString(),
+    confirmedChoices: structuredClone(settings.confirmedChoices),
+    proposal: structuredClone(settings.proposal),
   };
 }
 
 function validatePolicy(policy) {
   const p = policy?.proposal;
-  if (!p || policy.status !== "proposed") throw new TypeError("Se necesita una política explícita con status proposed.");
-  for (const rate of [p.reserveRate, p.paymentFeeRate, p.fallbackTargetMarginRate, ...Object.values(p.categoryTargetMarginRates || {}), ...Object.values(p.sourceCategoryTargetMarginRates || {})]) {
+  if (!p || !["proposed", "active"].includes(policy.status)) throw new TypeError("Se necesita una política explícita propuesta o activa.");
+  const markupMode = p.pricingMethod === "cost-markup";
+  const marginRates = markupMode ? [] : [p.fallbackTargetMarginRate, ...Object.values(p.categoryTargetMarginRates || {}), ...Object.values(p.sourceCategoryTargetMarginRates || {})];
+  for (const rate of [p.reserveRate, p.paymentFeeRate, ...marginRates]) {
     if (typeof rate !== "number" || !Number.isFinite(rate) || rate < 0 || rate >= 1) throw new TypeError("Las tasas deben ser proporciones numéricas en [0,1), no porcentajes enteros ni texto.");
   }
-  if (p.reserveRate + p.paymentFeeRate + Math.max(p.fallbackTargetMarginRate, ...Object.values(p.categoryTargetMarginRates || {}), ...Object.values(p.sourceCategoryTargetMarginRates || {})) >= 1) throw new RangeError("Comisión, reserva y margen deben sumar menos que uno.");
+  if (p.reserveRate + p.paymentFeeRate + Math.max(0, ...marginRates) >= 1) throw new RangeError("Comisión, reserva y margen deben sumar menos que uno.");
+  if (markupMode) for (const rate of [p.fallbackMarkupRate, ...Object.values(p.categoryMarkupRates || {}), ...Object.values(p.sourceCategoryMarkupRates || {})]) {
+    if (typeof rate !== "number" || !Number.isFinite(rate) || rate < 0) throw new TypeError("El recargo debe ser una proporción numérica no negativa.");
+    if ((1 + rate) * (1 - p.reserveRate - p.paymentFeeRate) <= 1) throw new RangeError("El recargo no cubre comisión y reserva.");
+  }
   if (!finitePositive(p.marketTargetFactor) || p.marketTargetFactor > 1) throw new TypeError("marketTargetFactor debe estar en (0,1].");
   if (!finitePositive(p.maximumEvidenceAgeHours)) throw new TypeError("maximumEvidenceAgeHours debe ser positivo.");
   if (!finitePositive(p.supplierMaxAgeDays)) throw new TypeError("supplierMaxAgeDays debe ser positivo.");
@@ -154,10 +115,15 @@ export function proposeStorePrices(catalog, normalizedSeeds = [], policy = creat
   const products = catalog.products.map((product) => {
     if (typeof product.id !== "string" || !product.id || ids.has(product.id)) throw new Error(`ID inválido o duplicado: ${product.id}`);
     ids.add(product.id);
-    const sourceMargin = settings.sourceCategoryTargetMarginRates[fold(product.sourceCategory)];
-    const categoryMargin = settings.categoryTargetMarginRates[product.category];
-    const targetMarginRate = sourceMargin ?? categoryMargin ?? settings.fallbackTargetMarginRate;
-    const marginBasis = sourceMargin !== undefined ? "source-category" : categoryMargin !== undefined ? "category" : "fallback";
+    const markupMode = settings.pricingMethod === "cost-markup";
+    const categoryRates = markupMode ? settings.categoryMarkupRates : settings.categoryTargetMarginRates;
+    const sourceRates = markupMode ? settings.sourceCategoryMarkupRates : settings.sourceCategoryTargetMarginRates;
+    const sourceRate = sourceRates?.[fold(product.sourceCategory)];
+    const categoryRate = categoryRates?.[product.category];
+    const rate = sourceRate ?? categoryRate ?? (markupMode ? settings.fallbackMarkupRate : settings.fallbackTargetMarginRate);
+    const markupRate = markupMode ? rate : null;
+    const targetMarginRate = markupMode ? 1 - settings.reserveRate - settings.paymentFeeRate - 1 / (1 + markupRate) : rate;
+    const marginBasis = sourceRate !== undefined ? "source-category" : categoryRate !== undefined ? "category" : "fallback";
     const unitCost = product.cost?.gross;
     const blockReasons = [];
     if (product.cost?.currency !== "ARS") blockReasons.push("cost-not-final-ars");
@@ -171,7 +137,9 @@ export function proposeStorePrices(catalog, normalizedSeeds = [], policy = creat
     if (freshness.blockReason) blockReasons.push(freshness.blockReason);
     const roundTo = unitCost < 10000 ? 50 : unitCost <= 100000 ? 100 : 500;
     const assumptions = {
-      policyStatus: "proposed",
+      policyStatus: policy.status,
+      pricingMethod: markupMode ? "cost-markup" : "target-margin",
+      minimumMarkupRate: markupRate,
       targetMarginRate,
       marginBasis,
       reserveRate: settings.reserveRate,
@@ -218,10 +186,14 @@ export function proposeStorePrices(catalog, normalizedSeeds = [], policy = creat
       fixedFees: 0,
       paymentFeeRate: settings.paymentFeeRate,
       reserveRate: settings.reserveRate,
-      targetMarginRate,
+      targetMarginRate: markupMode ? 0 : targetMarginRate,
       minimumProfit: settings.minimumProfitPerUnitARS,
       roundTo,
     });
+    if (markupMode) {
+      const markupFloor = Math.ceil(quote.orderCostArs * (1 + markupRate) / roundTo - 1e-10) * roundTo;
+      quote.unitPrice = Math.max(quote.unitPrice, markupFloor);
+    }
     entry.proposedPrice = quote.unitPrice;
     const uniqueEvidence = new Map();
     for (const seed of seedIndex.get(product.id) || []) {
@@ -236,7 +208,9 @@ export function proposeStorePrices(catalog, normalizedSeeds = [], policy = creat
       entry.marketMedianARS = medianPriceARS;
       entry.marketTargetARS = marketTargetARS;
       entry.marketSources = evidence;
-      if (marketTargetARS >= quote.unitPrice) {
+      if (settings.marketAdjustmentEnabled === false) {
+        entry.marketStatus = "reference-only-cost-policy";
+      } else if (marketTargetARS >= quote.unitPrice) {
         entry.proposedPrice = Math.ceil(marketTargetARS / roundTo) * roundTo;
         entry.priceBasis = "market-comparable";
         entry.marketStatus = "comparable-target-above-profitable-floor";
@@ -256,7 +230,7 @@ export function proposeStorePrices(catalog, normalizedSeeds = [], policy = creat
   });
   return {
     version: 1,
-    status: "proposed-not-automatically-published",
+    status: policy.status === "active" ? "calculated-from-active-policy" : "proposed-not-automatically-published",
     generatedAt: policy.generatedAt,
     priceValidUntil: policy.priceValidUntil,
     policyStatus: policy.status,
@@ -282,22 +256,27 @@ export function sanitizePublicCatalog(publicCatalog, proposal) {
   const proposed = new Map(proposal.products.map((product) => [product.id, product]));
   const publicIds = new Set(publicCatalog.products.map((product) => product.id));
   if (proposed.size !== proposal.products.length || publicIds.size !== publicCatalog.products.length || proposed.size !== publicIds.size || [...publicIds].some((id) => !proposed.has(id))) throw new Error("Los IDs públicos y privados no coinciden exactamente; no se aplicó nada.");
+  let changed = false;
+  const products = publicCatalog.products.map((product) => {
+    const source = proposed.get(product.id);
+    const result = Object.fromEntries(PUBLIC_PRODUCT_KEYS.filter((key) => key in product).map((key) => [key, product[key]]));
+    result.price = source.orderable ? source.proposedPrice : null;
+    if (source.orderable && !finitePositive(result.price)) throw new Error(`Precio público inválido para ${product.id}`);
+    result.currency = "ARS";
+    result.orderable = source.orderable;
+    result.priceBasis = source.priceBasis;
+    result.priceValidUntil = source.priceValidUntil;
+    const unchanged = ["price", "currency", "orderable", "priceBasis", "priceValidUntil"].every(key => result[key] === product[key]);
+    result.priceUpdatedAt = unchanged && Number.isFinite(Date.parse(product.priceUpdatedAt)) ? product.priceUpdatedAt : source.priceUpdatedAt;
+    if (!unchanged) changed = true;
+    if (!Number.isFinite(Date.parse(result.priceUpdatedAt)) || !Number.isFinite(Date.parse(result.priceValidUntil))) throw new Error(`Fechas públicas inválidas para ${product.id}`);
+    return result;
+  });
+  const dateParts = Object.fromEntries(new Intl.DateTimeFormat("en", { timeZone: "America/Argentina/Buenos_Aires", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(proposal.generatedAt)).map(part => [part.type, part.value]));
   return {
     version: publicCatalog.version || 1,
-    updatedAt: proposal.generatedAt.slice(0, 10),
-    products: publicCatalog.products.map((product) => {
-      const source = proposed.get(product.id);
-      const result = Object.fromEntries(PUBLIC_PRODUCT_KEYS.filter((key) => key in product).map((key) => [key, product[key]]));
-      result.price = source.orderable ? source.proposedPrice : null;
-      if (source.orderable && !finitePositive(result.price)) throw new Error(`Precio público inválido para ${product.id}`);
-      result.currency = "ARS";
-      result.orderable = source.orderable;
-      result.priceBasis = source.priceBasis;
-      result.priceUpdatedAt = source.priceUpdatedAt;
-      result.priceValidUntil = source.priceValidUntil;
-      if (!Number.isFinite(Date.parse(result.priceUpdatedAt)) || !Number.isFinite(Date.parse(result.priceValidUntil))) throw new Error(`Fechas públicas inválidas para ${product.id}`);
-      return result;
-    }),
+    updatedAt: !changed && publicCatalog.updatedAt ? publicCatalog.updatedAt : `${dateParts.year}-${dateParts.month}-${dateParts.day}`,
+    products,
   };
 }
 
@@ -308,7 +287,8 @@ export function buildStorePriceFiles({ generatedAt, applyPublic = false } = {}) 
   const seedPath = resolve(folder, "normalized-seeds.json");
   const seedData = existsSync(seedPath) ? readJson(seedPath) : [];
   const seeds = Array.isArray(seedData) ? seedData : seedData.references;
-  const policy = createPricingPolicy(generatedAt);
+  const settings = readJson(resolve(folder, "pricing-settings.json"));
+  const policy = createPricingPolicy(generatedAt, settings);
   const proposal = proposeStorePrices(catalog, seeds, policy);
   mkdirSync(folder, { recursive: true });
   const policyPath = resolve(folder, "pricing-policy.json");

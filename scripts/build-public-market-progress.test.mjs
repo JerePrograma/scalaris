@@ -105,7 +105,6 @@ async function storefront() {
   const nodes = new Map([...html.matchAll(/\bid="([^"]+)"/g)].map(match => [match[1], new Node()]));
   for (const id of ["product-dialog", "selection-dialog"]) { const close = new Node("button"); close.className = "close-dialog"; nodes.get(id).append(close); }
   nodes.get("sort").value = "featured";
-  nodes.get("market-progress").hidden = true;
   const document = new Node();
   document.getElementById = id => nodes.get(id);
   document.createElement = tag => new Node(tag);
@@ -138,7 +137,6 @@ test("un error del avance no bloquea catálogo, precios ni carrito; petición in
   app.rejectProgress(new Error("offline"));
   await app.flush();
   assert.equal(app.requests.find(row => row.url.includes("market-progress")).options.cache, "no-store");
-  assert.equal(app.nodes.get("market-progress").hidden, true);
   assert.equal(app.nodes.get("product-grid").children.length, 1);
   app.nodes.get("product-grid").querySelector(".add-product").emit("click");
   assert.equal(app.nodes.get("selection-count").textContent, "1");
@@ -159,7 +157,6 @@ test("detalle abierto recibe referencias vigentes sin reemplazar el pedido; venc
     { currency: "ARS", priceARS: 200, observedAt, url: "https://credencial.com.ar/producto/x%3Bjsessionid%3DSECRET" },
   ] }] }) });
   await app.flush();
-  assert.equal(app.nodes.get("market-progress").hidden, false);
   assert.equal(detail.querySelector(".add-product"), add);
   assert.equal(detail.querySelector(".market-references").querySelectorAll("a").length, 1);
   assert.equal(detail.querySelector(".market-references").querySelector("a").href, "https://comercio.com.ar/producto/modelo");

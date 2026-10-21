@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createPricingPolicy, normalizeMarketEvidence } from "./build-store-prices.mjs";
+import { createEvidencePolicy, normalizeMarketEvidence } from "./build-store-prices.mjs";
 import { classifyCandidateUrl } from "./market-references.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
@@ -38,7 +38,7 @@ export function publicReferenceUrl(value) {
 
 /** Only explicit public aggregates and strictly accepted, safe references leave here. */
 export function buildPublicMarketProgress(publicCatalog, research, seedData = [], generatedAt = new Date().toISOString()) {
-  const policy = createPricingPolicy(generatedAt);
+  const policy = createEvidencePolicy(generatedAt);
   const now = Date.parse(policy.generatedAt);
   if (!Array.isArray(publicCatalog?.products)) throw new TypeError("Catálogo público inválido.");
   const ids = publicCatalog.products.map(product => product?.id);

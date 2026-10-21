@@ -1,54 +1,36 @@
 # Estrategia de venta Scalaris
 
-## Modalidad elegida
+El 21/10/2026 el usuario pidió cerrar las búsquedas y fijar el patrón de recargos con los productos ya cargados. Se eliminó el heartbeat y se deshabilitó la investigación. Los checkpoints conservan evidencia histórica, con cobertura parcial del mercado.
 
-Vender contra pedido con precio visible por transferencia y envío al cliente cotizado aparte por código postal. El proveedor entrega gratis a Scalaris. Confirmar disponibilidad y plazo antes del pago; no anunciar stock propio ni entrega inmediata. El cliente puede armar un pedido completo con total, sin preguntar el precio de cada artículo.
+La tienda vende contra pedido, por transferencia y con envío al cliente cotizado aparte. El flete del proveedor a Scalaris es gratuito según el acuerdo confirmado. Antes de cobrar, confirmar disponibilidad y plazo.
 
-## Precio inicial
+## Regla activa
 
-Usar el costo final ARS, sin volver a agregar IVA, y estos objetivos de contribución sobre la venta:
-
-| Familia | Margen objetivo | Reserva adicional |
-| --- | ---: | ---: |
-| Equipos, componentes, almacenamiento, monitores, celulares y tablets | 20% | 3% |
-| Accesorios, periféricos, audio, redes, impresión, hogar y consolas | 25% | 3% |
-| Repuestos y herramientas | 30% | 3% |
-
-Las categorías exactas y excepciones están en `build-store-prices.mjs`. La reserva presupuesta variaciones, embalaje y otros gastos todavía no medidos. Estas tasas son una decisión comercial inicial, editable; no garantizan utilidad neta contable. No se cobra comisión de tarjeta porque el precio publicado corresponde a transferencia.
+Los porcentajes, categorías, excepciones, reserva y condiciones comerciales se guardan exclusivamente en `.private/market-research/pricing-settings.json`, ignorado por Git. El generador exige esa configuración explícita y no inventa valores si falta.
 
 ```text
-precio = costo final / (1 - margen objetivo - reserva)
+costo base = costo final ARS + gastos explícitos absorbidos
+precio mínimo = costo base × (1 + recargo de la categoría)
+precio publicado = redondear hacia arriba respetando el piso de costos y reserva
+contribución = venta - costo base - comisión - reserva presupuestada
 ```
 
-Redondear hacia arriba: múltiplos de $50 para costos menores a $10.000, $100 hasta $100.000 y $500 por encima. No sumar una ganancia fija de $3.000 a cada unidad: distorsionaría productos baratos. Evaluar ese importe por pedido y agrupar accesorios pequeños en kits. El ticket sugerido de $15.000 es una métrica interna; no se impuso un mínimo de compra.
+No agregar IVA nuevamente al costo final confirmado. El recargo se calcula sobre el costo; la contribución se mide sobre la venta. La reserva es un presupuesto operativo: no equivale a impuestos calculados ni a utilidad contable neta.
 
-La primera aplicación habilita 7.292 precios y bloquea 13 referencias: 12 nombres contienen “VENCIDO” y un kit NB carece de costo actual. La vigencia máxima es de siete días desde el costo de origen. Regenerar archivos no vuelve vigente una lista vieja; al vencer se deshabilita el pedido hasta actualizarla.
+Para pedidos pequeños, evaluar el aporte total y agrupar productos. El ticket orientativo permanece como recomendación interna; no se impuso un mínimo de compra ni una ganancia fija a cada unidad.
 
-## Comparación argentina por cada referencia
+Las referencias anteriores no alteran el patrón final. Sus importes sólo aparecen mientras sean estrictos y vigentes. Snippets y búsquedas nunca habilitan un precio de mercado.
 
-El objetivo es cubrir los 7.305 IDs, conservando las variantes y la procedencia. Se buscan tiendas argentinas y Mercado Libre por lotes. Para comparar se necesita modelo exacto, capacidad, color, calidad, marco y 4G/5G cuando corresponda; un título parecido o un GTIN compartido no basta.
-
-Guardar URL, fecha, importe ARS, pago, disponibilidad y envío conocido/desconocido. Los snippets sólo descubren candidatos. Leer la ficha y registrar discrepancias entre precio visible y metadatos, productos agotados y accesos bloqueados. Un precio del producto sin envío confirmado no equivale a un total entregado.
-
-Mercado Libre rechaza en este entorno las consultas anónimas directas; los resultados indexados siguen siendo candidatos. No se saltean bloqueos ni se presentan precios viejos como actuales. El seguimiento registra excepciones para que “relevado” no signifique que apareció cualquier enlace.
-
-El reporte `market-references.json` distingue búsquedas y evidencia de producto. Para influir en precios se exige además evidencia exacta y reciente de pago por transferencia en `normalized-seeds.json`. Cuando existe, se propone 2% por debajo de la mediana comparable sólo si permite conservar el piso rentable. No ajustar automáticamente el sitio desde una búsqueda ni usar precios tachados o promesas de ahorro sin evidencia.
-
-## Dónde competir
-
-Priorizar productos con margen y referencias comprobadas. Competir también con selección, compatibilidad, asistencia y pedidos agrupados. Si el piso rentable supera al minorista, revisar proveedor o dejar ese artículo fuera de promociones; vender más con margen insuficiente no resuelve el problema.
-
-Ejemplo observado el 20/10/2026: una ficha del Logitech MK345 en [Gaming City](https://www.gamingcity.com.ar/teclados-teclado-y-mouse-logitech-mk345-inalambrico--det--1792) muestra $49.399, frente al precio Scalaris inicial de $68.600. Es una señal para revisar el proveedor y las condiciones, no una referencia totalmente comparable de pago y entrega. El costo mayorista se conserva únicamente en el panel privado. No afirmar que todo el catálogo ya es competitivo.
-
-## Operación y seguimiento
+## Actualización manual
 
 ```powershell
 node scripts/build-store-prices.mjs
 node scripts/build-store-prices.mjs --apply-public
 node scripts/build-market-dashboard.mjs
-node scripts/check.mjs
+node scripts/build-public-market-progress.mjs
+npm run check
 ```
 
-El primer comando genera una propuesta privada; `--apply-public` hace una copia de respaldo y actualiza exclusivamente campos públicos de venta. La investigación programada no publica cambios de precio ni hace push.
+El primer comando calcula la propuesta privada para revisar. `--apply-public` respalda el catálogo y copia sólo campos públicos de venta. Costos, recargos, márgenes y reportes permanecen fuera del hosting y del repositorio.
 
-Abrir `.private/market-research/research-dashboard.html` con doble clic para ver costos, precios propios, fuentes y cobertura. Es privado y no se sube al hosting. Ver [validación técnica](MERCADO.md) y [continuación por lotes](market-research-runbook.md). Los costos, políticas internas, fuentes mayoristas y reportes requieren respaldo local: Git y Cloudflare sólo reciben el catálogo público permitido.
+La validez de cada precio depende de la fecha del costo fuente. Regenerar el catálogo no renueva esa fecha. Recalcular sin cambiar el precio o sus condiciones conserva su fecha anterior. Productos vencidos o con costo pendiente siguen bloqueados. Para actualizar la política, editar la configuración privada, revisar todos los productos y publicar los cambios autorizados.

@@ -1,9 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createPricingPolicy, normalizeMarketEvidence, proposeStorePrices, sanitizePublicCatalog, PUBLIC_PRODUCT_KEYS } from "./build-store-prices.mjs";
+import { createPricingPolicy, createEvidencePolicy, normalizeMarketEvidence, proposeStorePrices, sanitizePublicCatalog, PUBLIC_PRODUCT_KEYS } from "./build-store-prices.mjs";
 
 const at = "2026-10-20T15:00:00.000Z";
-const policy = () => createPricingPolicy(at);
+// Fictional deterministic settings; production business rates remain private.
+const fixtureSettings = { status: "proposed", confirmedChoices: { payment: "transferencia", customerShipping: "separate", supplierInboundShipping: "free" }, proposal: {
+  categoryTargetMarginRates: { "Notebooks y computadoras": 0.2, "Periféricos": 0.25, "Herramientas e insumos": 0.3, "Almacenamiento y memorias": 0.2, "Repuestos de celulares": 0.3 },
+  sourceCategoryTargetMarginRates: {}, fallbackTargetMarginRate: 0.25, reserveRate: 0.03, paymentFeeRate: 0,
+  inboundShippingInProductPriceARS: 0, outboundShippingInProductPriceARS: 0, packagingAllowanceInProductPriceARS: 0,
+  minimumProfitPerUnitARS: 0, minimumProfitPerOrderMetricARS: 3000, proposedMinimumOrderARS: 15000, minimumOrderEnforced: false,
+  marketTargetFactor: 0.98, maximumEvidenceAgeHours: 24, supplierMaxAgeDays: 7,
+} };
+const policy = (date = at) => createPricingPolicy(date, fixtureSettings);
 const product = (overrides = {}) => ({ id: "test-1", supplier: "nb", name: "Producto de prueba", category: "Periféricos", cost: { currency: "ARS", gross: 10000, vatIncluded: true }, ...overrides });
 const catalog = (...products) => ({ version: 1, importedAt: "2026-10-20", products });
 const seed = (overrides = {}) => ({ id: "test-1", matchExact: true, variantVerified: true, paymentComparable: true, priceVerifiedOnPage: true, available: true, currency: "ARS", priceARS: 20000, status: "verified", payment: "transferencia", observedAt: "2026-10-20T14:00:00Z", url: "https://retailer.example/product", ...overrides });
@@ -120,7 +128,7 @@ test("reconstruir precios no renueva costos viejos y vigencia se limita a la fue
   assert.equal(p.orderable, true);
   assert.equal(p.priceUpdatedAt, at);
   assert.equal(p.priceValidUntil, "2026-10-22T03:00:00.000Z");
-  const stale = proposeStorePrices(original, [], createPricingPolicy("2026-10-23T15:00:00Z")).products[0];
+  const stale = proposeStorePrices(original, [], policy("2026-10-23T15:00:00Z")).products[0];
   assert.equal(stale.orderable, false);
   assert.equal(stale.proposedPrice, null);
   assert.ok(stale.blockReasons.includes("supplier-cost-stale"));
@@ -152,4 +160,47 @@ test("aplicación pública es whitelist, nunca exporta costos y oculta precios b
   assert.ok(!JSON.stringify(result).includes("gross"));
   assert.ok(!JSON.stringify(result).includes("profitContribution"));
   assert.throws(() => sanitizePublicCatalog({ products: [] }, proposal), /IDs/);
+});
+
+const markupPolicy = (extra = {}) => createPricingPolicy(at, { ...fixtureSettings, status: "active", proposal: { ...fixtureSettings.proposal,
+  pricingMethod: "cost-markup", categoryMarkupRates: { "Demo": 0.25 }, sourceCategoryMarkupRates: { "DEMO OVERRIDE": 0.6 }, fallbackMarkupRate: 0.45,
+  marketAdjustmentEnabled: false, ...extra,
+} });
+
+test("recargo se aplica al costo final, reserva se descuenta de la venta y no duplica IVA", () => {
+  const p = proposeStorePrices(catalog(product({ category: "Demo" })), [], markupPolicy()).products[0];
+  assert.equal(p.proposedPrice, 12500);
+  assert.equal(p.assumptions.minimumMarkupRate, 0.25);
+  assert.equal(p.reserveAllowanceARS, 375);
+  assert.equal(p.profitContribution, 2125);
+  assert.equal(p.assumptions.policyStatus, "active");
+  assert.equal(proposeStorePrices(catalog(product({ sourceCategory: "demo override" })), [], markupPolicy()).products[0].proposedPrice, 16000);
+  assert.equal(proposeStorePrices(catalog(product({ category: "unknown" })), [], markupPolicy()).products[0].proposedPrice, 14500);
+  assert.equal(proposeStorePrices(catalog(product()), [], markupPolicy({ fallbackMarkupRate: 1.1 })).products[0].proposedPrice, 21000);
+});
+
+test("recargo insuficiente para comisión/reserva, texto o tasa inválida no publica precios", () => {
+  for (const value of ["0.4", NaN, -0.1, 0.01]) assert.throws(() => proposeStorePrices(catalog(product()), [], markupPolicy({ fallbackMarkupRate: value })));
+  assert.throws(() => createPricingPolicy(at), /configuración privada/);
+  assert.throws(() => proposeStorePrices(catalog(product()), [], createEvidencePolicy(at)), /política explícita/);
+});
+
+test("referencias previas son informativas cuando la regla de costo quedó fijada", () => {
+  const p = proposeStorePrices(catalog(product({ category: "Demo" })), [seed({ priceARS: 50000 })], markupPolicy()).products[0];
+  assert.equal(p.proposedPrice, 12500);
+  assert.equal(p.marketEvidenceCount, 1);
+  assert.equal(p.priceBasis, "cost-policy");
+  assert.equal(p.marketStatus, "reference-only-cost-policy");
+});
+
+test("recalcular sin cambios conserva fechas y no renueva la fuente; cambios usan fecha argentina", () => {
+  const initialProposal = proposeStorePrices(catalog(product()), [], policy());
+  const original = sanitizePublicCatalog({ version: 1, products: [{ id: "test-1", name: "Demo" }] }, initialProposal);
+  const recalculated = proposeStorePrices(catalog(product()), [], policy("2026-10-21T02:00:00Z"));
+  assert.deepEqual(sanitizePublicCatalog(original, recalculated), original);
+  const changed = proposeStorePrices(catalog(product({ cost: { currency: "ARS", gross: 11000, vatIncluded: true } })), [], policy("2026-10-21T02:00:00Z"));
+  const result = sanitizePublicCatalog(original, changed);
+  assert.equal(result.updatedAt, "2026-10-20");
+  assert.equal(result.products[0].priceUpdatedAt, "2026-10-21T02:00:00.000Z");
+  assert.equal(result.products[0].priceValidUntil, original.products[0].priceValidUntil);
 });
