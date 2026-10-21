@@ -100,6 +100,11 @@ for (const file of publicFiles.filter(file => file.endsWith(".js"))) execFileSyn
 for (const file of ["proyectos/index.html", "tienda/index.html"]) {
   if (!existsSync(resolve(root, file))) errors.push(`Página inexistente: ${file}`);
 }
+const gallery = readFileSync(resolve(root, "proyectos/index.html"), "utf8");
+for (const destination of ["https://scalaris.com.ar/tu-comida/", "https://scalaris.com.ar/e-medicapp/"]) {
+  if (!gallery.includes(`href="${destination}"`)) errors.push(`Proyecto sin acceso público en la galería: ${destination}`);
+}
+if (/burger[\s-]*house/i.test(gallery)) errors.push("La galería conserva el proyecto reemplazado de Burger House");
 const catalog = JSON.parse(readFileSync(resolve(root, "tienda/catalog.json"), "utf8"));
 if (catalog.version !== 1 || !Array.isArray(catalog.products) || !catalog.products.length) errors.push("Catálogo público inválido");
 const productIds = new Set();

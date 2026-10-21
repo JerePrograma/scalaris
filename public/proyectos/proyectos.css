@@ -9,7 +9,7 @@
 .gallery-intro-copy>span{font-size:11px;color:var(--muted)}
 .gallery-intro-copy>span>span{color:var(--blue);margin-left:7px}
 .gallery-collection{max-width:1380px;margin:auto;padding:0 5% 80px}
-.gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.gallery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
 .project-card{min-width:0;background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 6px 24px #0b1f3304}
 .project-preview{display:block;position:relative;overflow:hidden;background:#e9f0f6;text-decoration:none;border-bottom:1px solid var(--line)}
 .project-browser{height:35px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 12px;background:white;color:#687c8c;font-size:9px;letter-spacing:.02em}
@@ -25,7 +25,8 @@
 .project-number{font-size:10px;color:#8b9cac;font-weight:400;letter-spacing:0}
 .project-kind:before{content:"";display:inline-block;width:6px;height:6px;background:#f57826;border-radius:50%;margin-right:7px;vertical-align:1px}
 .project-shekinah .project-kind:before{background:#5b843f}
-.project-burger .project-kind:before{background:#ef301f}
+.project-tu-comida .project-kind:before{background:#ef301f}
+.project-emedicapp .project-kind:before{background:#2b74ba}
 .project-copy h2{font-size:27px;letter-spacing:-.04em;line-height:1.2;margin:15px 0 12px}
 .project-copy>p{font-size:13px;color:var(--muted);margin:0;line-height:1.7}
 .project-tags{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0 20px;padding:0;list-style:none}
@@ -42,7 +43,7 @@
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:1380px){.gallery-contact{margin-inline:5%}}
 @media(max-width:1050px){.gallery-grid{gap:17px}.project-copy{padding:21px 18px}.project-copy h2{font-size:24px}.project-meta{font-size:8px;letter-spacing:.04em}.gallery-intro{gap:30px}.gallery-intro h1{font-size:51px}.gallery-intro-copy p{font-size:14px}}
-@media(max-width:850px){.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.project-card:last-child{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}.project-card:last-child .project-preview{border-bottom:0;border-right:1px solid var(--line)}.project-card:last-child .project-preview img{height:calc(100% - 35px);min-height:260px;object-fit:cover}.gallery-intro h1{font-size:44px}.gallery-contact{padding:32px;gap:25px}.gallery-contact h2{font-size:31px}.gallery-contact .button{min-width:190px}}
+@media(max-width:850px){.gallery-intro h1{font-size:44px}.gallery-contact{padding:32px;gap:25px}.gallery-contact h2{font-size:31px}.gallery-contact .button{min-width:190px}}
 @media(max-width:700px){
   .gallery-page .header-inner{flex-wrap:wrap;padding-block:14px;row-gap:16px}.gallery-page .site-header .logo{width:145px}.gallery-page nav{gap:20px;flex-wrap:wrap;width:100%;border-top:1px solid #e6edf4;padding-top:12px}.gallery-page nav a:not(.small-cta){display:inline-block;font-size:12px}.gallery-page nav .small-cta{margin-left:auto;font-size:11px;min-height:38px;padding:8px 12px}.gallery-page nav a[aria-current="page"]:after{bottom:-5px}
   .gallery-intro{grid-template-columns:1fr;padding:37px 6% 30px;gap:20px}.gallery-intro h1{font-size:clamp(39px,9vw,56px);margin-top:18px}.gallery-intro .eyebrow{font-size:9px}.gallery-intro-copy{justify-self:start;max-width:480px;padding-bottom:0}.gallery-intro-copy p{font-size:14px;margin-bottom:12px}.gallery-intro-copy>span{font-size:10px}
