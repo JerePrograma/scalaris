@@ -10,6 +10,35 @@ const paragraph = text => ({ type: "paragraph", text });
 const repairIdentity = name => ({ id: "repair", name, identifiers: { barcodes: [{ value: "730143314558", valid: true }] }, variant: { isRepairPart: true, identityLocks: {} } });
 const repairScope = (title, description = "") => productScope(page([], { text: { children: [{ type: "heading", level: 1, text: title }, paragraph("730143314558\nARS $ 5.000\n1 disponibles\n" + description)] } }));
 
+test("el mismo teléfono no convierte una pantalla en tapa, batería o placa de carga", () => {
+  for (const component of ["Tapa", "Bateria", "Placa de Carga"]) {
+    const source = repairIdentity(component + " Motorola Moto Razr 60 XT2553 Original");
+    const wrong = matchIdentity(source, repairScope("Modulo Pantalla Motorola Moto Razr 60 XT2553 Original", source.name));
+    assert.equal(wrong.matchExact, false);
+    assert.ok(wrong.conflicts.includes("repair_component:screen"));
+    assert.equal(matchIdentity(source, repairScope(source.name)).matchExact, true);
+  }
+});
+
+test("carcasa y placas de repuesto no heredan el precio de otra pieza o del equipo completo", () => {
+  const housing = repairIdentity("Repuesto Carcasa Batea Yaxun YX-3060");
+  assert.equal(matchIdentity(housing, repairScope("Batea Yaxun YX-3060", housing.name)).matchExact, false);
+  assert.equal(matchIdentity(housing, repairScope("Repuesto Placa Digital Batea Yaxun YX-3060")).matchExact, false);
+  assert.equal(matchIdentity(housing, repairScope(housing.name)).matchExact, true);
+  const controller = repairIdentity("Repuesto Placa Controladora Yaxun YX-1502DD");
+  assert.equal(matchIdentity(controller, repairScope("Repuesto Placa Digital Yaxun YX-1502DD")).matchExact, false);
+  const plate = repairIdentity("Repuesto Plancha Separadora Sunshine SS-918K");
+  assert.ok(matchIdentity(plate, repairScope("Plancha Separadora Sunshine SS-918K equipo completo")).missing.includes("standalone_repair_heating_plate"));
+});
+
+test("un repuesto scrap para despiece exige esa condición en su ficha primaria", () => {
+  const source = repairIdentity("Repuesto Placa Digital Yaxun YX-3060 Scrap para Despiece");
+  const wrong = matchIdentity(source, repairScope("Repuesto Placa Digital Yaxun YX-3060 Nueva", source.name));
+  assert.equal(wrong.matchExact, false);
+  assert.ok(wrong.missing.includes("scrap_dismantling_condition"));
+  assert.equal(matchIdentity(source, repairScope(source.name)).matchExact, true);
+});
+
 test("repuestos Motorola distinguen Power, Lite, Plus y generación aun con GTIN compartido", () => {
   for (const [wanted, observed] of [["G9 Plus", "G9 Power"], ["G8 Power", "G8 Power Lite"], ["G8 Power", "G8 Comun"], ["G8 Plus", "G8 Power"], ["E6 Plus", "E7 Plus"], ["Edge 70", "Edge 70 Fusion"]]) {
     const source = repairIdentity("Placa de Carga Motorola Moto " + wanted);

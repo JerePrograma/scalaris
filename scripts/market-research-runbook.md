@@ -92,6 +92,8 @@ En teclados, comprobar el formato Mini/TKL/SF y el idioma explícitos del encabe
 
 En repuestos, comprobar el dispositivo completo en el encabezado: G8 Power, G8 Power Lite y G8 Plus son variantes diferentes, al igual que One Vision/Fusion y las generaciones y terminaciones Pro/Max/Plus de iPhone. Las compatibilidades múltiples deben estar expresas; no completarlas con códigos o GTIN de otra sección. La calidad, capacidad, marco y funciones del repuesto siguen requiriendo su propia revisión.
 
+El componente también debe coincidir: una tapa o subplaca no hereda el precio de una pantalla, ni una carcasa o placa de repuesto el de un equipo completo. Distinguir placa digital, controladora, carcasa, plancha y bomba de vacío. Para scrap destinado a despiece, exigir esa condición en la ficha primaria; no equipararlo con una pieza nueva funcional.
+
 Si el JSON omite el importe final visible, puede leerse la misma ficha de los IDs de la tanda con Fetch gratuito en `format: "html"`. Guardar la respuesta íntegra en `fetch-batches` con `evidenceOnly: true`: es evidencia adicional para revisión, no reemplaza el JSON ni cierra por sí sola una lectura pendiente. Antes de aceptar un seed, leer el encabezado y modelo completos, total ARS, rótulo de transferencia y stock del producto. Separar impuestos excluidos, cuotas, importes anteriores o ambiguos y relacionados. Documentar archivo y fecha de lectura, fragmentos y comprobaciones en la revisión privada; nunca convertir automáticamente metadatos o estados parciales en seeds estrictos. La condición comercial se revisa por ID; no se equiparan publicaciones usadas/outlet con productos ordinarios.
 
 ## Cerrar la corrida y actualizar los paneles

@@ -278,6 +278,22 @@ function keyboardLanguage(value) {
   return spanish === english ? null : spanish ? "ES" : "US";
 }
 
+function repairComponentKind(value) {
+  const text = fold(value);
+  for (const [kind, pattern] of [
+    ["vacuum_pump", /\bBOMBA\s+(?:DE\s+)?VACIO\b/],
+    ["controller_board", /\bPLACA\s+CONTROLADORA\b/],
+    ["display_board", /\bPLACA\s+DIGITAL\b/],
+    ["charging_board", /\b(?:PLACA|PIN|MODULO)\s+(?:DE\s+)?CARGA\b|\bSUBPLACA\b/],
+    ["heating_plate", /\bPLANCHA\s+SEPARADORA\b/],
+    ["back_cover", /\bTAPA\b/],
+    ["housing", /\bCARCASA\b/],
+    ["battery", /\bBATERIA\b/],
+    ["screen", /\b(?:MODULO|PANTALLA|DISPLAY)\b/],
+  ]) if (pattern.test(text)) return kind;
+  return null;
+}
+
 function repairDeviceModels(value, family) {
   const text = fold(value);
   if (family === "IPHONE") return unique([...text.matchAll(/(?:\bIPHONE\s+|\/\s*)(\d{1,2}S?)(?:\s+(PRO(?:\s+MAX)?|PLUS|MINI|AIR))?\b/g)].map(match => `IPHONE:${match[1]}:${match[2] || "BASE"}`));
@@ -319,6 +335,18 @@ export function matchIdentity(identity, scope) {
   const missing = [], conflicts = [], evidence = [];
   if (!scope.proven) missing.push("product_scope");
   if (identity.brand && !hasToken(title, identity.brand)) missing.push("brand_in_product_title");
+  // A device model alone cannot identify its cover, screen or internal board.
+  // Keep dismantling scrap and standalone machine parts separate from full units.
+  if (identity.variant?.isRepairPart || /\bREPUESTO\b/.test(fold(identity.name))) {
+    const wanted = repairComponentKind(identity.name), observed = repairComponentKind(title);
+    if (wanted) {
+      if (!observed) missing.push("repair_component_in_primary_title:" + wanted);
+      else if (wanted !== observed) conflicts.push("repair_component:" + observed);
+      else evidence.push({ attribute: "repairComponent", value: wanted });
+      if (wanted === "heating_plate" && /\bREPUESTO\b/.test(fold(identity.name)) && !/\bREPUESTO\b/.test(fold(title))) missing.push("standalone_repair_heating_plate");
+    }
+    if (/\b(?:SCRAP|DESPIECE)\b/.test(fold(identity.name)) && !/\b(?:SCRAP|DESPIECE)\b/.test(fold(title))) missing.push("scrap_dismantling_condition");
+  }
   // Repair parts must name the complete device in the primary title. Shared
   // G8/G9 prefixes, device codes or barcodes elsewhere cannot prove Power/Lite
   // variants, nor a different iPhone generation or Pro/Max model.
