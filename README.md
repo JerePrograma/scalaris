@@ -2,9 +2,9 @@
 
 Web estática de Scalaris: soporte informático, desarrollo de software, galería de proyectos y tienda contra pedido.
 
-Dominio principal previsto: https://scalaris.com.ar (activación DNS pendiente).
+Sitio público: https://scalaris.com.ar
 
-Dirección de Pages durante la migración: https://scalaris.pages.dev
+Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
 ## Archivos
 
@@ -52,15 +52,13 @@ El control de publicación verifica recursos de todas las páginas, sintaxis, ca
 - Directorio raíz: raíz del repositorio.
 - Despliegues automáticos de producción habilitados.
 - No requiere secretos ni variables de entorno.
-- Dominio principal: `scalaris.com.ar`; `www.scalaris.com.ar` debe redirigir a la misma ruta del dominio principal, conservando los parámetros.
+- Dominio principal: `scalaris.com.ar`; `www.scalaris.com.ar` redirige a la misma ruta del dominio principal, conservando los parámetros.
 
-La integración Git de Pages debe estar configurada desde la cuenta Cloudflare. Cada push a `main` publicará los archivos de `public/` después de la verificación.
+La integración Git de Pages está configurada desde la cuenta Cloudflare. Cada push a `main` publica los archivos de `public/` después de la verificación.
 
 ### Dominio propio
 
-La zona `scalaris.com.ar` debe estar en la misma cuenta Cloudflare que el proyecto Pages `scalaris`. En NIC Argentina se cargan los dos servidores de nombres exactos asignados por Cloudflare mediante **Agregar una nueva delegación**, se guarda cada uno y se confirma con **Ejecutar Cambios**. Para servidores externos de Cloudflare no se usa Autodelegar ni se cargan IPv4/IPv6.
-
-Servidores asignados a esta zona el 21/10/2026: `adam.ns.cloudflare.com` y `tia.ns.cloudflare.com`. La zona usa el plan Free. El propietario confirmó **Ejecutar Cambios** en NIC; la activación pública sigue pendiente de la propagación DNS y de que Cloudflare valide la zona.
+El dominio se activó el 21/10/2026. La zona `scalaris.com.ar` está activa en el plan Free, en la misma cuenta Cloudflare que el proyecto Pages `scalaris`. La delegación de NIC Argentina y las consultas DNS públicas confirman los servidores `adam.ns.cloudflare.com` y `tia.ns.cloudflare.com`.
 
 Registros guardados en Cloudflare, ambos proxied con TTL Auto:
 
@@ -69,11 +67,13 @@ Registros guardados en Cloudflare, ambos proxied con TTL Auto:
 | CNAME | `scalaris.com.ar` | `scalaris.pages.dev` |
 | CNAME | `www.scalaris.com.ar` | `scalaris.com.ar` |
 
-La regla habilitada **Scalaris: www al dominio principal** redirige `http*://www.scalaris.com.ar/*` a `https://scalaris.com.ar/${2}` con estado 301 y **Preserve query string** activado. La regla conserva la ruta tanto desde HTTP como HTTPS. La comprobación pública debe realizarse cuando la zona esté activa.
+La regla habilitada **Scalaris: www al dominio principal** redirige `http*://www.scalaris.com.ar/*` a `https://scalaris.com.ar/${2}` con estado 301 y **Preserve query string** activado. Se verificó desde HTTP y HTTPS con `/consulta/?service=SOFTWARE`: conserva la ruta y los parámetros.
 
-Además de la delegación, el dominio debe asociarse en **Pages → scalaris → Custom domains**. Crear sólo un CNAME no completa esa asociación. La redirección de `www` se configura en Cloudflare, preservando ruta y parámetros; los redirects por dominio no se configuran en un archivo Pages `_redirects`. La dirección `scalaris.pages.dev` se mantiene operativa hasta comprobar DNS, certificado HTTPS, portada, consulta, proyectos y tienda en el dominio nuevo. Después se puede activar su redirección permanente mediante Bulk Redirects.
+El dominio está asociado en **Pages → scalaris → Custom domains**. Esa asociación y la delegación DNS son necesarias para servir el sitio; crear sólo un CNAME no completa la configuración. Las redirecciones por dominio se configuran en Cloudflare.
 
-Al preparar la migración, Pages mostró **Transfer DNS management** para el dominio principal: la asociación todavía no quedó creada porque la zona sigue pendiente. Al activarse la delegación, completar esa asociación, validar HTTPS y las cuatro páginas, y recién entonces redirigir `scalaris.pages.dev`. La versión preparada para el dominio ya se publicó correctamente en Pages; esta limitación es de activación DNS y asociación, no del build.
+La lista Bulk Redirects `scalaris_pages_to_domain` y su regla habilitada **Scalaris: Pages al dominio principal** redirigen `scalaris.pages.dev/` a `https://scalaris.com.ar/` con estado 301. Están activados **Preserve query string**, **Subpath matching** y **Preserve path suffix**. Se verificaron portada, `/consulta/?service=SOFTWARE` y `/tienda/?q=ssd`: cada enlace llega al dominio principal en un salto, conserva ruta y parámetros y termina en 200, sin bucles. La coincidencia se limita al host de producción `scalaris.pages.dev`.
+
+La verificación pública del 21/10/2026 confirmó HTTPS válido y respuestas 200 en portada, consulta, proyectos, tienda, `robots.txt`, `sitemap.xml`, catálogo con 7.305 productos y 12 recursos CSS, JavaScript y SVG. Las cuatro páginas, el catálogo, robots y sitemap coinciden con los archivos publicados del repositorio.
 
 Las cuatro páginas publican canonical y OpenGraph con el dominio principal. `public/robots.txt` referencia `https://scalaris.com.ar/sitemap.xml`, que enumera las cuatro rutas públicas. Los enlaces internos y recursos siguen siendo relativos para conservar la vista local.
 
