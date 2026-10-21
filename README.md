@@ -81,6 +81,23 @@ Referencias: [dominios de Pages](https://developers.cloudflare.com/pages/configu
 
 Contacto: [WhatsApp](https://wa.me/5491172789289), 1172789289.
 
+## Demo E-MEDICAPP
+
+La demo se comparte en https://scalaris.com.ar/e-medicapp/. La función
+`functions/e-medicapp/[[path]].js` sirve la compilación estática de
+`https://jereprograma.github.io/E-MEDICAPP/`; sus recursos relativos permiten usar
+ambas rutas. `public/_routes.json` limita la función a `/e-medicapp` y sus subrutas.
+El acceso sin barra final redirige conservando los parámetros. Sólo admite GET y
+HEAD; no reenvía cookies ni credenciales del navegador al origen. La portada y
+`deployment.json` se consultan sin caché para confirmar el commit y backend vigentes.
+
+Cada publicación del repositorio `JerePrograma/E-MEDICAPP` actualiza la demo sin
+copiar archivos ni volver a publicar Scalaris. El backend y los datos de la demo
+siguen en esta PC, administrados por los scripts de E-MEDICAPP. El backend admite
+los orígenes `https://scalaris.com.ar` y `https://jereprograma.github.io`.
+La compilación de Pages sigue usando `node scripts/check.mjs` y `public`; Cloudflare
+también compila la carpeta `functions/`. No requiere secretos adicionales.
+
 ## Backoffice local y formulario guiado
 
 El backoffice Java/Spring Boot + React/TypeScript + PostgreSQL está separado en `backoffice/`. Ver [uso, configuración local/LAN, cálculos, archivos y respaldos](backoffice/README.md). No se publica en Cloudflare Pages, no tiene login y no se conecta al sitio público.
