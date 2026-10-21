@@ -60,7 +60,20 @@ La integración Git de Pages debe estar configurada desde la cuenta Cloudflare. 
 
 La zona `scalaris.com.ar` debe estar en la misma cuenta Cloudflare que el proyecto Pages `scalaris`. En NIC Argentina se cargan los dos servidores de nombres exactos asignados por Cloudflare mediante **Agregar una nueva delegación**, se guarda cada uno y se confirma con **Ejecutar Cambios**. Para servidores externos de Cloudflare no se usa Autodelegar ni se cargan IPv4/IPv6.
 
+Servidores asignados a esta zona el 21/10/2026: `adam.ns.cloudflare.com` y `tia.ns.cloudflare.com`. La zona usa el plan Free. El propietario confirmó **Ejecutar Cambios** en NIC; la activación pública sigue pendiente de la propagación DNS y de que Cloudflare valide la zona.
+
+Registros guardados en Cloudflare, ambos proxied con TTL Auto:
+
+| Tipo | Nombre | Destino |
+|---|---|---|
+| CNAME | `scalaris.com.ar` | `scalaris.pages.dev` |
+| CNAME | `www.scalaris.com.ar` | `scalaris.com.ar` |
+
+La regla habilitada **Scalaris: www al dominio principal** redirige `http*://www.scalaris.com.ar/*` a `https://scalaris.com.ar/${2}` con estado 301 y **Preserve query string** activado. La regla conserva la ruta tanto desde HTTP como HTTPS. La comprobación pública debe realizarse cuando la zona esté activa.
+
 Además de la delegación, el dominio debe asociarse en **Pages → scalaris → Custom domains**. Crear sólo un CNAME no completa esa asociación. La redirección de `www` se configura en Cloudflare, preservando ruta y parámetros; los redirects por dominio no se configuran en un archivo Pages `_redirects`. La dirección `scalaris.pages.dev` se mantiene operativa hasta comprobar DNS, certificado HTTPS, portada, consulta, proyectos y tienda en el dominio nuevo. Después se puede activar su redirección permanente mediante Bulk Redirects.
+
+Al preparar la migración, Pages mostró **Transfer DNS management** para el dominio principal: la asociación todavía no quedó creada porque la zona sigue pendiente. Al activarse la delegación, completar esa asociación, validar HTTPS y las cuatro páginas, y recién entonces redirigir `scalaris.pages.dev`. La versión preparada para el dominio ya se publicó correctamente en Pages; esta limitación es de activación DNS y asociación, no del build.
 
 Las cuatro páginas publican canonical y OpenGraph con el dominio principal. `public/robots.txt` referencia `https://scalaris.com.ar/sitemap.xml`, que enumera las cuatro rutas públicas. Los enlaces internos y recursos siguen siendo relativos para conservar la vista local.
 
