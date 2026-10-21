@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-21T00:38:45.893Z",
+  "updatedAt": "2026-10-21T00:58:14.777Z",
   "summary": {
     "totalProducts": 7305,
-    "researchedProducts": 1373,
-    "productsWithVerifiedReferences": 6,
-    "verifiedReferences": 6
+    "researchedProducts": 1453,
+    "productsWithVerifiedReferences": 8,
+    "verifiedReferences": 8
   },
   "products": [
     {
@@ -71,6 +71,28 @@
           "priceARS": 53939,
           "currency": "ARS",
           "observedAt": "2026-10-21T00:34:24.694Z"
+        }
+      ]
+    },
+    {
+      "id": "nb-123112",
+      "references": [
+        {
+          "url": "https://mendohard.com.ar/producto/tv-43-smart-tcl-qled-full-hd-google-tv-43s5kf/",
+          "priceARS": 625130,
+          "currency": "ARS",
+          "observedAt": "2026-10-21T00:53:42.803Z"
+        }
+      ]
+    },
+    {
+      "id": "nb-123042",
+      "references": [
+        {
+          "url": "https://multiplo.com.ar/producto/webcam-razer-kiyo-v2-4k-black/",
+          "priceARS": 392107.11,
+          "currency": "ARS",
+          "observedAt": "2026-10-21T00:53:42.803Z"
         }
       ]
     }
