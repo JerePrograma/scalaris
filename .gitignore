@@ -14,3 +14,4 @@ backoffice/config.local.ps1
 backoffice/backend/.idea/
 *.log
 *.tsbuildinfo
+__pycache__/

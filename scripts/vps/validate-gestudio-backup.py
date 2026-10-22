@@ -105,6 +105,8 @@ def main(args):
     if init_roles.is_symlink() or not init_roles.is_file():
         fail("Official role initialization script is missing")
     receipts = check_backup(backup)
+    if os.environ.get("DOCKER_CONTEXT"):
+        fail("An environment-selected Docker context is not permitted")
     docker_host = os.environ.get("DOCKER_HOST", "")
     if docker_host and docker_host not in {"unix:///var/run/docker.sock", "unix:///run/docker.sock"}:
         fail("Remote Docker endpoints are not permitted")
