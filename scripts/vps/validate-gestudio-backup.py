@@ -78,6 +78,22 @@ def check_backup(backup):
     return receipt_files
 
 
+def classify_receipt_references(reference_keys, receipt_files, alpha):
+    """Account for every referenced file, with one exact official-fixture exception."""
+    references = {archive_path(key) for key in reference_keys}
+    missing = references - receipt_files
+    if not missing:
+        return {"checks": ["ALL_RECEIPT_REFERENCES_PRESENT_IN_ARCHIVE"]}
+    # The official SQL fixture creates 48 historical references without PDFs.
+    # Partial archives and absent operational receipts must still fail.
+    fixture_references = {f"{alpha}/recibos/demo-pago-{number:03}.pdf" for number in range(1, 49)}
+    if (len(reference_keys) != 48 or references != fixture_references or
+            missing != fixture_references or receipt_files):
+        fail("A restored receipt references an unexpected file absent from the archive")
+    return {"syntheticReceiptPdfsNotGeneratedByOfficialFixture": 48,
+            "checks": ["48_SYNTHETIC_RECEIPT_REFERENCES_WITHOUT_PHYSICAL_PDFS"]}
+
+
 def run(command, payload=None, phase="operation", timeout=180, ok=(0,)):
     try:
         result = subprocess.run(command, input=payload, text=True, capture_output=True, timeout=timeout)
@@ -184,10 +200,10 @@ def main(args):
         beta = tenants.get("escuela-beta-demo")
         if not alpha or not beta:
             fail("Restored tenant identities differ from the reviewed fixture")
-        for key in summary["receipts"]:
-            if archive_path(key) not in receipts:
-                fail("A restored receipt references a file absent from the archive")
-        report["checks"].extend(["28_STUDENTS_2_TENANTS", "FLYWAY_B12_BASELINE", "MULTITENANCY_HEALTH_GREEN", "RECEIPT_HASHES_ARCHIVE_AND_REFERENCES"])
+        receipt_report = classify_receipt_references(summary["receipts"], receipts, alpha)
+        report["checks"].extend(receipt_report.pop("checks"))
+        report.update(receipt_report)
+        report["checks"].extend(["28_STUDENTS_2_TENANTS", "FLYWAY_B12_BASELINE", "MULTITENANCY_HEALTH_GREEN", "RECEIPT_ARCHIVE_HASHES_AND_REFERENCE_CLASSIFICATION"])
         role_result = sql(f"""SELECT format('SET ROLE %I', :'application_role') \\gexec
 DO $$
 DECLARE visible bigint; leaked bigint; rejected boolean := false;
@@ -241,6 +257,31 @@ def self_test():
         except RuntimeError:
             continue
         raise AssertionError("Unsafe archive path accepted")
+    alpha = "00000000-0000-4000-8000-000000000001"
+    fixture = [f"{alpha}/recibos/demo-pago-{number:03}.pdf" for number in range(1, 49)]
+    operational = f"{alpha}/recibos/payment-2026-001.pdf"
+    assert classify_receipt_references(fixture, set(), alpha) == {
+        "syntheticReceiptPdfsNotGeneratedByOfficialFixture": 48,
+        "checks": ["48_SYNTHETIC_RECEIPT_REFERENCES_WITHOUT_PHYSICAL_PDFS"]}
+    present = {"checks": ["ALL_RECEIPT_REFERENCES_PRESENT_IN_ARCHIVE"]}
+    assert classify_receipt_references([operational], {operational}, alpha) == present
+    assert classify_receipt_references(fixture, set(fixture), alpha) == present
+    assert classify_receipt_references([], set(), alpha) == present
+    invalid_receipts = [
+        ("missing operational file", [operational], set()),
+        ("47 fixture references", fixture[:-1], set()),
+        ("extra operational reference", fixture + [operational], set()),
+        ("partial fixture archive", fixture, {fixture[0]}),
+        ("extra archive file", fixture, {operational}),
+        ("duplicate fixture reference", fixture + [fixture[0]], set()),
+        ("replaced fixture reference", fixture[:-1] + [operational], set()),
+    ]
+    for description, references, files in invalid_receipts:
+        try:
+            classify_receipt_references(references, files, alpha)
+        except RuntimeError:
+            continue
+        raise AssertionError(f"Receipt validation accepted {description}")
     with tempfile.TemporaryDirectory(prefix="scalaris-restore-selftest-") as temporary:
         root = Path(temporary)
         (root / "database.dump").write_bytes(b"synthetic fixture")
@@ -270,7 +311,7 @@ def self_test():
             pass
         else:
             raise AssertionError("Unsafe receipt member accepted")
-    print("PASS: checksum integrity and receipt archive path boundaries; Docker restore not executed")
+    print("PASS: checksum integrity, archive path boundaries, exact 48-reference fixture exception and missing-file rejection; Docker restore not executed")
 
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ Los archivos se revisaron localmente; estas instrucciones de instalación y la p
 ## Contenido
 
 - FourBubbles: dump validado por su script oficial, configuración privada y revisión Git.
-- Gestudio: dump custom validado, recibos, hashes, configuración y revisión Git. El estado privado del helper se archiva desde **`/srv/private/gestudio-demo`**; incluye credenciales y evidencia de aprovisionamiento, por lo que su archivo permanece privado.
+- Gestudio: dump custom validado, archivo de recibos disponibles, hashes, configuración y revisión Git. La semilla oficial registra 48 recibos sintéticos sin generar sus PDF físicos. El estado privado del helper se archiva desde **`/srv/private/gestudio-demo`**; incluye credenciales y evidencia de aprovisionamiento, por lo que su archivo permanece privado.
 - Los overlays de código Gestudio existentes en `/root/gestudio-code-overlay.tar.gz`, `/root/gestudio-provision-helper.tar.gz` y `/root/gestudio-public-demo.tar.gz` se copian cuando están presentes, con `gestudio-code.SHA256SUMS`. Se conservan por separado del `.env`; el backup no introduce configuración privada en los archivos de código. La ausencia de un overlay posterior no bloquea una primera copia.
 - PharmaHome y Calendario de servicios: revisiones Git para reconstruir los estáticos.
 - Caddy: copia de la configuración de sitios, incluidas las rutas anidadas.
@@ -58,10 +58,12 @@ El validador:
 3. Crea un contenedor con nombre y etiqueta únicos, sin red ni puertos, 512 MiB y 0,5 CPU. La base usa un tmpfs de 384 MiB; las dos únicas vinculaciones del host (backup e inicializador oficial de roles) son de lectura.
 4. Inicializa los mismos logins y grupos técnicos con el `.env` privado existente y el script oficial. Recrea también el rol global `gestudio_health`, ausente en un `pg_dump` de una sola base.
 5. Ejecuta `pg_restore --exit-on-error` **con propietarios y ACL completos**, sin `--no-owner` ni `--no-acl`.
-6. Comprueba 28 alumnos, dos tenants, una fila Flyway `SQL_BASELINE` de versión 12 y salud multitenant `GREEN`; verifica que los recibos referenciados estén en el tar.
+6. Comprueba 28 alumnos, dos tenants, una fila Flyway `SQL_BASELINE` de versión 12 y salud multitenant `GREEN`; exige los archivos de todos los recibos referenciados. Sólo admite la excepción exacta de la semilla oficial: las 48 referencias Alpha `recibos/demo-pago-001.pdf` a `048.pdf`, sin otros recibos y con el tar sin archivos. Informa `syntheticReceiptPdfsNotGeneratedByOfficialFixture=48`; rechaza referencias incompletas, archivos parcialmente presentes y cualquier recibo operativo faltante.
 7. Cambia al login real de aplicación en la copia y verifica Alpha con 28 alumnos, Beta sin alumnos ajenos y rechazo `42501` sin contexto tenant.
 8. En `finally`, elimina únicamente el contenedor cuya etiqueta y nombre coinciden con la ejecución. No monta ni conecta la base viva. Informa resultados sin imprimir secretos, SQL ni salidas crudas de Docker.
 
-La prueba valida la recuperación de esta demo sintética y su aislamiento conocido. No inicia un backend recuperado ni certifica todos los flujos de interfaz. El coordinador debe guardar el resultado ejecutado antes de declarar una restauración aprobada.
+La prueba valida la recuperación de esta demo sintética y su aislamiento conocido. Los 48 PDF de la semilla nunca se generaron: un resultado aprobado con esa excepción no acredita su restauración. La demo pública informa esa limitación y tiene deshabilitada su descarga. El validador no inicia un backend recuperado ni certifica todos los flujos de interfaz. El coordinador debe guardar el resultado ejecutado antes de declarar una restauración aprobada.
+
+El self-test cubre la excepción exacta de 48 referencias sin archivos y los recibos normales presentes. Deben fallar un recibo operativo ausente, 47 referencias, referencias adicionales o duplicadas y un archivo de recibos incompleto o con archivos ajenos a la excepción.
 
 Controles locales de retención: `python scripts/vps/backup-retention.test.py`. Se ejecutaron cuatro casos y se omitió el caso de symlink porque este Windows no permite crearlos sin elevación; no se probó la eliminación de copias del VPS.
