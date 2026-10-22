@@ -1,5 +1,5 @@
 {
   "version": 1,
-  "include": ["/e-medicapp", "/e-medicapp/*", "/tu-comida", "/tu-comida/*", "/gestudio", "/gestudio/*", "/gestudio-api", "/gestudio-api/*", "/fourbubbles", "/fourbubbles/*", "/fourbubbles-api", "/fourbubbles-api/*", "/pharmahome", "/pharmahome/*", "/calendario-servicios", "/calendario-servicios/*"],
+  "include": ["/e-medicapp", "/e-medicapp/*", "/tu-comida", "/tu-comida/*", "/gestudio", "/gestudio/*", "/gestudio-api", "/gestudio-api/*", "/fourbubbles", "/fourbubbles/*", "/fourbubbles-api", "/fourbubbles-api/*", "/pharmahome", "/pharmahome/*", "/calendario-servicios", "/calendario-servicios/*", "/comercio", "/comercio/*"],
   "exclude": []
 }
