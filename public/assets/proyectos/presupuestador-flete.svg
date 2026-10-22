@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none">
+  <title>Presupuestador Flete, cotizaciones en movimiento</title>
+  <desc>Ilustración de un camión con cajas y una ruta entre dos puntos, en una paleta azul.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse"><stop stop-color="#F5FAFE"/><stop offset="1" stop-color="#DFEAF4"/></linearGradient>
+    <linearGradient id="truck" x1="370" y1="310" x2="730" y2="500" gradientUnits="userSpaceOnUse"><stop stop-color="#76A7CA"/><stop offset="1" stop-color="#487EA7"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-40%" width="180%" height="200%"><feDropShadow dx="0" dy="16" stdDeviation="15" flood-color="#315F84" flood-opacity=".12"/></filter>
+  </defs>
+  <path fill="url(#bg)" d="M0 0h1200v800H0z"/><circle cx="1047" cy="88" r="230" fill="#FFF" opacity=".55"/>
+  <path d="M0 529q273-124 560 9t640-1v263H0z" fill="#D2E2EF" opacity=".45"/>
+  <path d="M250 216h583q89 0 89 75t-107 75H389q-155 0-155 110t179 110h497" stroke="#ACC9DF" stroke-width="7" stroke-linecap="round" stroke-dasharray="12 17"/>
+  <g filter="url(#shadow)">
+    <path d="M250 126a48 48 0 0 0-48 48c0 39 48 81 48 81s48-42 48-81a48 48 0 0 0-48-48" fill="#487EA7"/><circle cx="250" cy="174" r="17" fill="#F5FAFE"/>
+    <path d="M927 497a48 48 0 0 0-48 48c0 39 48 81 48 81s48-42 48-81a48 48 0 0 0-48-48" fill="#315F84"/><circle cx="927" cy="545" r="17" fill="#F5FAFE"/>
+  </g>
+  <ellipse cx="609" cy="543" rx="292" ry="24" fill="#AFCBDF" opacity=".45"/>
+  <g filter="url(#shadow)">
+    <rect x="342" y="287" width="351" height="205" rx="13" fill="url(#truck)"/>
+    <path d="M693 352h106a29 29 0 0 1 25 15l51 91v34H693z" fill="#315F84"/>
+    <path d="M714 371h75l36 68H714z" fill="#D5E8F5"/><path d="M714 371h13v68h-13z" fill="#ABCBDD"/>
+    <rect x="326" y="478" width="560" height="26" rx="9" fill="#254B6A"/>
+    <rect x="851" y="459" width="25" height="13" rx="4" fill="#F1D9A8"/>
+    <path d="M718 454h24" stroke="#84B1CF" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="426" cy="501" r="43" fill="#254B6A"/><circle cx="426" cy="501" r="21" fill="#ABCBDD"/><circle cx="426" cy="501" r="8" fill="#F5FAFE"/>
+    <circle cx="789" cy="501" r="43" fill="#254B6A"/><circle cx="789" cy="501" r="21" fill="#ABCBDD"/><circle cx="789" cy="501" r="8" fill="#F5FAFE"/>
+    <path d="M371 319h138" stroke="#A1C8E2" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+    <rect x="413" y="369" width="97" height="84" rx="5" fill="#D9C5A7"/><path d="M451 369h22v32h-22z" fill="#F5E7CF"/>
+    <rect x="525" y="342" width="122" height="111" rx="5" fill="#E8D7BC"/><path d="M574 342h24v39h-24z" fill="#FAEFDA"/>
+  </g>
+  <circle cx="708" cy="160" r="8" fill="#76A7CA" opacity=".55"/><circle cx="1014" cy="365" r="13" fill="#ACC9DF" opacity=".65"/>
+  <path d="M82 659h70" stroke="#487EA7" stroke-width="6" stroke-linecap="round"/>
+  <text x="80" y="718" fill="#315F84" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="650" letter-spacing="-1">Presupuestador Flete</text>
+  <text x="82" y="756" fill="#5B7F9D" font-family="system-ui, -apple-system, sans-serif" font-size="21">Una cotización para cada recorrido</text>
+</svg>

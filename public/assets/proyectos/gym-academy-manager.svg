@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none">
+  <title>Gym &amp; Academy Manager, actividad y organización</title>
+  <desc>Ilustración de un calendario, una mancuerna y una figura en movimiento en tonos oliva y arena.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse"><stop stop-color="#FCFBF6"/><stop offset="1" stop-color="#EBE7D0"/></linearGradient>
+    <linearGradient id="band" x1="280" y1="195" x2="660" y2="300" gradientUnits="userSpaceOnUse"><stop stop-color="#A69854"/><stop offset="1" stop-color="#82723B"/></linearGradient>
+    <filter id="shadow" x="-35%" y="-35%" width="180%" height="190%"><feDropShadow dx="0" dy="16" stdDeviation="15" flood-color="#6A5D27" flood-opacity=".12"/></filter>
+  </defs>
+  <path fill="url(#bg)" d="M0 0h1200v800H0z"/><circle cx="1056" cy="105" r="231" fill="#FFF" opacity=".5"/><circle cx="94" cy="735" r="235" fill="#E2DDBE" opacity=".45"/>
+  <ellipse cx="603" cy="588" rx="369" ry="30" fill="#CFC79F" opacity=".4"/>
+  <path d="M744 143q196 53 192 223T732 575" stroke="#D5CDA7" stroke-width="3" stroke-dasharray="5 13"/>
+  <g filter="url(#shadow)" transform="rotate(-6 470 372)">
+    <rect x="270" y="196" width="401" height="365" rx="27" fill="#FFFDF7"/>
+    <path d="M297 196h347a27 27 0 0 1 27 27v70H270v-70a27 27 0 0 1 27-27" fill="url(#band)"/>
+    <path d="M360 173v47m220-47v47" stroke="#6A5D27" stroke-width="15" stroke-linecap="round"/>
+    <g fill="#E8E3CC"><rect x="312" y="330" width="62" height="54" rx="10"/><rect x="398" y="330" width="62" height="54" rx="10"/><rect x="484" y="330" width="62" height="54" rx="10"/><rect x="570" y="330" width="62" height="54" rx="10"/><rect x="312" y="407" width="62" height="54" rx="10"/><rect x="398" y="407" width="62" height="54" rx="10"/><rect x="570" y="407" width="62" height="54" rx="10"/></g>
+    <rect x="484" y="407" width="62" height="54" rx="10" fill="#A69854"/><path d="m499 434 11 10 22-23" stroke="#FFFDF7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M314 508h121m25 0h70" stroke="#D3CBA7" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <g filter="url(#shadow)">
+    <circle cx="818" cy="204" r="27" fill="#82723B"/>
+    <path d="m811 254-22 91 66 65m-59-118 65 14 43-44m-111 61-65-9-35 40m99-11-21 74-58 44m116-46 37 74" stroke="#82723B" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m788 278 28 7" stroke="#C6BB80" stroke-width="34" stroke-linecap="round"/>
+  </g>
+  <g transform="rotate(12 837 542)" filter="url(#shadow)">
+    <path d="M751 542h172" stroke="#A69854" stroke-width="17"/>
+    <rect x="729" y="498" width="35" height="88" rx="10" fill="#82723B"/><rect x="705" y="511" width="26" height="62" rx="8" fill="#A69854"/>
+    <rect x="911" y="498" width="35" height="88" rx="10" fill="#82723B"/><rect x="944" y="511" width="26" height="62" rx="8" fill="#A69854"/>
+  </g>
+  <path d="M82 659h70" stroke="#A69854" stroke-width="6" stroke-linecap="round"/>
+  <text x="80" y="718" fill="#6A5D27" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="650" letter-spacing="-1">Gym &amp; Academy</text>
+  <text x="82" y="756" fill="#8A7D48" font-family="system-ui, -apple-system, sans-serif" font-size="21">Más movimiento. Todo en orden.</text>
+</svg>

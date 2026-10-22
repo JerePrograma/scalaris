@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none">
+  <title>CJ Préstamos, registro y control administrativo</title>
+  <desc>Ilustración de documentos ordenados, una calculadora y cuotas señaladas, sobre un fondo rosa suave.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse"><stop stop-color="#FCF8F9"/><stop offset="1" stop-color="#EEDFE4"/></linearGradient>
+    <linearGradient id="cover" x1="290" y1="220" x2="650" y2="590" gradientUnits="userSpaceOnUse"><stop stop-color="#AA8796"/><stop offset="1" stop-color="#715660"/></linearGradient>
+    <filter id="shadow" x="-35%" y="-35%" width="180%" height="190%"><feDropShadow dx="0" dy="16" stdDeviation="15" flood-color="#715660" flood-opacity=".12"/></filter>
+  </defs>
+  <path fill="url(#bg)" d="M0 0h1200v800H0z"/><circle cx="1049" cy="93" r="237" fill="#FFF" opacity=".5"/><circle cx="100" cy="741" r="235" fill="#E7D4DC" opacity=".45"/>
+  <ellipse cx="597" cy="591" rx="365" ry="29" fill="#D5BEC9" opacity=".4"/>
+  <g filter="url(#shadow)" transform="rotate(-7 463 370)">
+    <rect x="273" y="191" width="352" height="390" rx="19" fill="url(#cover)"/>
+    <path d="M297 213h307v349H297z" fill="#D8C4CD"/>
+    <path d="M319 178h243l58 59v302a9 9 0 0 1-9 9H319a9 9 0 0 1-9-9V187a9 9 0 0 1 9-9" fill="#FFFDFB"/>
+    <path d="M562 178v49a10 10 0 0 0 10 10h48" fill="#F0E5EA"/>
+    <path d="M345 268h114m-114 26h74" stroke="#CBB2BF" stroke-width="8" stroke-linecap="round"/>
+    <g fill="#F0E5EA"><rect x="342" y="341" width="42" height="42" rx="8"/><rect x="342" y="406" width="42" height="42" rx="8"/><rect x="342" y="471" width="42" height="42" rx="8"/></g>
+    <g stroke="#AA8796" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="m353 360 8 9 14-17m-22 73 8 9 14-17"/><path d="M410 354h154m-154 18h112m-112 47h154m-154 18h92m-92 47h154m-154 18h112" stroke-width="6"/></g>
+  </g>
+  <g filter="url(#shadow)" transform="rotate(8 782 426)">
+    <rect x="677" y="277" width="222" height="308" rx="24" fill="#715660"/>
+    <rect x="700" y="301" width="176" height="64" rx="9" fill="#D7DAD0"/>
+    <path d="M797 326h14v15h-14zm24 0h14v15h-14zm24 0h14v15h-14z" fill="#91A18E"/>
+    <g fill="#F0E5EA"><rect x="700" y="388" width="43" height="40" rx="8"/><rect x="766" y="388" width="43" height="40" rx="8"/><rect x="832" y="388" width="43" height="40" rx="8"/><rect x="700" y="447" width="43" height="40" rx="8"/><rect x="766" y="447" width="43" height="40" rx="8"/><rect x="700" y="506" width="43" height="40" rx="8"/><rect x="766" y="506" width="43" height="40" rx="8"/></g>
+    <rect x="832" y="447" width="43" height="99" rx="8" fill="#CBA5B5"/><path d="M843 491h21m-21 13h21" stroke="#715660" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <circle cx="794" cy="181" r="44" fill="#FFFDFB"/><path d="m775 181 13 13 25-27" stroke="#AA8796" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="945" cy="280" r="10" fill="#CBA5B5" opacity=".6"/>
+  <path d="M82 659h70" stroke="#AA8796" stroke-width="6" stroke-linecap="round"/>
+  <text x="80" y="718" fill="#715660" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="650" letter-spacing="-1">CJ Préstamos</text>
+  <text x="82" y="756" fill="#977581" font-family="system-ui, -apple-system, sans-serif" font-size="21">Registros claros, cuotas bajo control</text>
+</svg>

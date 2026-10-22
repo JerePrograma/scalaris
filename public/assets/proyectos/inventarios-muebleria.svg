@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none">
+  <title>Inventarios Mueblería, orden y gestión comercial</title>
+  <desc>Ilustración de una estantería con cajas, una silla y una mesa, en tonos violeta suaves.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse"><stop stop-color="#F9F7FC"/><stop offset="1" stop-color="#E6E0F1"/></linearGradient>
+    <linearGradient id="wood" x1="700" y1="400" x2="950" y2="560" gradientUnits="userSpaceOnUse"><stop stop-color="#BC9F8E"/><stop offset="1" stop-color="#9C7F70"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="170%" height="180%"><feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#5C4D86" flood-opacity=".12"/></filter>
+  </defs>
+  <path fill="url(#bg)" d="M0 0h1200v800H0z"/>
+  <circle cx="1030" cy="57" r="246" fill="#FFF" opacity=".5"/><path d="M0 520q220-100 458 32t742-15v263H0z" fill="#DED5EC" opacity=".4"/>
+  <ellipse cx="602" cy="590" rx="422" ry="32" fill="#CFC4E0" opacity=".45"/>
+  <g filter="url(#shadow)">
+    <path d="M250 171h366v395H250z" fill="#FDFBFF" stroke="#BEB0D4" stroke-width="9"/>
+    <path d="M250 301h366M250 432h366" stroke="#8C79AC" stroke-width="13"/>
+    <path d="M268 566v28m330-28v28" stroke="#6C598D" stroke-width="13" stroke-linecap="round"/>
+    <rect x="280" y="224" width="115" height="69" rx="5" fill="#C7B7DA"/><path d="M328 224h19v29h-19z" fill="#F7F3FB"/><path d="M294 276h24" stroke="#8C79AC" stroke-width="4" stroke-linecap="round"/>
+    <rect x="421" y="204" width="157" height="89" rx="5" fill="#9B87B9"/><path d="M486 204h25v35h-25z" fill="#E9E0F1"/><path d="M438 273h34" stroke="#6C598D" stroke-width="4" stroke-linecap="round"/>
+    <rect x="280" y="344" width="146" height="80" rx="5" fill="#AB96C4"/><path d="M342 344h22v31h-22z" fill="#F4EDF9"/>
+    <rect x="448" y="364" width="130" height="60" rx="5" fill="#D6C8E5"/><path d="M503 364h20v23h-20z" fill="#FFF"/>
+    <rect x="280" y="468" width="98" height="88" rx="5" fill="#C7B7DA"/><path d="M320 468h19v31h-19z" fill="#F4EDF9"/>
+    <rect x="400" y="484" width="178" height="72" rx="5" fill="#9B87B9"/><path d="M476 484h24v28h-24z" fill="#E9E0F1"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="700" y="309" width="155" height="171" rx="24" fill="#8F7BA9"/><rect x="717" y="329" width="121" height="125" rx="15" fill="#B8A6CD"/>
+    <path d="m714 475-12 110m139-110 12 110" stroke="#7C6559" stroke-width="14" stroke-linecap="round"/>
+    <path d="M695 465h170v27H695z" fill="url(#wood)"/>
+    <path d="m853 448 17 139m91-139 17 139" stroke="#7C6559" stroke-width="13" stroke-linecap="round"/>
+    <rect x="811" y="428" width="210" height="25" rx="12" fill="url(#wood)"/>
+    <path d="M917 405v21" stroke="#789587" stroke-width="5"/>
+    <path d="M917 406q-37-4-33-36 32 0 33 36m2-12q-3-34 29-36-1 32-29 36" fill="#91AA9A"/>
+    <path d="M895 405h46l-6 23h-34z" fill="#D6C8E5"/>
+  </g>
+  <circle cx="775" cy="196" r="42" fill="#FFF" opacity=".9"/><path d="m756 196 13 13 25-27" stroke="#8C79AC" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M82 659h70" stroke="#8C79AC" stroke-width="6" stroke-linecap="round"/>
+  <text x="80" y="718" fill="#5C4D86" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="650" letter-spacing="-1">Inventarios Mueblería</text>
+  <text x="82" y="756" fill="#817197" font-family="system-ui, -apple-system, sans-serif" font-size="21">Del inventario a la venta</text>
+</svg>
