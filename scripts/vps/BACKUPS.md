@@ -22,7 +22,7 @@ systemctl enable --now scalaris-demos-backup.timer
 systemctl list-timers scalaris-demos-backup.timer --no-pager
 ```
 
-Los archivos se revisaron localmente; estas instrucciones de instalación y la primera corrida permanecen pendientes hasta ejecutarlas en el VPS.
+Instalación y primera ejecución verificadas el 22/10/2026 UTC: `Result=success`, `ExecMainStatus=0` y timer habilitado. La primera copia conjunta quedó en `demo-configuration/20261022T021738Z`; los tres overlays archivados aprobaron su manifiesto SHA-256. Se preservaron los timers previos de las otras aplicaciones y de configuración general.
 
 ## Contenido
 
@@ -42,7 +42,7 @@ El coordinador no elimina volúmenes, aplicaciones, respaldos de otras aplicacio
 
 ## Validador de restauración aislada para Gestudio
 
-`validate-gestudio-backup.py` implementa una prueba real de recuperación completa. Sus controles locales de integridad y rutas aprobaron; **la restauración Docker todavía no se ejecutó al escribir esta guía**.
+`validate-gestudio-backup.py` implementa una prueba real de recuperación completa. La ejecución en el VPS sobre `gestudio/20261022T020641Z` terminó con `PASS_ISOLATED_FULL_ACL_RESTORE`, base activa intacta y contenedor temporal retirado. Aprobó propietarios/ACL, 28 alumnos, dos tenants, baseline B12, salud `GREEN` y los tres controles de aislamiento del rol de aplicación. El resultado declara expresamente los 48 PDF no generados por la semilla.
 
 En el VPS, elegir un snapshot existente y ejecutar:
 
@@ -67,3 +67,9 @@ La prueba valida la recuperación de esta demo sintética y su aislamiento conoc
 El self-test cubre la excepción exacta de 48 referencias sin archivos y los recibos normales presentes. Deben fallar un recibo operativo ausente, 47 referencias, referencias adicionales o duplicadas y un archivo de recibos incompleto o con archivos ajenos a la excepción.
 
 Controles locales de retención: `python scripts/vps/backup-retention.test.py`. Se ejecutaron cuatro casos y se omitió el caso de symlink porque este Windows no permite crearlos sin elevación; no se probó la eliminación de copias del VPS.
+
+## Restauración aislada de FourBubbles
+
+`validate-fourbubbles-backup.py --backupfile /var/backups/scalaris/fourbubbles/fourbubbles-20261022T012755Z.dump` aprobó en el VPS con `PASS_ISOLATED_FULL_ACL_RESTORE`. Recuperó tres clientes sintéticos, tres pedidos, dos ciclos completos y las once migraciones, preservando propietarios y las cuentas exclusivas `REPORT_VIEWER`/`ADMIN`. El archivo de origen conservó sus bytes y el contenedor temporal se retiró.
+
+Este validador también fuerza el socket Docker local y una imagen PostgreSQL ya cacheada, sin red ni puertos, con memoria/CPU limitadas y sin montar volúmenes activos. No necesita las credenciales reales. Los informes sin secretos de ambas ejecuciones se conservaron en `/var/log/scalaris-four-restore-validation.log` y `/var/log/scalaris-gestudio-restore-validation.log`.
