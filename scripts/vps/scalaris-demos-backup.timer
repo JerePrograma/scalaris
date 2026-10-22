@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily backup of isolated Scalaris demos
+
+[Timer]
+OnCalendar=*-*-* 03:55:00
+RandomizedDelaySec=600
+Persistent=true
+
+[Install]
+WantedBy=timers.target

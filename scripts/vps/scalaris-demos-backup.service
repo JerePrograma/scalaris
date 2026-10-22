@@ -1,0 +1,12 @@
+[Unit]
+Description=Backup isolated Scalaris demos and private configuration
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+ExecStart=/usr/local/sbin/scalaris-demos-backup
+Nice=10
+IOSchedulingClass=idle

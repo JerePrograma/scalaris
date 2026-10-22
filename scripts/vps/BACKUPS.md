@@ -1,0 +1,67 @@
+# Respaldos de las demos
+
+`backup-demos.sh` se instala como `/usr/local/sbin/scalaris-demos-backup`, con dueño root y modo 700. Requiere Python 3, Git, tar, Docker y Compose. La unidad oneshot ejecuta como root con umask 077; el timer programa las 03:55 de la zona horaria del VPS, con hasta 10 minutos de demora aleatoria, y recupera ejecuciones omitidas mediante `Persistent=true`.
+
+La instalación de estos archivos no acredita una ejecución: antes de habilitar el timer se debe ejecutar el servicio, comprobar su resultado y revisar los archivos producidos sin imprimir secretos.
+
+Desde el checkout de Scalaris en el VPS, como administrador:
+
+```sh
+install -o root -g root -m 700 scripts/vps/backup-demos.sh /usr/local/sbin/scalaris-demos-backup
+install -o root -g root -m 644 scripts/vps/scalaris-demos-backup.service /etc/systemd/system/scalaris-demos-backup.service
+install -o root -g root -m 644 scripts/vps/scalaris-demos-backup.timer /etc/systemd/system/scalaris-demos-backup.timer
+systemctl daemon-reload
+systemctl start scalaris-demos-backup.service
+systemctl status scalaris-demos-backup.service --no-pager
+```
+
+Sólo después de comprobar el resultado correcto de esa primera corrida:
+
+```sh
+systemctl enable --now scalaris-demos-backup.timer
+systemctl list-timers scalaris-demos-backup.timer --no-pager
+```
+
+Los archivos se revisaron localmente; estas instrucciones de instalación y la primera corrida permanecen pendientes hasta ejecutarlas en el VPS.
+
+## Contenido
+
+- FourBubbles: dump validado por su script oficial, configuración privada y revisión Git.
+- Gestudio: dump custom validado, recibos, hashes, configuración y revisión Git. El estado privado del helper se archiva desde **`/srv/private/gestudio-demo`**; incluye credenciales y evidencia de aprovisionamiento, por lo que su archivo permanece privado.
+- Los overlays de código Gestudio existentes en `/root/gestudio-code-overlay.tar.gz`, `/root/gestudio-provision-helper.tar.gz` y `/root/gestudio-public-demo.tar.gz` se copian cuando están presentes, con `gestudio-code.SHA256SUMS`. Se conservan por separado del `.env`; el backup no introduce configuración privada en los archivos de código. La ausencia de un overlay posterior no bloquea una primera copia.
+- PharmaHome y Calendario de servicios: revisiones Git para reconstruir los estáticos.
+- Caddy: copia de la configuración de sitios, incluidas las rutas anidadas.
+
+Las copias del coordinador quedan en `/var/backups/scalaris/demo-configuration`. Los datos de Gestudio quedan en `/var/backups/scalaris/gestudio`; FourBubbles usa `/var/backups/scalaris/fourbubbles`.
+
+## Retención acotada
+
+Después de completar los respaldos, se eliminan snapshots generados hace más de 14 días en los dos directorios explícitos de configuración y Gestudio. Se exige nombre UTC `YYYYMMDDTHHMMSSZ`, ubicación como hijo directo del directorio permitido, contenido conocido y ausencia de modificaciones recientes o enlaces simbólicos. Una configuración antigua se elimina completa, incluidas sus rutas Caddy; una carpeta desconocida o modificada se conserva y se informa. FourBubbles conserva su propia retención de dumps de 14 días.
+
+El coordinador no elimina volúmenes, aplicaciones, respaldos de otras aplicaciones ni el estado privado vivo. Las copias permanecen en el mismo VPS: no son un respaldo externo.
+
+## Validador de restauración aislada para Gestudio
+
+`validate-gestudio-backup.py` implementa una prueba real de recuperación completa. Sus controles locales de integridad y rutas aprobaron; **la restauración Docker todavía no se ejecutó al escribir esta guía**.
+
+En el VPS, elegir un snapshot existente y ejecutar:
+
+```sh
+python3 scripts/vps/validate-gestudio-backup.py --self-test
+python3 scripts/vps/validate-gestudio-backup.py --app-root /srv/apps/gestudio-demo --backup /var/backups/scalaris/gestudio/SNAPSHOT_UTC
+```
+
+El validador:
+
+1. Comprueba SHA-256 del dump y del tar de recibos, lee todo el archivo y rechaza rutas fuera de la raíz, enlaces y miembros no regulares.
+2. Utiliza únicamente la imagen PostgreSQL 15.18 ya cacheada en el daemon local. No descarga imágenes ni usa un contexto Docker remoto.
+3. Crea un contenedor con nombre y etiqueta únicos, sin red ni puertos, 512 MiB y 0,5 CPU. La base usa un tmpfs de 384 MiB; las dos únicas vinculaciones del host (backup e inicializador oficial de roles) son de lectura.
+4. Inicializa los mismos logins y grupos técnicos con el `.env` privado existente y el script oficial. Recrea también el rol global `gestudio_health`, ausente en un `pg_dump` de una sola base.
+5. Ejecuta `pg_restore --exit-on-error` **con propietarios y ACL completos**, sin `--no-owner` ni `--no-acl`.
+6. Comprueba 28 alumnos, dos tenants, una fila Flyway `SQL_BASELINE` de versión 12 y salud multitenant `GREEN`; verifica que los recibos referenciados estén en el tar.
+7. Cambia al login real de aplicación en la copia y verifica Alpha con 28 alumnos, Beta sin alumnos ajenos y rechazo `42501` sin contexto tenant.
+8. En `finally`, elimina únicamente el contenedor cuya etiqueta y nombre coinciden con la ejecución. No monta ni conecta la base viva. Informa resultados sin imprimir secretos, SQL ni salidas crudas de Docker.
+
+La prueba valida la recuperación de esta demo sintética y su aislamiento conocido. No inicia un backend recuperado ni certifica todos los flujos de interfaz. El coordinador debe guardar el resultado ejecutado antes de declarar una restauración aprobada.
+
+Controles locales de retención: `python scripts/vps/backup-retention.test.py`. Se ejecutaron cuatro casos y se omitió el caso de symlink porque este Windows no permite crearlos sin elevación; no se probó la eliminación de copias del VPS.
