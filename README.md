@@ -82,6 +82,23 @@ Referencias: [dominios de Pages](https://developers.cloudflare.com/pages/configu
 
 Contacto: [WhatsApp](https://wa.me/5491172789289), 1172789289.
 
+## Demos en el VPS
+
+Publicaciones verificadas el 22/10/2026:
+
+- https://scalaris.com.ar/gestudio/: dos organizaciones sintéticas, 28 alumnos y cuenta `DEMO_COMERCIAL` de consulta. El botón **Entrar a la demo** usa exclusivamente esa cuenta; los accesos de administración y MFA permanecen privados. La semilla oficial registra 48 recibos históricos sin generar PDF: la interfaz pública explica ese alcance y deshabilita su descarga.
+- https://scalaris.com.ar/fourbubbles/: cuenta pública exclusiva `REPORT_VIEWER`, tres clientes ficticios, tres pedidos y dos ciclos simulados. El acceso de demo abre Pedidos; no permite modificar la operación.
+- https://scalaris.com.ar/pharmahome/: aplicación estática con datos guardados en el navegador. Su service worker y cachés quedan limitados a su prefijo.
+- https://scalaris.com.ar/calendario-servicios/: calendario y PDF locales al navegador, sin anuncios ni analítica.
+
+Las funciones de `lib/vps-demo-proxy.js` usan un origen fijo del VPS. Los API públicos rechazan escrituras de negocio y orígenes ajenos; permiten sólo los POST de sesión declarados. Cada aplicación Java tiene su cookie propia, con `Secure`, `HttpOnly`, ruta restringida y respuestas sin caché. Caddy conserva los prefijos y dirige cada demo a su contenedor. Bases y Java carecen de puertos públicos; el correo y los procesos programados de Gestudio están desactivados.
+
+El KVM 2 tiene 2 CPU y 8 GB de RAM. Las nuevas demos limitan Gestudio a 1.3125 GiB, FourBubbles a 1.1875 GiB y cada estático a 64 MiB. Estos topes no son una prueba de capacidad o concurrencia. Se compiló secuencialmente con un constructor limitado a 1 CPU y 2 GiB.
+
+`scripts/vps/backup-demos.sh` respalda datos, configuración privada, Caddy y los paquetes de código de Gestudio. Su timer diario de las 03:55 de Buenos Aires admite hasta diez minutos de demora y conserva snapshots generados durante aproximadamente 14 días. La primera ejecución del servicio terminó con éxito. Se restauraron ambos PostgreSQL en contenedores temporales sin red ni puertos, preservando propietarios y permisos; Gestudio también pasó el aislamiento Alpha/Beta y el rechazo sin contexto de organización. La excepción de los recibos sintéticos queda registrada de forma explícita. Las copias permanecen en el mismo VPS: falta una copia externa. Ver [procedimientos de respaldo](scripts/vps/BACKUPS.md).
+
+CRM, Inventarios Mueblería, Gym & Academy Manager, Presupuestador Flete, HogarIA y CJ Préstamos siguen en preparación. Las fichas muestran su propuesta sin exponer bases operativas ni publicar una demo no verificada.
+
 ## Demo E-MEDICAPP
 
 La demo se comparte en https://scalaris.com.ar/e-medicapp/. La función
@@ -94,7 +111,7 @@ HEAD; no reenvía cookies ni credenciales del navegador al origen. La portada y
 
 Cada publicación del repositorio `JerePrograma/E-MEDICAPP` actualiza la demo sin
 copiar archivos ni volver a publicar Scalaris. El backend y los datos de la demo
-siguen en esta PC, administrados por los scripts de E-MEDICAPP. El backend admite
+se ejecutan en el VPS, administrados por los scripts de E-MEDICAPP. El backend admite
 los orígenes `https://scalaris.com.ar` y `https://jereprograma.github.io`.
 La compilación de Pages sigue usando `node scripts/check.mjs` y `public`; Cloudflare
 también compila la carpeta `functions/`. No requiere secretos adicionales.
