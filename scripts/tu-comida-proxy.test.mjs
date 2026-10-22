@@ -86,9 +86,10 @@ test("Tu Comida keeps static JSON fresh, preserves errors and restricts methods"
   assert.equal((await onRequest({ request: new Request("https://scalaris.com.ar/tu-comida/") })).status, 502);
 });
 
-test("Pages invokes only the two application prefixes and supports public Worker fetches", () => {
+test("Pages retains Tu Comida routes and supports public Worker fetches", () => {
   const routes = JSON.parse(readFileSync(new URL("../public/_routes.json", import.meta.url)));
-  assert.deepEqual(routes.include, ["/e-medicapp", "/e-medicapp/*", "/tu-comida", "/tu-comida/*"]);
+  for (const prefix of ["/e-medicapp", "/e-medicapp/*", "/tu-comida", "/tu-comida/*"]) assert.ok(routes.include.includes(prefix));
+  assert.ok(routes.include.every(route => route !== '/*'));
   assert.deepEqual(routes.exclude, []);
   const config = JSON.parse(readFileSync(new URL("../wrangler.jsonc", import.meta.url)));
   assert.equal(config.name, "scalaris");

@@ -104,7 +104,16 @@ const gallery = readFileSync(resolve(root, "proyectos/index.html"), "utf8");
 for (const destination of ["https://scalaris.com.ar/tu-comida/", "https://scalaris.com.ar/e-medicapp/"]) {
   if (!gallery.includes(`href="${destination}"`)) errors.push(`Proyecto sin acceso público en la galería: ${destination}`);
 }
-if (/burger[\s-]*house/i.test(gallery)) errors.push("La galería conserva el proyecto reemplazado de Burger House");
+const galleryProjects = [...gallery.matchAll(/<article\b[^>]*\bdata-project="([^"]+)"[^>]*\bdata-state="([^"]+)"/g)];
+const galleryProjectIds = new Set();
+for (const [, project, state] of galleryProjects) {
+  if (galleryProjectIds.has(project)) errors.push(`Proyecto repetido en la galería: ${project}`);
+  galleryProjectIds.add(project);
+  if (!["live", "demo", "preparation"].includes(state)) errors.push(`Estado de proyecto inválido: ${project}.${state}`);
+}
+for (const project of ["remodelaya", "shekinah", "tu-comida", "e-medicapp", "burger-house-3", "gestudio", "fourbubbles", "crm-platform", "pharmahome", "calendario-servicios", "inventarios-muebleria", "gym-academy-manager", "presupuestador-flete", "hogaria", "cjprestamos"]) {
+  if (!galleryProjectIds.has(project)) errors.push(`Proyecto sin ficha en la galería: ${project}`);
+}
 const catalog = JSON.parse(readFileSync(resolve(root, "tienda/catalog.json"), "utf8"));
 if (catalog.version !== 1 || !Array.isArray(catalog.products) || !catalog.products.length) errors.push("Catálogo público inválido");
 const productIds = new Set();
