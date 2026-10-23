@@ -101,7 +101,7 @@ for (const file of ["proyectos/index.html", "tienda/index.html"]) {
   if (!existsSync(resolve(root, file))) errors.push(`Página inexistente: ${file}`);
 }
 const gallery = readFileSync(resolve(root, "proyectos/index.html"), "utf8");
-for (const destination of ["https://scalaris.com.ar/tu-comida/", "https://scalaris.com.ar/e-medicapp/"]) {
+for (const destination of ["https://scalaris.com.ar/tu-comida/", "https://scalaris.com.ar/e-medicapp/", "https://scalaris.com.ar/comercio/t/corralon-demo", "https://scalaris.com.ar/comercio/t/mayorista-demo", "https://scalaris.com.ar/comercio/t/almacen-demo"]) {
   if (!gallery.includes(`href="${destination}"`)) errors.push(`Proyecto sin acceso público en la galería: ${destination}`);
 }
 const galleryProjects = [...gallery.matchAll(/<article\b[^>]*\bdata-project="([^"]+)"[^>]*\bdata-state="([^"]+)"/g)];
@@ -111,7 +111,7 @@ for (const [, project, state] of galleryProjects) {
   galleryProjectIds.add(project);
   if (!["live", "demo", "preparation"].includes(state)) errors.push(`Estado de proyecto inválido: ${project}.${state}`);
 }
-for (const project of ["remodelaya", "shekinah", "tu-comida", "e-medicapp", "burger-house-3", "gestudio", "fourbubbles", "crm-platform", "pharmahome", "calendario-servicios", "inventarios-muebleria", "gym-academy-manager", "presupuestador-flete", "hogaria", "cjprestamos"]) {
+for (const project of ["corralon-demo", "mayorista-demo", "almacen-demo", "remodelaya", "shekinah", "tu-comida", "e-medicapp", "burger-house-3", "gestudio", "fourbubbles", "crm-platform", "pharmahome", "calendario-servicios", "inventarios-muebleria", "gym-academy-manager", "presupuestador-flete", "hogaria", "cjprestamos"]) {
   if (!galleryProjectIds.has(project)) errors.push(`Proyecto sin ficha en la galería: ${project}`);
 }
 const catalog = JSON.parse(readFileSync(resolve(root, "tienda/catalog.json"), "utf8"));
