@@ -101,7 +101,7 @@ for (const file of ["proyectos/index.html", "tienda/index.html"]) {
   if (!existsSync(resolve(root, file))) errors.push(`Página inexistente: ${file}`);
 }
 const gallery = readFileSync(resolve(root, "proyectos/index.html"), "utf8");
-for (const destination of ["https://scalaris.com.ar/tu-comida/", "https://scalaris.com.ar/e-medicapp/", "https://scalaris.com.ar/comercio/t/corralon-demo", "https://scalaris.com.ar/comercio/t/mayorista-demo", "https://scalaris.com.ar/comercio/t/almacen-demo"]) {
+for (const destination of ["https://scalaris.com.ar/tu-comida/", "https://scalaris.com.ar/e-medicapp/", "https://scalaris.com.ar/comercio/t/corralon-demo", "https://scalaris.com.ar/comercio/t/mayorista-demo", "https://scalaris.com.ar/comercio/t/almacen-demo", "https://scalaris.com.ar/mesa/"]) {
   if (!gallery.includes(`href="${destination}"`)) errors.push(`Proyecto sin acceso público en la galería: ${destination}`);
 }
 const galleryProjects = [...gallery.matchAll(/<article\b[^>]*\bdata-project="([^"]+)"[^>]*\bdata-state="([^"]+)"/g)];
@@ -111,9 +111,17 @@ for (const [, project, state] of galleryProjects) {
   galleryProjectIds.add(project);
   if (!["live", "demo", "preparation"].includes(state)) errors.push(`Estado de proyecto inválido: ${project}.${state}`);
 }
-for (const project of ["corralon-demo", "mayorista-demo", "almacen-demo", "remodelaya", "shekinah", "tu-comida", "e-medicapp", "burger-house-3", "gestudio", "fourbubbles", "crm-platform", "pharmahome", "calendario-servicios", "inventarios-muebleria", "gym-academy-manager", "presupuestador-flete", "hogaria", "cjprestamos"]) {
+const expectedGalleryProjects = ["corralon-demo", "mayorista-demo", "almacen-demo", "scalaris-mesa", "remodelaya", "shekinah", "tu-comida", "e-medicapp", "burger-house-3", "gestudio", "fourbubbles", "crm-platform", "pharmahome", "calendario-servicios", "inventarios-muebleria", "gym-academy-manager", "presupuestador-flete", "hogaria", "cjprestamos"];
+if (galleryProjects.length !== expectedGalleryProjects.length) errors.push(`Se esperaban ${expectedGalleryProjects.length} fichas de proyectos, se encontraron ${galleryProjects.length}`);
+for (const project of expectedGalleryProjects) {
   if (!galleryProjectIds.has(project)) errors.push(`Proyecto sin ficha en la galería: ${project}`);
 }
+const mesaProject = gallery.match(/<article\b[^>]*\bdata-project="scalaris-mesa"[^>]*>[\s\S]*?<\/article>/)?.[0] || "";
+if (!mesaProject.includes('data-state="demo"') || !mesaProject.includes('class="preview-caption demo-caption">Demo interactiva</span>')) errors.push("Scalaris Mesa debe identificarse como demo interactiva");
+if (!mesaProject.includes('src="../assets/proyectos/scalaris-mesa.png"')) errors.push("Falta la captura de Scalaris Mesa en su ficha");
+if (!/por visitante/i.test(mesaProject) || !/datos ficticios/i.test(mesaProject)) errors.push("La ficha de Scalaris Mesa debe explicar el aislamiento por visitante y los datos ficticios");
+const mesaLinks = [...mesaProject.matchAll(/<a\b[^>]*\bhref="https:\/\/scalaris\.com\.ar\/mesa\/"[^>]*>/g)];
+if (mesaLinks.length !== 2 || mesaLinks.some(([link]) => !link.includes('target="_blank"') || !link.includes('rel="noopener noreferrer"'))) errors.push("La miniatura y el acceso de Scalaris Mesa deben abrir su demo en una pestaña nueva sin acceso a la ventana de origen");
 const catalog = JSON.parse(readFileSync(resolve(root, "tienda/catalog.json"), "utf8"));
 if (catalog.version !== 1 || !Array.isArray(catalog.products) || !catalog.products.length) errors.push("Catálogo público inválido");
 const productIds = new Set();
@@ -142,5 +150,5 @@ if (errors.length) {
 }
 execFileSync(process.execPath, ["--test", ...walk(resolve(root, "../scripts")).filter(file => file.endsWith(".test.mjs"))], { stdio: "inherit" });
 console.log(
-  `OK: portada, consulta guiada, galería, tienda, recursos locales y ${productIds.size} productos sin costos privados.`,
+  `OK: portada, consulta guiada, galería con ${galleryProjectIds.size} proyectos, tienda, recursos locales y ${productIds.size} productos sin costos privados.`,
 );
