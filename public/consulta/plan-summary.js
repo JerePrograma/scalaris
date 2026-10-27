@@ -1,13 +1,16 @@
-const planNames = Object.freeze({ catalogo: 'Base', pedidos: 'Pedidos', gestion: 'Gestión' });
+const families = Object.freeze({
+  catalogo: {endpoint:'/catalogo/offer.json',plans:{catalogo:'Base',pedidos:'Pedidos',gestion:'Gestión'}},
+  web: {endpoint:'/web/offer.json',plans:{presencia:'Presencia',negocio:'Negocio'}},
+});
 const modes = new Set(['annual', 'monthly']);
 const money = value => new Intl.NumberFormat('es-AR', {
   style: 'currency', currency: 'ARS', maximumFractionDigits: 0,
 }).format(value).replace(/\s/g, ' ');
 
 export function hasPlanSelection(interest) {
-  return interest?.product === 'catalogo'
-    && Object.hasOwn(planNames, interest.plan)
-    && modes.has(interest.billing);
+  return Boolean(interest && Object.hasOwn(families,interest.product)
+    && Object.hasOwn(families[interest.product].plans, interest.plan)
+    && modes.has(interest.billing));
 }
 
 function amount(value, name, { positive = false } = {}) {
@@ -37,7 +40,7 @@ export function buildPlanSummary(offer, interest) {
   const installation = annual && offer.billing.setupAnnualWaived ? 0 : setup;
   const total = amount(subscription + installation, 'total inicial', { positive: true });
   return Object.freeze({
-    plan: interest.plan, name: planNames[interest.plan], billing: interest.billing,
+    plan: interest.plan, name: families[interest.product].plans[interest.plan], billing: interest.billing,
     monthlyAmount: annual ? annualMonthly : monthly,
     periodMonths: annual ? months : 1,
     subscription, installation, total,
@@ -74,7 +77,7 @@ export function planSummaryTotal(plan) {
 
 export async function loadPlanSummary(interest, { fetchImpl = globalThis.fetch, signal } = {}) {
   if (!hasPlanSelection(interest)) return null;
-  const response = await fetchImpl('/catalogo/offer.json', {
+  const response = await fetchImpl(families[interest.product].endpoint, {
     method: 'GET', cache: 'no-store', credentials: 'omit', mode: 'same-origin', signal,
   });
   if (!response.ok) throw new Error('No se pudo consultar la oferta.');

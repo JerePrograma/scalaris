@@ -100,7 +100,7 @@ for (const file of ["proyectos/index.html", "tienda/index.html"]) {
 }
 const requiredCanonical = new Map([
   ["index.html","/"],["consulta/index.html","/consulta/"],["proyectos/index.html","/proyectos/"],["tienda/index.html","/tienda/"],
-  ["productos/index.html","/productos/"],["catalogo/index.html","/catalogo/"],["catalogo/demos/index.html","/catalogo/demos/"],["catalogo/propuesta.html","/catalogo/propuesta"],
+  ["productos/index.html","/productos/"],["web/index.html","/web/"],["catalogo/index.html","/catalogo/"],["catalogo/demos/index.html","/catalogo/demos/"],["catalogo/propuesta.html","/catalogo/propuesta"],
 ]);
 for(const [filename,route] of requiredCanonical){
   const file=resolve(root,filename);
@@ -111,7 +111,7 @@ for(const [filename,route] of requiredCanonical){
   if(!page.includes(`property="og:url" content="${expected}"`))errors.push(`OpenGraph URL incorrecta en ${filename}`);
 }
 const sitemap=readFileSync(resolve(root,"sitemap.xml"),"utf8");
-for(const route of ["/","/consulta/","/proyectos/","/tienda/","/productos/","/catalogo/","/catalogo/demos/"]){
+for(const route of ["/","/consulta/","/proyectos/","/tienda/","/productos/","/web/","/catalogo/","/catalogo/demos/"]){
   if(!sitemap.includes(`<loc>https://scalaris.com.ar${route}</loc>`))errors.push(`Ruta ausente del sitemap: ${route}`);
 }
 const publicOfferPath=resolve(root,"catalogo/offer.json");
@@ -125,7 +125,7 @@ if(existsSync(publicOfferPath)){
     if(!card.includes(money(plan.annualMonthlyEquivalent))||!card.includes(money(plan.setupFee)))errors.push(`Precio mensual o instalación inconsistente en el plan ${plan.id}`);
     if(!card.includes(`plan=${plan.id}`)||!card.includes("billing=annual"))errors.push(`Consulta sin contexto del plan ${plan.id}`);
   }
-  for(const file of ["index.html","productos/index.html","catalogo/index.html","catalogo/propuesta.html","catalogo/cartel-precios.svg"]){
+  for(const file of ["index.html","catalogo/index.html","catalogo/propuesta.html","catalogo/cartel-precios.svg"]){
     const content=readFileSync(resolve(root,file),"utf8");
     for(const plan of offer.plans||[])if(content.includes(money(plan.annualMonthlyEquivalent*offer.billing.annualMonths)))errors.push(`Total anual prematuro en marketing: ${file}`);
   }

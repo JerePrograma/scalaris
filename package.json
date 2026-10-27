@@ -7,6 +7,7 @@
     "check": "node scripts/check.mjs",
     "dev": "node scripts/serve.mjs",
     "test": "node --test scripts/*.test.mjs",
-    "cotizador": "node scripts/build-price-calculator.mjs"
+    "cotizador": "node scripts/build-price-calculator.mjs",
+    "offers:build": "node scripts/sync-product-offers.mjs"
   }
 }

@@ -7,14 +7,14 @@ import {
   buildInquiry,
   readProductInterest,
   productInterestAnswers,
-} from "./model.js?v=20261027-catalogo";
+} from "./model.js?v=20261027-portfolio";
 import {
   hasPlanSelection,
   loadPlanSummary,
   planSummaryRows,
   planSummaryText,
   planSummaryTotal,
-} from "./plan-summary.js?v=20261027-pricing";
+} from "./plan-summary.js?v=20261027-portfolio";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
   interest = readProductInterest(window.location.search),
@@ -102,7 +102,7 @@ function render() {
     const context = element('aside',null,{class:'product-context','aria-label':'Producto consultado'});
     context.append(element('strong',`${interest.productName}${interest.planName?` · Plan ${interest.planName}`:''}`),
       element('p',`${interest.billingName?`Modalidad de interés: ${interest.billingName}. `:''}Podés editar las respuestas. Esta consulta no confirma una contratación ni un pago.`),
-      element('a','Volver a comparar los planes →',{href:'../catalogo/#planes'}));
+      element('a','Volver a comparar los planes →',{href:interest.product==='web'?'../web/#planes':interest.product==='catalogo'?'../catalogo/#planes':'../productos/#planes'}));
     root.append(context);
   }
   if (step === 0) {

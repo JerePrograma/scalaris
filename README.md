@@ -6,6 +6,20 @@ Sitio público: https://scalaris.com.ar
 
 Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
+## Portafolio y oferta comercial — 27/10/2026
+
+`/productos/` organiza seis familias por necesidad: Web, Catálogo, Menú gastronómico, Mesa, Gestudio y CRM. La navegación común lleva a sus planes y demos; `/proyectos/` conserva la galería completa. `/web/` explica los dos paquetes institucionales. El selector anual/mensual conserva la modalidad al pasar al formulario. Los totales anuales se calculan al revisar la consulta, con instalación separada y sin cobro automático.
+
+La fuente de Web, las referencias y los alcances es `commercial/portfolio-offer.json`. Catálogo conserva su fuente en `../scalaris-comercio/commercial/offer.json`; el sincronizador aplica su proyección pública y no copia campos internos. Ejecutar `npm run offers:build` tras cambiar la oferta y luego `npm run check`. Los generadores se conservan en `scripts/build-portfolio-offer.mjs`, `scripts/build-web-offer.mjs` y `scripts/sync-catalog-product.mjs`. Cloudflare publica los archivos generados y versionados de `public/` sin depender de repositorios hermanos durante el build remoto.
+
+Web Presencia: $8.000 por mes con anual / $12.000 mes a mes, instalación $45.000. Web Negocio: $15.000 / $20.000, instalación $90.000. La instalación Web se cobra en ambas modalidades. Incluyen un dominio .com.ar a nombre del negocio con registro/renovación mientras esté activo y configuración de hasta cinco casillas Zoho Free si está disponible para la organización; migraciones, IMAP/POP y licencias pagas se cotizan. Negocio incluye un lote mensual de cambios simples de hasta veinte minutos, no acumulable; Presencia incluye mantenimiento técnico, sin cambios de contenido posteriores al alta.
+
+Catálogo mantiene $10.000/$20.000/$30.000 por mes con anual y $15.000/$30.000/$45.000 mes a mes; instalaciones $30.000/$50.000/$80.000 bonificadas con anual durante la promoción hasta el 30/11/2026. Su dirección pertenece a Scalaris; dominio propio y correo son adicionales. Menú ($25.000/mes e instalación $90.000, desde) y Mesa ($29.000/mes e instalación $120.000, desde) requieren revisión y presupuesto. Gestudio y CRM se cotizan tras relevamiento. El formulario no inventa importes cerrados para estas cuatro implementaciones.
+
+La [auditoría de capacidades](docs/portfolio-capabilities-2026-10-27.md) registra fuentes, límites y pendientes. Menú y Mesa se implementan por separado: no se promete sincronización de productos, pedidos, stock o caja. Mesa requiere aceptación del piloto; Gestudio conserva su demo de consulta y aceptación productiva pendiente; CRM necesita adaptación y no se ofrece con envíos automáticos habilitados. El estudio de proveedores y los escenarios de costos se guardan en `.private/research/portfolio-2026-10-27/`, fuera de Git y del sitio. Las capturas publicitarias aportadas son referencias sin contratación ni validación del proveedor.
+
+Evaluación vigente del estándar: se mantiene HTML/CSS/JavaScript estático con Cloudflare Pages, apropiado para presentación, precios y consultas sin persistencia propia. La ampliación no necesita React, backend ni base de datos adicionales; introducirlos ahora aumentaría el mantenimiento sin resolver un flujo requerido. Las aplicaciones operativas mantienen su arquitectura, permisos y despliegue. La aceptación de esta ampliación comprende seis familias, ambos modos de precio, instalación correcta por producto, continuidad de la consulta, vistas de escritorio/móvil y ausencia de datos privados en las proyecciones públicas.
+
 ## Integración de Scalaris Catálogo — 27/10/2026
 
 La navegación orientada a productos, la oferta, los planes y las demos están publicados en este dominio. La [nota de integración y publicación](docs/publicacion-catalogo-2026-10-27.md) registra el alcance, la evaluación vigente del estándar, las 143 pruebas aprobadas y la comprobación pública en escritorio y ancho móvil de 390 píxeles. El producto está en `/catalogo/` y las demos en `/catalogo/demos/`. Las evaluaciones anteriores se conservan como evidencia histórica de sus respectivos alcances.

@@ -111,3 +111,69 @@ test('quote request uses the same-origin public offer without cached prices or b
   await assert.rejects(loadPlanSummary(interest('catalogo', 'annual'), { fetchImpl: async () => ({ ok: false }) }));
   await assert.rejects(loadPlanSummary(interest('catalogo', 'annual'), { fetchImpl: async () => { throw new Error('offline'); } }));
 });
+
+const webOffer = {
+  currency:'ARS',
+  billing:{annualMonths:12,setupAnnualWaived:false},
+  plans:[
+    {id:'presencia',annualMonthlyEquivalent:8000,monthlyPrice:12000,setupFee:45000},
+    {id:'negocio',annualMonthlyEquivalent:15000,monthlyPrice:20000,setupFee:90000},
+  ],
+};
+
+test('Web review charges the one-time installation in annual and monthly modes',()=>{
+  for(const [id,annual,monthly,installation]of [['presencia',141000,57000,45000],['negocio',270000,110000,90000]]){
+    for(const [billing,total]of [['annual',annual],['monthly',monthly]]){
+      const plan=buildPlanSummary(webOffer,{product:'web',plan:id,billing});
+      assert.equal(plan.total,total);
+      assert.equal(plan.installation,installation);
+      assert.equal(plan.installationWaived,false);
+      assert.equal(plan.periodMonths,billing==='annual'?12:1);
+      assert.ok(!planSummaryText(plan).includes('Bonificada'));
+    }
+  }
+});
+
+test('Web selection rejects URL amounts and preserves the original inquiry schema',()=>{
+  const selection=readProductInterest('?product=web&plan=presencia&billing=annual&amount=1&setup=0&total=1');
+  assert.equal(selection.productName,'Scalaris Web');
+  assert.equal(selection.planName,'Presencia');
+  const answers=productInterestAnswers(selection);
+  assert.equal(answers.topic,'Sitio web');
+  const inquiry=buildInquiry('SOFTWARE',{name:'Prueba web'},answers,'test-web','2026-10-27T00:00:00Z');
+  const snapshot=structuredClone(inquiry);
+  assert.equal(buildPlanSummary(webOffer,selection).total,141000);
+  assert.deepEqual(inquiry,snapshot);
+  assert.deepEqual(Object.keys(inquiry).sort(),['answers','contact','createdAt','id','schema','service','version']);
+  const invalid=structuredClone(webOffer);invalid.billing.annualMonths=Number.MAX_SAFE_INTEGER;
+  assert.throws(()=>buildPlanSummary(invalid,selection));
+  assert.equal(hasPlanSelection({product:'catalogo',plan:'presencia',billing:'annual'}),false);
+  assert.equal(hasPlanSelection({product:'web',plan:'gestion',billing:'annual'}),false);
+});
+
+test('operational family inquiries request a scoped assessment instead of inventing plan charges',async()=>{
+  for(const product of ['menu','mesa','academia','crm']){
+    const selection=readProductInterest('?product='+product+'&plan=gestion&billing=annual&amount=1');
+    assert.equal(selection.product,product);
+    assert.equal(selection.plan,null);
+    assert.equal(selection.billing,null);
+    assert.equal(hasPlanSelection(selection),false);
+    const answers=productInterestAnswers(selection);
+    assert.equal(answers.topic,'Software a medida');
+    assert.match(answers.scope,/relevamiento/);
+    assert.match(answers.scope,/presupuesto/);
+    assert.equal(await loadPlanSummary(selection,{fetchImpl:()=>{throw new Error('Must not fetch quoted products');}}),null);
+  }
+});
+
+test('Web prices load only the fixed Web offer endpoint without accepting an endpoint from the URL',async()=>{
+  const selection=readProductInterest('?product=web&plan=negocio&billing=monthly&endpoint=https://evil.invalid/offer.json');
+  const plan=await loadPlanSummary(selection,{fetchImpl:async(url,options)=>{
+    assert.equal(url,'/web/offer.json');
+    assert.equal(options.cache,'no-store');
+    assert.equal(options.credentials,'omit');
+    assert.equal(options.mode,'same-origin');
+    return{ok:true,json:async()=>webOffer};
+  }});
+  assert.equal(plan.total,110000);
+});
