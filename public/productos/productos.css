@@ -1,0 +1,60 @@
+/* Keep HTML image dimensions for layout reservation, while scaling media with its card. */
+.product-spotlight img {
+  height: auto;
+  aspect-ratio: 1265 / 712;
+  object-fit: cover;
+  object-position: top;
+}
+
+.product-paths {
+  gap: 24px;
+  align-items: stretch;
+}
+
+.product-path {
+  box-shadow: 0 12px 32px -26px #0b1f3350;
+}
+
+.product-path > img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  flex-shrink: 0;
+}
+
+.product-path-body {
+  padding: 27px;
+}
+
+.product-path h3 {
+  line-height: 1.2;
+}
+
+.product-path .text-link {
+  width: 100%;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  min-height: 44px;
+}
+
+.product-path .product-status {
+  min-height: 3.2em;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .product-paths {
+    gap: 22px;
+  }
+
+  .product-path > img {
+    max-height: none;
+  }
+
+  .product-path-body {
+    padding: 24px;
+  }
+}

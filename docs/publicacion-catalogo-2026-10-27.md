@@ -43,3 +43,11 @@ La aplicación de `/comercio/` sirve la release `1e2c27d4fc52fe6397f727fff95c98b
 El informe HTTP de producto está en `scalaris-comercio/docs/http-publication-audit-2026-10-27.json`. Comprueba rechazo anónimo de administración, privacidad de precios mayoristas y que las rutas privadas no entregan archivos de configuración ni JSON privado. Algunas rutas inexistentes devuelven la página HTML pública con HTTP 200; no se reportan como 404. Las capturas locales están en `scalaris/artifacts/catalogo-publication-2026-10-27/`, fuera de Git y del directorio público.
 
 Pendientes independientes: copia externa automatizada y restauración desde ese destino, enlaces reales de Mercado Pago para el abono de Scalaris, revisión bancaria del titular y aceptación del primer negocio en un teléfono físico. El circuito inicial de contratación, conciliación y activación es asistido. Los datos fiscales y bancarios permanecen privados; la publicación no realiza cobros ni emite facturas.
+
+## Corrección visual de Productos
+
+El usuario detectó después del lanzamiento que las capturas de las tarjetas conservaban un alto HTML de 900 píxeles aunque el CSS reducía su ancho. `aspect-ratio` sin `height:auto` no corregía ese alto y `object-fit:contain` centraba una imagen pequeña en un bloque muy alto. La captura destacada conservaba igualmente un alto HTML de 712 píxeles. La revisión anterior no había detectado este defecto de la página Productos.
+
+Se añadió `public/productos/productos.css?v=20261027-2`, limitado a esta página: alturas automáticas, proporciones estables, encuadre superior, separación uniforme y enlaces de acción alineados. El recurso nuevo evita que el navegador conserve la presentación anterior por caché. No cambia precios, consultas ni servicios. Se mantiene la arquitectura estática evaluada arriba; el cambio no requiere migración de stack ni base de datos.
+
+La revisión visual local cubrió 1440 × 1000, 768 × 1024 y 390 × 844, incluyendo las capturas y los cuerpos de las tarjetas. `node scripts/check.mjs` aprobó las 143 pruebas existentes. La comprobación pública y las capturas finales se realizan sobre la misma versión publicada.
