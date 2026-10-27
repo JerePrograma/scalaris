@@ -5,9 +5,9 @@ import { readProductInterest,productInterestAnswers,buildInquiry,summary } from 
 
 test('product links preserve plan and billing interest without accepting prices or arbitrary query text',()=>{
   const interest=readProductInterest('?service=EQUIPMENT&product=catalogo&plan=gestion&billing=annual&amount=1&need=UNTRUSTED');
-  assert.deepEqual(interest,{product:'catalogo',productName:'Scalaris Catálogo',plan:'gestion',planName:'Gestión',billing:'annual',billingName:'pago anual anticipado'});
+  assert.deepEqual(interest,{product:'catalogo',productName:'Scalaris Catálogo',plan:'gestion',planName:'Catálogo con pedidos y caja manual',billing:'annual',billingName:'pago anual anticipado'});
   const answers=productInterestAnswers(interest);
-  assert.match(answers.scope,/Gestión/);assert.match(answers.scope,/pago anual anticipado/);
+  assert.match(answers.scope,/Catálogo con pedidos y caja manual/);assert.match(answers.scope,/pago anual anticipado/);
   assert.ok(!JSON.stringify(answers).includes('UNTRUSTED'));
   assert.ok(!JSON.stringify(answers).includes('amount'));
   assert.equal(readProductInterest('?product=unknown&plan=gestion'),null);
@@ -20,7 +20,7 @@ test('product enquiry keeps existing schema v1 and only allowed answer fields fo
   const inquiry=buildInquiry('SOFTWARE',{name:'Cliente de prueba'},answers,'11111111-1111-4111-8111-111111111111','2026-10-27T12:00:00-03:00');
   assert.equal(inquiry.version,1);assert.equal(inquiry.schema,'scalaris.inquiry');
   assert.deepEqual(Object.keys(inquiry).sort(),['answers','contact','createdAt','id','schema','service','version']);
-  assert.match(summary(inquiry),/Scalaris Catálogo/);assert.match(summary(inquiry),/plan Pedidos/);assert.match(summary(inquiry),/mes a mes/);
+  assert.match(summary(inquiry),/Scalaris Catálogo/);assert.match(summary(inquiry),/plan Catálogo con seguimiento de pedidos/);assert.match(summary(inquiry),/mes a mes/);
   assert.equal(inquiry.answers.amount,undefined);assert.equal(inquiry.product,undefined);
 });
 
@@ -36,6 +36,7 @@ test('public navigation pages keep one shared accessible menu and product entry 
   }
   const formPage=await readFile(new URL('../public/consulta/index.html',import.meta.url),'utf8');
   const formCode=await readFile(new URL('../public/consulta/form.js',import.meta.url),'utf8');
-  assert.match(formPage,/form\.js\?v=20261027-portfolio/);
-  assert.match(formCode,/from "\.\/model\.js\?v=20261027-portfolio"/);
+  assert.match(formPage,/form\.js\?v=20261027-names/);
+  assert.match(formCode,/from "\.\/model\.js\?v=20261027-names"/);
+  assert.match(formCode,/from "\.\/plan-summary\.js\?v=20261027-names"/);
 });

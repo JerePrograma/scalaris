@@ -22,8 +22,8 @@
   "plans": [
     {
       "id": "catalogo",
-      "name": "Base",
-      "audience": "Para mostrar lo que vendés y recibir pedidos por WhatsApp.",
+      "name": "Catálogo para WhatsApp",
+      "audience": "Productos y precios editables. El cliente arma y envía el pedido por WhatsApp.",
       "featured": false,
       "annualMonthlyEquivalent": 10000,
       "monthlyPrice": 15000,
@@ -48,8 +48,8 @@
     },
     {
       "id": "pedidos",
-      "name": "Pedidos",
-      "audience": "Para organizar las solicitudes y acompañarlas hasta la entrega.",
+      "name": "Catálogo con seguimiento de pedidos",
+      "audience": "Catálogo para WhatsApp más pedidos guardados, estados y enlace de seguimiento.",
       "featured": true,
       "annualMonthlyEquivalent": 20000,
       "monthlyPrice": 30000,
@@ -63,7 +63,7 @@
         "revisionRounds": 1
       },
       "features": [
-        "Todo lo incluido en Base",
+        "Todo el Catálogo para WhatsApp",
         "Pedidos guardados con referencia",
         "Panel para revisar y actualizar estados",
         "Enlace de seguimiento para el cliente",
@@ -73,8 +73,8 @@
     },
     {
       "id": "gestion",
-      "name": "Gestión",
-      "audience": "Para sumar control diario del dinero que entra y sale.",
+      "name": "Catálogo con pedidos y caja manual",
+      "audience": "Catálogo y seguimiento de pedidos más ingresos, egresos y cierre de caja manual.",
       "featured": false,
       "annualMonthlyEquivalent": 30000,
       "monthlyPrice": 45000,
@@ -88,7 +88,7 @@
         "revisionRounds": 1
       },
       "features": [
-        "Todo lo incluido en Pedidos",
+        "Todo el Catálogo con seguimiento de pedidos",
         "Apertura de caja con saldo inicial",
         "Registro manual de ingresos y egresos",
         "Movimientos con concepto y responsable",

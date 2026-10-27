@@ -26,11 +26,11 @@
     "plans": [
       {
         "id": "presencia",
-        "name": "Presencia",
+        "name": "Web de una página",
         "annualMonthlyEquivalent": 8000,
         "monthlyPrice": 12000,
         "setupFee": 45000,
-        "audience": "Para mostrar tus servicios y recibir consultas por WhatsApp.",
+        "audience": "Una página con hasta 5 secciones para presentar tu negocio y recibir consultas.",
         "limits": {
           "pages": 1,
           "sections": 5,
@@ -51,11 +51,11 @@
       },
       {
         "id": "negocio",
-        "name": "Negocio",
+        "name": "Web de hasta 5 páginas",
         "annualMonthlyEquivalent": 15000,
         "monthlyPrice": 20000,
         "setupFee": 90000,
-        "audience": "Para organizar más servicios y mantener información institucional.",
+        "audience": "Hasta 5 páginas y un lote mensual de cambios simples, de hasta 20 minutos.",
         "limits": {
           "pages": 5,
           "revisionRounds": 1,

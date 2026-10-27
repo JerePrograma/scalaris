@@ -4,8 +4,8 @@ export const services = {
   SOFTWARE: "Web / software",
 };
 const productFamilies = Object.freeze({
-  catalogo: {name:'Scalaris Catálogo',topic:'Sitio web',plans:{catalogo:'Base',pedidos:'Pedidos',gestion:'Gestión'}},
-  web: {name:'Scalaris Web',topic:'Sitio web',plans:{presencia:'Presencia',negocio:'Negocio'}},
+  catalogo: {name:'Scalaris Catálogo',topic:'Sitio web',plans:{catalogo:'Catálogo para WhatsApp',pedidos:'Catálogo con seguimiento de pedidos',gestion:'Catálogo con pedidos y caja manual'}},
+  web: {name:'Scalaris Web',topic:'Sitio web',plans:{presencia:'Web de una página',negocio:'Web de hasta 5 páginas'}},
   menu: {name:'Menú gastronómico',topic:'Software a medida',plans:null},
   mesa: {name:'Scalaris Mesa',topic:'Software a medida',plans:null},
   academia: {name:'Gestudio',topic:'Software a medida',plans:null},
