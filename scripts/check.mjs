@@ -2,11 +2,26 @@ import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
+import { resolvePublicReference,validatePublicOffer } from "./public-references.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../public");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
 const css = readFileSync(resolve(root, "styles.css"), "utf8");
 const errors = [];
+const routes = JSON.parse(readFileSync(resolve(root,"_routes.json"),"utf8"));
+const dynamicPrefixes = routes.include.filter(route=>/^\/[a-z0-9-]+$/.test(route)).filter(route=>{
+  const handler=resolve(root,"../functions",route.slice(1),"[[path]].js");
+  if(!existsSync(handler)){errors.push(`Ruta dinámica sin función: ${route}`);return false;}
+  return true;
+});
+// Existing Burger House routing is managed outside Pages. Its public URL is
+// declared by that project's frontend.config.json; do not create a competing function.
+const externallyManagedPrefixes=["/burger-house-3"];
+function verifyReference(source,ref){
+  try{return resolvePublicReference(root,source,ref,{dynamicPrefixes,externallyManagedPrefixes});}
+  catch(error){errors.push(`${error.message} (desde ${relativeToPublic(source)})`);return null;}
+}
+const relativeToPublic=file=>file.slice(root.length+1);
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
 const refs = [...html.matchAll(/\b(?:href|src)="([^"]+)"/g)].map((m) => m[1]);
 refs.push(
@@ -14,15 +29,7 @@ refs.push(
 );
 let localFiles = 0;
 for (const ref of refs) {
-  if (ref.startsWith("#")) {
-    if (ref.length > 1 && !ids.has(ref.slice(1)))
-      errors.push(`Ancla inexistente: ${ref}`);
-  } else if (!/^[a-z][a-z0-9+.-]*:/i.test(ref)) {
-    const path = resolve(root, ref.split(/[?#]/)[0]);
-    if (!path.startsWith(root + sep) || !existsSync(path))
-      errors.push(`Recurso inexistente: ${ref}`);
-    localFiles++;
-  }
+  if(verifyReference(resolve(root,"index.html"),ref)?.kind==='static')localFiles++;
 }
 if (!html.includes('href="tel:+5491172789289"'))
   errors.push("Teléfono incorrecto");
@@ -58,10 +65,7 @@ const formRefs = [
   ...[...formCss.matchAll(/url\(['"]?([^)'"\s]+)['"]?\)/g)].map((m) => m[1]),
 ];
 for (const ref of formRefs) {
-  if (/^[a-z][a-z0-9+.-]*:/i.test(ref) || ref.startsWith("#")) continue;
-  const file = resolve(formRoot, ref.split(/[?#]/)[0]);
-  if (!file.startsWith(root + sep) || !existsSync(file))
-    errors.push(`Recurso del formulario inexistente: ${ref}`);
+  verifyReference(resolve(formRoot,"index.html"),ref);
 }
 for (const file of ["form.js", "model.js"])
   execFileSync(process.execPath, ["--check", resolve(formRoot, file)], {
@@ -87,18 +91,66 @@ for (const file of publicFiles.filter(file => /\.(html|css)$/.test(file))) {
     ...[...text.matchAll(/url\(['"]?([^)'"\s]+)['"]?\)/g)].map(match => match[1]),
   ];
   for (const ref of pageRefs) {
-    if (ref.startsWith("#")) {
-      if (ref.length > 1 && !pageIds.has(ref.slice(1))) errors.push(`Ancla inexistente en ${file}: ${ref}`);
-      continue;
-    }
-    if (/^[a-z][a-z0-9+.-]*:/i.test(ref)) continue;
-    const target = resolve(dirname(file), ref.split(/[?#]/)[0]);
-    if (!target.startsWith(root + sep) || !existsSync(target)) errors.push(`Recurso inexistente en ${file}: ${ref}`);
+    verifyReference(file,ref);
   }
 }
 for (const file of publicFiles.filter(file => file.endsWith(".js"))) execFileSync(process.execPath, ["--check", file], { stdio: "pipe" });
 for (const file of ["proyectos/index.html", "tienda/index.html"]) {
   if (!existsSync(resolve(root, file))) errors.push(`Página inexistente: ${file}`);
+}
+const requiredCanonical = new Map([
+  ["index.html","/"],["consulta/index.html","/consulta/"],["proyectos/index.html","/proyectos/"],["tienda/index.html","/tienda/"],
+  ["productos/index.html","/productos/"],["catalogo/index.html","/catalogo/"],["catalogo/demos/index.html","/catalogo/demos/"],["catalogo/propuesta.html","/catalogo/propuesta.html"],
+]);
+for(const [filename,route] of requiredCanonical){
+  const file=resolve(root,filename);
+  if(!existsSync(file)){errors.push(`Página de producto inexistente: ${filename}`);continue;}
+  const page=readFileSync(file,"utf8"),expected=`https://scalaris.com.ar${route}`;
+  const canonicals=[...page.matchAll(/<link\b[^>]*\brel="canonical"[^>]*\bhref="([^"]+)"/g)];
+  if(canonicals.length!==1||canonicals[0][1]!==expected)errors.push(`Canonical incorrecto en ${filename}`);
+  if(!page.includes(`property="og:url" content="${expected}"`))errors.push(`OpenGraph URL incorrecta en ${filename}`);
+}
+const sitemap=readFileSync(resolve(root,"sitemap.xml"),"utf8");
+for(const route of ["/","/consulta/","/proyectos/","/tienda/","/productos/","/catalogo/","/catalogo/demos/"]){
+  if(!sitemap.includes(`<loc>https://scalaris.com.ar${route}</loc>`))errors.push(`Ruta ausente del sitemap: ${route}`);
+}
+const publicOfferPath=resolve(root,"catalogo/offer.json");
+if(existsSync(publicOfferPath)){
+  const offer=JSON.parse(readFileSync(publicOfferPath,"utf8"));
+  errors.push(...validatePublicOffer(offer));
+  const productPage=readFileSync(resolve(root,"catalogo/index.html"),"utf8");
+  const money=value=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(value).replace(/\s/g," ");
+  for(const plan of offer.plans||[]){
+    const card=productPage.match(new RegExp(`<article\\b[^>]*data-catalog-plan="${plan.id}"[^>]*>[\\s\\S]*?<\\/article>`))?.[0]||"";
+    if(!card.includes(money(plan.annualMonthlyEquivalent))||!card.includes(money(plan.annualMonthlyEquivalent*offer.billing.annualMonths)))errors.push(`Precio anual inconsistente en el plan ${plan.id}`);
+    if(!card.includes(`plan=${plan.id}`)||!card.includes("billing=annual"))errors.push(`Consulta sin contexto del plan ${plan.id}`);
+  }
+  const js=readFileSync(resolve(root,"catalogo/catalogo.js"),"utf8");
+  try{
+    const config=JSON.parse(js.match(/^const config=(.+);$/m)?.[1]||"null");
+    if(!config||config.months!==offer.billing.annualMonths||JSON.stringify(config.plans)!==JSON.stringify(offer.plans.map(({id,annualMonthlyEquivalent,monthlyPrice,setupFee})=>({id,annualMonthlyEquivalent,monthlyPrice,setupFee}))))errors.push("El selector de planes no coincide con la oferta pública.");
+  }catch{errors.push("Configuración pública del selector de planes inválida.");}
+  // Local releases can compare the editable source; CI remains portable without a sibling checkout.
+  const editableOffer=resolve(root,"../../scalaris-comercio/commercial/offer.json");
+  if(existsSync(editableOffer)){
+    const source=JSON.parse(readFileSync(editableOffer,"utf8"));
+    for(const plan of offer.plans||[]){
+      const original=source.plans.find(candidate=>candidate.id===plan.id);
+      if(!original||["annualMonthlyEquivalent","monthlyPrice","setupFee"].some(field=>plan[field]!==original[field]))errors.push(`Tarifas públicas distintas de la fuente editable: ${plan.id}`);
+    }
+  }
+}
+for(const file of publicFiles.filter(file=>file.endsWith(".json"))){
+  const value=JSON.parse(readFileSync(file,"utf8"));
+  const inspect=(node,at="")=>{
+    if(!node||typeof node!=="object")return;
+    for(const [key,child]of Object.entries(node)){
+      const normalized=key.toLowerCase().replace(/[^a-z0-9]/g,"");
+      if(/password|secret|credential|accesstoken|privatekey|apikey|suppliercost|unitcost|costars/.test(normalized)||["cbu","alias","cuit","taxid","legalname","holdername","issuer","paymentoptions","banktransfer","mercadopagomanual"].includes(normalized))errors.push(`Campo privado en JSON público ${relativeToPublic(file)}: ${at}${key}`);
+      inspect(child,`${at}${key}.`);
+    }
+  };
+  inspect(value);
 }
 const gallery = readFileSync(resolve(root, "proyectos/index.html"), "utf8");
 for (const destination of ["https://scalaris.com.ar/tu-comida/", "https://scalaris.com.ar/e-medicapp/", "https://scalaris.com.ar/comercio/t/corralon-demo", "https://scalaris.com.ar/comercio/t/mayorista-demo", "https://scalaris.com.ar/comercio/t/almacen-demo", "https://scalaris.com.ar/mesa/"]) {
@@ -150,5 +202,5 @@ if (errors.length) {
 }
 execFileSync(process.execPath, ["--test", ...walk(resolve(root, "../scripts")).filter(file => file.endsWith(".test.mjs"))], { stdio: "inherit" });
 console.log(
-  `OK: portada, consulta guiada, galería con ${galleryProjectIds.size} proyectos, tienda, recursos locales y ${productIds.size} productos sin costos privados.`,
+  `OK: portada, Productos, Catálogo, planes/demos, consulta guiada, galería con ${galleryProjectIds.size} proyectos, tienda, referencias locales/dinámicas y ${productIds.size} productos sin costos privados.`,
 );

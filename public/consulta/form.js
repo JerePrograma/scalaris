@@ -5,16 +5,19 @@ import {
   summary,
   whatsappMessage,
   buildInquiry,
+  readProductInterest,
+  productInterestAnswers,
 } from "./model.js";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
-  requestedService = new URLSearchParams(window.location.search).get("service");
+  interest = readProductInterest(window.location.search),
+  requestedService = interest ? 'SOFTWARE' : new URLSearchParams(window.location.search).get("service");
 let step = Object.prototype.hasOwnProperty.call(services, requestedService)
     ? 1
     : 0,
   service = step ? requestedService : "",
   contact = { name: "", phone: "" },
-  answers = {},
+  answers = productInterestAnswers(interest),
   inquiry = null;
 const id = crypto.randomUUID(),
   createdAt = new Date().toISOString();
@@ -85,6 +88,13 @@ function render() {
       if (i === step) e.setAttribute("aria-current", "step");
       else e.removeAttribute("aria-current");
     });
+  if (interest && service === 'SOFTWARE') {
+    const context = element('aside',null,{class:'product-context','aria-label':'Producto consultado'});
+    context.append(element('strong',`${interest.productName}${interest.planName?` · Plan ${interest.planName}`:''}`),
+      element('p',`${interest.billingName?`Modalidad de interés: ${interest.billingName}. `:''}Podés editar las respuestas. Esta consulta no confirma una contratación ni un pago.`),
+      element('a','Volver a comparar los planes →',{href:'../catalogo/#planes'}));
+    root.append(context);
+  }
   if (step === 0) {
     root.append(element("h2", "¿Sobre qué querés consultar?"));
     const options = element("div", null, { class: "choices" });
@@ -93,7 +103,7 @@ function render() {
         label,
         () => {
           if (service !== key) {
-            answers = {};
+            answers = key === 'SOFTWARE' ? productInterestAnswers(interest) : {};
             service = key;
           }
           step = 1;

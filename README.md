@@ -6,6 +6,10 @@ Sitio público: https://scalaris.com.ar
 
 Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
+## Integración de Scalaris Catálogo — 27/10/2026
+
+La navegación orientada a productos, la oferta, los planes y las demos están preparados para publicación en este dominio. La [nota de integración y publicación](docs/publicacion-catalogo-2026-10-27.md) registra el alcance, la evaluación vigente del estándar y las 143 pruebas locales aprobadas. Estado: publicación en proceso; la verificación del dominio real se completa en esa nota. Las evaluaciones anteriores se conservan como evidencia histórica de sus respectivos alcances.
+
 ## Archivos
 
 `public/` contiene la web portable de HTML, CSS, JavaScript, catálogo público, imágenes, logos y fuentes Inter con su licencia. No necesita dependencias ni compilación. Los costos mayoristas y el cotizador personal quedan en `.private/`, fuera de la publicación y excluidos de Git.

@@ -3,6 +3,24 @@ export const services = {
   PARTS: "Repuestos",
   SOFTWARE: "Web / software",
 };
+const productPlans = Object.freeze({catalogo:'Base',pedidos:'Pedidos',gestion:'Gestión'});
+const productBilling = Object.freeze({annual:'pago anual anticipado',monthly:'mes a mes'});
+/** A URL expresses interest only. Prices and contract terms never come from query values. */
+export function readProductInterest(search = '') {
+  const params = new URLSearchParams(search);
+  if (!['catalogo','scalaris-catalogo'].includes(params.get('product'))) return null;
+  const requestedPlan = params.get('plan'), requestedBilling = params.get('billing');
+  const plan = Object.hasOwn(productPlans,requestedPlan) ? requestedPlan : null;
+  const billing = Object.hasOwn(productBilling,requestedBilling) ? requestedBilling : null;
+  return {product:'catalogo',productName:'Scalaris Catálogo',plan,planName:plan?productPlans[plan]:null,billing,billingName:billing?productBilling[billing]:null};
+}
+export function productInterestAnswers(interest) {
+  const safe = interest?.product==='catalogo'
+    ? readProductInterest(new URLSearchParams({product:'catalogo',...(interest.plan?{plan:interest.plan}:{}),...(interest.billing?{billing:interest.billing}:{})}).toString())
+    : null;
+  if (!safe) return {};
+  return {topic:'Sitio web',need:'Quiero conocer Scalaris Catálogo para mi negocio.',scope:`Me interesa ${safe.planName?`el plan ${safe.planName}`:'definir qué plan me conviene'}${safe.billingName?`, con modalidad ${safe.billingName}`:''}. Quiero revisar el alcance y las condiciones antes de contratar.`};
+}
 export const labels = {
   topic: "Motivo",
   type: "Tipo de equipo",

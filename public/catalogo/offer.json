@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-27",
+  "currency": "ARS",
+  "product": {
+    "name": "Scalaris Catálogo",
+    "tagline": "Tu negocio tiene su estilo. Tu web también.",
+    "description": "Una web con la identidad de tu negocio, productos que actualizás desde el celular y un carrito para preparar pedidos por WhatsApp."
+  },
+  "billing": {
+    "annualMonths": 12,
+    "setupAnnualWaived": true,
+    "promotionEnd": "2026-11-30",
+    "renewalPolicy": "Anual: servicio por 12 meses desde la activación, abonado por adelantado y con precio fijo durante ese período. Renovación a la tarifa informada con 30 días de anticipación. Mensual: precio inicial garantizado por 3 meses; revisión trimestral con aviso de 30 días, sin ajustes retroactivos.",
+    "support": {
+      "businessDays": "Lunes a viernes",
+      "hours": "09:00 a 18:00",
+      "timezone": "America/Buenos_Aires",
+      "firstResponseTarget": "1 día hábil"
+    }
+  },
+  "plans": [
+    {
+      "id": "catalogo",
+      "name": "Base",
+      "audience": "Para mostrar lo que vendés y recibir pedidos por WhatsApp.",
+      "featured": false,
+      "annualMonthlyEquivalent": 10000,
+      "monthlyPrice": 15000,
+      "setupFee": 30000,
+      "limits": {
+        "products": 100,
+        "imagesPerProduct": 1,
+        "administrators": 1,
+        "initialProductsLoaded": 10,
+        "onboardingMinutes": 20,
+        "revisionRounds": 1
+      },
+      "features": [
+        "Web con tu marca y composición adaptada",
+        "Catálogo con categorías, foto, descripción y precio",
+        "Alta, edición y baja de productos desde el celular",
+        "Disponibilidad manual de productos",
+        "Carrito y mensaje preparado para WhatsApp",
+        "Dirección dentro del dominio de Scalaris",
+        "Configuración inicial y capacitación breve"
+      ]
+    },
+    {
+      "id": "pedidos",
+      "name": "Pedidos",
+      "audience": "Para organizar las solicitudes y acompañarlas hasta la entrega.",
+      "featured": true,
+      "annualMonthlyEquivalent": 20000,
+      "monthlyPrice": 30000,
+      "setupFee": 50000,
+      "limits": {
+        "products": 300,
+        "imagesPerProduct": 1,
+        "administrators": 2,
+        "initialProductsLoaded": 20,
+        "onboardingMinutes": 30,
+        "revisionRounds": 1
+      },
+      "features": [
+        "Todo lo incluido en Base",
+        "Pedidos guardados con referencia",
+        "Panel para revisar y actualizar estados",
+        "Enlace de seguimiento para el cliente",
+        "Datos para coordinar retiro o entrega",
+        "Historial de solicitudes del negocio"
+      ]
+    },
+    {
+      "id": "gestion",
+      "name": "Gestión",
+      "audience": "Para sumar control diario del dinero que entra y sale.",
+      "featured": false,
+      "annualMonthlyEquivalent": 30000,
+      "monthlyPrice": 45000,
+      "setupFee": 80000,
+      "limits": {
+        "products": 1000,
+        "imagesPerProduct": 1,
+        "administrators": 3,
+        "initialProductsLoaded": 30,
+        "onboardingMinutes": 45,
+        "revisionRounds": 1
+      },
+      "features": [
+        "Todo lo incluido en Pedidos",
+        "Apertura de caja con saldo inicial",
+        "Registro manual de ingresos y egresos",
+        "Movimientos con concepto y responsable",
+        "Cierre con saldo esperado, declarado y diferencia",
+        "Consulta del historial de caja"
+      ]
+    }
+  ]
+}
