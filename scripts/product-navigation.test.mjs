@@ -36,6 +36,6 @@ test('public navigation pages keep one shared accessible menu and product entry 
   }
   const formPage=await readFile(new URL('../public/consulta/index.html',import.meta.url),'utf8');
   const formCode=await readFile(new URL('../public/consulta/form.js',import.meta.url),'utf8');
-  assert.match(formPage,/form\.js\?v=20261027-catalogo/);
+  assert.match(formPage,/form\.js\?v=20261027-pricing/);
   assert.match(formCode,/from "\.\/model\.js\?v=20261027-catalogo"/);
 });

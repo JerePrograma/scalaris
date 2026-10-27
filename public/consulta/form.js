@@ -8,6 +8,13 @@ import {
   readProductInterest,
   productInterestAnswers,
 } from "./model.js?v=20261027-catalogo";
+import {
+  hasPlanSelection,
+  loadPlanSummary,
+  planSummaryRows,
+  planSummaryText,
+  planSummaryTotal,
+} from "./plan-summary.js?v=20261027-pricing";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
   interest = readProductInterest(window.location.search),
@@ -22,6 +29,7 @@ let step = Object.prototype.hasOwnProperty.call(services, requestedService)
 const id = crypto.randomUUID(),
   createdAt = new Date().toISOString();
 let renderedStep = step;
+let cancelPlanSummary = () => {};
 function element(tag, text, attrs = {}) {
   const e = document.createElement(tag);
   if (text) e.textContent = text;
@@ -79,6 +87,8 @@ function field(
   return wrapper;
 }
 function render() {
+  cancelPlanSummary();
+  cancelPlanSummary = () => {};
   root.replaceChildren();
   document
     .querySelectorAll(".steps li")
@@ -207,10 +217,17 @@ function render() {
     root.append(form);
   }
   if (step === 2) {
+    const needsPlanSummary = service === 'SOFTWARE' && hasPlanSelection(interest);
+    let shareText = summary(inquiry);
+    let planSummaryReady = !needsPlanSummary;
     root.append(
       element("h2", "Tu consulta, lista para compartir."),
       element("p", "Revisá el resumen. Podés corregir tus respuestas antes de enviarlo.", { class: "note" }),
     );
+    const planSection = needsPlanSummary
+      ? element('section', null, { class: 'plan-summary', 'aria-label': 'Resumen económico del plan' })
+      : null;
+    if (planSection) root.append(planSection);
     const pre = element("pre", summary(inquiry), { class: "summary" });
     root.append(pre);
     const feedback = element("p", null, { role: "status", class: "feedback" });
@@ -221,19 +238,20 @@ function render() {
     correction.classList.add("edit-response");
     root.append(correction);
     const actions = element("div", null, { class: "actions" });
-    actions.append(
-      button(
+    const copy = button(
         "Copiar resumen",
         async () => {
           try {
-            await navigator.clipboard.writeText(summary(inquiry));
+            await navigator.clipboard.writeText(shareText);
             feedback.textContent = "Resumen copiado. No se envió nada.";
           } catch {
             feedback.textContent =
               "No se pudo copiar automáticamente. Seleccioná el texto del resumen y copialo.";
           }
         },
-      ),
+      );
+    actions.append(
+      copy,
       button("Descargar ficha", () => {
         const blob = new Blob([JSON.stringify(inquiry, null, 2)], {
             type: "application/json",
@@ -276,9 +294,14 @@ function render() {
       target: "_blank",
       rel: "noopener noreferrer",
     });
-    link.addEventListener("click", () => {
+    link.addEventListener("click", (event) => {
+      if (!planSummaryReady) {
+        event.preventDefault();
+        feedback.textContent = 'Primero revisá los importes del plan. Podés volver a intentar cargarlos.';
+        return;
+      }
       try {
-        navigator.clipboard.writeText(summary(inquiry)).then(
+        navigator.clipboard.writeText(shareText).then(
           () => (feedback.textContent = "Resumen copiado. Pegalo en el chat y revisalo antes de enviarlo."),
           () =>
             (feedback.textContent =
@@ -302,6 +325,66 @@ function render() {
       ),
     );
     root.append(alternatives);
+    if (planSection) {
+      const greetingHref = link.href;
+      let requestGeneration = 0;
+      const setReady = ready => {
+        planSummaryReady = ready;
+        copy.disabled = !ready;
+        link.setAttribute('aria-disabled', String(!ready));
+        if (ready) {
+          link.href = greetingHref;
+          link.removeAttribute('tabindex');
+        } else {
+          link.removeAttribute('href');
+          link.tabIndex = -1;
+        }
+      };
+      const load = () => {
+        const generation = ++requestGeneration;
+        cancelPlanSummary();
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+        cancelPlanSummary = () => {
+          clearTimeout(timeout);
+          controller.abort();
+        };
+        setReady(false);
+        planSection.setAttribute('aria-busy', 'true');
+        planSection.replaceChildren(
+          element('h3', 'Revisá el plan elegido'),
+          element('p', 'Cargando los importes vigentes…', { role: 'status', class: 'plan-summary-status' }),
+        );
+        loadPlanSummary(interest, { signal: controller.signal }).then(plan => {
+          if (generation !== requestGeneration || !planSection.isConnected || step !== 2 || service !== 'SOFTWARE') return;
+          const lines = element('dl', null, { class: 'plan-summary-lines' });
+          for (const [label, value] of planSummaryRows(plan)) {
+            lines.append(element('dt', label), element('dd', value));
+          }
+          const total = element('p', null, { class: 'plan-summary-total' });
+          total.append(element('span', 'Total inicial'), element('strong', planSummaryTotal(plan)));
+          planSection.replaceChildren(
+            element('h3', 'Revisá el plan elegido'),
+            lines,
+            total,
+            element('p', plan.nextPayment, { class: 'note' }),
+            element('p', 'Precios finales en ARS. El alcance y las condiciones se confirman con Scalaris antes del pago. Esta consulta no contrata ni activa el servicio.', { class: 'note' }),
+          );
+          shareText = `${summary(inquiry)}\n\n${planSummaryText(plan)}`;
+          planSection.setAttribute('aria-busy', 'false');
+          setReady(true);
+        }).catch(() => {
+          if (generation !== requestGeneration || !planSection.isConnected || step !== 2 || service !== 'SOFTWARE') return;
+          planSection.setAttribute('aria-busy', 'false');
+          planSection.replaceChildren(
+            element('h3', 'Revisá el plan elegido'),
+            element('p', 'No pudimos cargar los precios. Tus respuestas siguen en esta página. Volvé a intentar para revisar el total antes de compartir la consulta.', { role: 'status', class: 'plan-summary-status' }),
+            button('Volver a cargar los precios', load),
+          );
+        }).finally(() => clearTimeout(timeout));
+      };
+      load();
+    }
   }
   if (renderedStep !== step) {
     const heading = root.querySelector("h2");

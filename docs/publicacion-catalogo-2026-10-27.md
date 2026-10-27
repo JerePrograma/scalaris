@@ -51,3 +51,13 @@ El usuario detectó después del lanzamiento que las capturas de las tarjetas co
 Se añadió `public/productos/productos.css?v=20261027-2`, limitado a esta página: alturas automáticas, proporciones estables, encuadre superior, separación uniforme y enlaces de acción alineados. El recurso nuevo evita que el navegador conserve la presentación anterior por caché. No cambia precios, consultas ni servicios. Se mantiene la arquitectura estática evaluada arriba; el cambio no requiere migración de stack ni base de datos.
 
 La revisión visual local cubrió 1440 × 1000, 768 × 1024 y 390 × 844, incluyendo las capturas y los cuerpos de las tarjetas. `node scripts/check.mjs` aprobó las 143 pruebas existentes. La comprobación pública y las capturas finales se realizan sobre la misma versión publicada.
+
+## Presentación de precios revisada
+
+Por indicación del usuario, la presentación comercial destaca $10.000 / $20.000 / $30.000 por mes con plan anual, con selector visible a $15.000 / $30.000 / $45.000 mes a mes. Una nota breve indica pago anual anticipado. La instalación figura junto a cada plan: $30.000 / $50.000 / $80.000 por única vez en modalidad mensual y bonificada en anual. Se retiraron los totales anuales y los importes del primer pago de portada, Productos, planes, propuesta genérica y cartel; se mantienen los importes reales y las reglas de cobro.
+
+La inspiración de jerarquía comercial se contrastó el 27/10/2026 con las páginas oficiales de [Pency](https://web.pency.app/) —precio por mes con nota de anualidad— y [Tiendanube](https://www.tiendanube.com/planes-y-precios) —selector mensual/anual y descuento visible—. Son referencias de presentación; no se copiaron sus precios ni se atribuyen sus funcionalidades al producto.
+
+El paso de revisión de la consulta muestra el desglose del plan elegido antes de compartirlo: modalidad, abono, instalación y total inicial. Obtiene únicamente la oferta pública vigente; los parámetros de URL no suministran importes. La descarga JSON mantiene el contrato `scalaris.inquiry` v1. No se añadieron contratación ni pagos automáticos. Los accesos comerciales históricos de `/comercio/planes/` redirigen mediante una lista explícita a las páginas actuales de `/catalogo/`, conservando la operación del backend sin desplegarlo de nuevo por un cambio de presentación.
+
+Validación local de esta revisión: 152 pruebas del sitio aprobadas y 13 pruebas de oferta/cobranza aprobadas en el proyecto del producto; selector y resumen mensual comprobados en navegador. Los controles incluyen cálculo anual y mensual, rechazo de ofertas inválidas y redirecciones comerciales sin acceso al upstream. La comprobación pública y sus capturas acompañan la publicación.

@@ -122,8 +122,12 @@ if(existsSync(publicOfferPath)){
   const money=value=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(value).replace(/\s/g," ");
   for(const plan of offer.plans||[]){
     const card=productPage.match(new RegExp(`<article\\b[^>]*data-catalog-plan="${plan.id}"[^>]*>[\\s\\S]*?<\\/article>`))?.[0]||"";
-    if(!card.includes(money(plan.annualMonthlyEquivalent))||!card.includes(money(plan.annualMonthlyEquivalent*offer.billing.annualMonths)))errors.push(`Precio anual inconsistente en el plan ${plan.id}`);
+    if(!card.includes(money(plan.annualMonthlyEquivalent))||!card.includes(money(plan.setupFee)))errors.push(`Precio mensual o instalación inconsistente en el plan ${plan.id}`);
     if(!card.includes(`plan=${plan.id}`)||!card.includes("billing=annual"))errors.push(`Consulta sin contexto del plan ${plan.id}`);
+  }
+  for(const file of ["index.html","productos/index.html","catalogo/index.html","catalogo/propuesta.html","catalogo/cartel-precios.svg"]){
+    const content=readFileSync(resolve(root,file),"utf8");
+    for(const plan of offer.plans||[])if(content.includes(money(plan.annualMonthlyEquivalent*offer.billing.annualMonths)))errors.push(`Total anual prematuro en marketing: ${file}`);
   }
   const js=readFileSync(resolve(root,"catalogo/catalogo.js"),"utf8");
   try{

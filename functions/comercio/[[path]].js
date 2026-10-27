@@ -1,6 +1,16 @@
 const upstreamOrigin='https://srv2083548.hstgr.cloud';
 const prefix='/comercio/';
 const noStore={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
+// Keep old public sales links on the current offer without redirecting arbitrary paths.
+const legacyMarketing=new Map([
+ ['/comercio/planes','/catalogo/'],
+ ['/comercio/planes/','/catalogo/'],
+ ['/comercio/planes/index.html','/catalogo/'],
+ ['/comercio/planes/propuesta.html','/catalogo/propuesta'],
+ ['/comercio/planes/cartel-precios.svg','/catalogo/cartel-precios.svg'],
+ ['/comercio/planes/cartel-precios.html','/catalogo/cartel-precios.svg'],
+ ['/comercio/planes/offer.json','/catalogo/offer.json'],
+]);
 export async function onRequest({request}){
  const url=new URL(request.url);
  if(url.pathname===prefix.slice(0,-1)){url.pathname=prefix;return Response.redirect(url.href,308);}
@@ -8,6 +18,8 @@ export async function onRequest({request}){
  const api=url.pathname.startsWith(`${prefix}api/`);
  const methods=api?['GET','HEAD','POST','PUT','PATCH','OPTIONS']:['GET','HEAD'];
  if(!methods.includes(request.method))return new Response('Método no permitido.',{status:405,headers:{...noStore,Allow:methods.join(', ')}});
+ const marketingTarget=legacyMarketing.get(url.pathname);
+ if(marketingTarget)return new Response(null,{status:308,headers:{...noStore,Location:new URL(marketingTarget,url.origin).href}});
  const origin=request.headers.get('Origin');
  if(api&&origin&&origin!==url.origin)return new Response('Origen no permitido.',{status:403,headers:noStore});
  const source=new URL(upstreamOrigin);source.pathname=url.pathname;source.search=url.search;
