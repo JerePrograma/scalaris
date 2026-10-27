@@ -25,11 +25,17 @@ test('product enquiry keeps existing schema v1 and only allowed answer fields fo
 });
 
 test('public navigation pages keep one shared accessible menu and product entry points',async()=>{
-  for(const file of ['index.html','productos/index.html','proyectos/index.html','consulta/index.html','tienda/index.html']){
+  for(const file of ['index.html','productos/index.html','proyectos/index.html','consulta/index.html','tienda/index.html','catalogo/index.html','catalogo/demos/index.html','catalogo/propuesta.html']){
     const html=await readFile(new URL(`../public/${file}`,import.meta.url),'utf8');
     assert.equal((html.match(/id="site-navigation"/g)||[]).length,1,file);
     assert.match(html,/aria-controls="site-navigation"/);assert.match(html,/aria-expanded="false"/);
     assert.match(html,/class="footer-links"/);assert.match(html,/main\.js/);
+    assert.match(html,/styles\.css\?v=20261027-catalogo/);
+    assert.match(html,/main\.js\?v=20261027-catalogo/);
     assert.match(html,/catalogo\/#planes/);assert.match(html,/catalogo\/demos\//);
   }
+  const formPage=await readFile(new URL('../public/consulta/index.html',import.meta.url),'utf8');
+  const formCode=await readFile(new URL('../public/consulta/form.js',import.meta.url),'utf8');
+  assert.match(formPage,/form\.js\?v=20261027-catalogo/);
+  assert.match(formCode,/from "\.\/model\.js\?v=20261027-catalogo"/);
 });

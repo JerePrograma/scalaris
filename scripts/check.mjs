@@ -100,7 +100,7 @@ for (const file of ["proyectos/index.html", "tienda/index.html"]) {
 }
 const requiredCanonical = new Map([
   ["index.html","/"],["consulta/index.html","/consulta/"],["proyectos/index.html","/proyectos/"],["tienda/index.html","/tienda/"],
-  ["productos/index.html","/productos/"],["catalogo/index.html","/catalogo/"],["catalogo/demos/index.html","/catalogo/demos/"],["catalogo/propuesta.html","/catalogo/propuesta.html"],
+  ["productos/index.html","/productos/"],["catalogo/index.html","/catalogo/"],["catalogo/demos/index.html","/catalogo/demos/"],["catalogo/propuesta.html","/catalogo/propuesta"],
 ]);
 for(const [filename,route] of requiredCanonical){
   const file=resolve(root,filename);

@@ -7,7 +7,7 @@ import {
   buildInquiry,
   readProductInterest,
   productInterestAnswers,
-} from "./model.js";
+} from "./model.js?v=20261027-catalogo";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
   interest = readProductInterest(window.location.search),
