@@ -1,6 +1,6 @@
 # Scalaris Catálogo: integración y publicación
 
-Fecha: 27/10/2026, Argentina. **Estado: publicación en proceso.** Esta nota reúne cambios y evidencia local; los resultados del despliegue y la verificación pública serán completados por el responsable de publicación.
+Fecha: 27/10/2026, Argentina. **Estado: publicado y verificado en el dominio real.** Esta nota reúne cambios, evidencia local y comprobaciones de publicación. La aceptación de un primer negocio y los pendientes operativos se distinguen del lanzamiento público de las demos.
 
 ## Cambios preparados
 
@@ -32,6 +32,14 @@ Se mantiene esa arquitectura para esta integración de presentación. Difiere de
 - Se conservan los controles de costos privados de hardware y se rechazan campos bancarios, fiscales o de credenciales dentro de JSON público. Los datos de cobranza, CUIT, titular y claves permanecen fuera de este directorio de publicación.
 - `git diff --check`: aprobado. Esta evidencia no acredita por sí sola despliegue ni funcionamiento público.
 
-## Cierre de publicación pendiente
+## Publicación comprobada
 
-Completar aquí la revisión de cambios, revisión/versiones publicadas, resultados HTTP y navegación en el dominio real, comprobación de demos y limitaciones operativas efectivas. No se declara producción aprobada hasta disponer de esos resultados.
+El sitio se publicó por el flujo existente de GitHub y Cloudflare Pages: implementación `8893b23` y corrección de caché/canonical `e67288d`. Las ejecuciones CI [40567858143](https://github.com/JerePrograma/scalaris/actions/runs/40567858143) y [40568489875](https://github.com/JerePrograma/scalaris/actions/runs/40568489875) finalizaron aprobadas. El ajuste versiona los recursos y la dependencia `model.js`, de modo que el navegador que conservaba el formulario antiguo cargó el nuevo sin vaciar su caché.
+
+Se verificaron HTTP 200 y contenido correcto de portada, Productos, Catálogo, Demos, propuesta, cartel, datos públicos y consulta. En navegador público, a 1440 × 1000 y 390 × 844, se comprobaron selector anual/mensual, consulta Gestión mes a mes con respuestas editables, menú móvil y Escape, acceso a pedidos y detalle de caja mediante roles de demostración de lectura. Base preparó un mensaje con producto y precio recalculado usando datos ficticios; no se abrió WhatsApp ni se envió el mensaje. El conteo agregado de pedidos permaneció en 22 tras esa prueba.
+
+La aplicación de `/comercio/` sirve la release `1e2c27d4fc52fe6397f727fff95c98bcf23ee1d54bbfc6af0af4e7b1c1db5959`, con salud y versión públicas comprobadas. La actualización conservó las filas de los tres comercios anteriores, la imagen y los montajes de PostgreSQL. Se aprobaron tres restauraciones aisladas: antes del corte, con app detenida y después de publicar. Resultado: seis demos, 54 productos, 22 pedidos, una caja sintética cerrada y tres movimientos. Las nuevas demos tienen seis productos por negocio; las anteriores mantienen doce cada una.
+
+El informe HTTP de producto está en `scalaris-comercio/docs/http-publication-audit-2026-10-27.json`. Comprueba rechazo anónimo de administración, privacidad de precios mayoristas y que las rutas privadas no entregan archivos de configuración ni JSON privado. Algunas rutas inexistentes devuelven la página HTML pública con HTTP 200; no se reportan como 404. Las capturas locales están en `scalaris/artifacts/catalogo-publication-2026-10-27/`, fuera de Git y del directorio público.
+
+Pendientes independientes: copia externa automatizada y restauración desde ese destino, enlaces reales de Mercado Pago para el abono de Scalaris, revisión bancaria del titular y aceptación del primer negocio en un teléfono físico. El circuito inicial de contratación, conciliación y activación es asistido. Los datos fiscales y bancarios permanecen privados; la publicación no realiza cobros ni emite facturas.
