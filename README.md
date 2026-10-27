@@ -8,6 +8,8 @@ Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
 ## Portafolio y oferta comercial — 27/10/2026
 
+Criterio editorial y visual confirmado: presentación sobria, mensaje claro y directo. Usar títulos funcionales, descripciones breves y botones con acciones concretas. Mostrar abono, modalidad e instalación sin repetir aclaraciones; agrupar las condiciones detalladas sin ocultar costos o restricciones relevantes. Mantener fondos claros, acento azul y pocas etiquetas.
+
 `/productos/` organiza seis familias por necesidad: Web, Catálogo, Menú gastronómico, Mesa, Gestudio y CRM. La navegación común lleva a sus planes y demos; `/proyectos/` conserva la galería completa. `/web/` explica los dos paquetes institucionales. El selector anual/mensual conserva la modalidad al pasar al formulario. Los totales anuales se calculan al revisar la consulta, con instalación separada y sin cobro automático.
 
 La fuente de Web, las referencias y los alcances es `commercial/portfolio-offer.json`. Catálogo conserva su fuente en `../scalaris-comercio/commercial/offer.json`; el sincronizador aplica su proyección pública y no copia campos internos. Ejecutar `npm run offers:build` tras cambiar la oferta y luego `npm run check`. Los generadores se conservan en `scripts/build-portfolio-offer.mjs`, `scripts/build-web-offer.mjs` y `scripts/sync-catalog-product.mjs`. Cloudflare publica los archivos generados y versionados de `public/` sin depender de repositorios hermanos durante el build remoto.

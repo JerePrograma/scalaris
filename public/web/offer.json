@@ -6,7 +6,7 @@
   "product": {
     "id": "web",
     "name": "Scalaris Web",
-    "description": "Una web para presentar tus servicios y recibir consultas, con implementación y mantenimiento acotados."
+    "description": "Sitio web para presentar servicios y recibir consultas por WhatsApp."
   },
   "includedServices": {
     "hosting": true,

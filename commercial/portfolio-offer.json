@@ -9,7 +9,7 @@
     "product": {
       "id": "web",
       "name": "Scalaris Web",
-      "description": "Una web para presentar tus servicios y recibir consultas, con implementación y mantenimiento acotados."
+      "description": "Sitio web para presentar servicios y recibir consultas por WhatsApp."
     },
     "billing": {
       "annualMonths": 12,
@@ -99,9 +99,9 @@
       "name": "Scalaris Web",
       "need": "Mostrar servicios y recibir consultas",
       "category": "Presencia digital",
-      "description": "Una web institucional con tu identidad y un alcance claro de contenido y mantenimiento.",
+      "description": "Sitio web para presentar servicios y recibir consultas por WhatsApp.",
       "status": "fixed_scope",
-      "statusLabel": "Paquetes de alcance cerrado",
+      "statusLabel": "Planes fijos",
       "pricingType": "fixed",
       "image": "/assets/proyectos/remodelaya.webp",
       "imageAlt": "Sitio institucional de Remodelaya como referencia de presentación web",
@@ -119,14 +119,14 @@
       "name": "Scalaris Catálogo",
       "need": "Mostrar productos y vender por WhatsApp",
       "category": "Comercios de cercanía",
-      "description": "Tu catálogo con productos y precios que mantenés desde el celular. Sumá seguimiento y caja manual según el plan.",
+      "description": "Productos y precios editables, carrito para WhatsApp y opciones de pedidos y caja.",
       "status": "public_demo_assisted",
-      "statusLabel": "Planes definidos · alta asistida",
+      "statusLabel": "Alta asistida",
       "pricingType": "fixed",
       "image": "/assets/proyectos/almacen-demo.jpg",
       "imageAlt": "Catálogo de demostración con categorías, productos y carrito",
       "features": [
-        "ABM de productos y precios",
+        "Administración de productos y precios",
         "Carrito para WhatsApp",
         "Pedidos y caja manual según el plan"
       ],
@@ -139,9 +139,9 @@
       "name": "Menú gastronómico",
       "need": "Tomar pedidos con tamaños y adicionales",
       "category": "Gastronomía para llevar",
-      "description": "Un menú para elegir variantes, ingredientes y extras antes de preparar el pedido por WhatsApp.",
+      "description": "Menú con variantes, ingredientes y adicionales para preparar pedidos por WhatsApp.",
       "status": "assisted_quote",
-      "statusLabel": "Implementación por negocio",
+      "statusLabel": "Instalación por negocio",
       "pricingType": "starting_quote",
       "monthlyFrom": 25000,
       "setupFrom": 90000,
@@ -161,9 +161,9 @@
       "name": "Scalaris Mesa",
       "need": "Organizar salón, comandas y cuentas",
       "category": "Restaurantes y cafés",
-      "description": "Mesas, cocina, barra y registro manual de pagos para acompañar la operación del local.",
+      "description": "Mesas, comandas y cuentas para restaurantes y cafés.",
       "status": "pilot_required",
-      "statusLabel": "Evaluación y piloto operativo",
+      "statusLabel": "Requiere piloto en el local",
       "pricingType": "starting_quote",
       "monthlyFrom": 29000,
       "setupFrom": 120000,
@@ -183,9 +183,9 @@
       "name": "Gestudio",
       "need": "Administrar alumnos y cuotas",
       "category": "Academias e institutos",
-      "description": "Organización de alumnos, inscripciones, asistencias y registros de cuotas y pagos.",
+      "description": "Gestión de alumnos, inscripciones, asistencias y cuotas.",
       "status": "demo_quote",
-      "statusLabel": "Demo de consulta · proyecto cotizado",
+      "statusLabel": "Demo de consulta",
       "pricingType": "quote",
       "image": "/assets/proyectos/gestudio.webp",
       "imageAlt": "Demostración de Gestudio con alumnos y gestión de academia",
@@ -203,9 +203,9 @@
       "name": "CRM Scalaris",
       "need": "Ordenar clientes y oportunidades",
       "category": "Equipos comerciales",
-      "description": "Una implementación del proceso comercial, con contactos, seguimientos y oportunidades organizados.",
+      "description": "Contactos, seguimientos y oportunidades comerciales.",
       "status": "scoped_implementation",
-      "statusLabel": "Implementación según proceso",
+      "statusLabel": "A cotizar",
       "pricingType": "quote",
       "image": "/assets/proyectos/crm-platform.svg",
       "imageAlt": "Referencia ilustrativa del proceso comercial en CRM Scalaris",
@@ -224,13 +224,13 @@
       "id": "dominio",
       "name": "Dominio para Catálogo u otra extensión",
       "pricingType": "quote",
-      "description": "Web incluye un dominio .com.ar. Para Catálogo, dominios adicionales u otras extensiones se presupuestan registro y renovación a nombre del cliente."
+      "description": "Registro y renovación para Catálogo, dominios adicionales u otras extensiones, a nombre del cliente."
     },
     {
       "id": "correo",
       "name": "Correo con más prestaciones",
       "pricingType": "quote",
-      "description": "Web incluye configuración de Zoho Free si está disponible: hasta cinco casillas, 5 GB por usuario y acceso web. Migraciones, IMAP/POP o licencias pagas se presupuestan antes de contratar."
+      "description": "Más casillas, migración de correo, IMAP/POP y licencias pagas, según el proveedor."
     },
     {
       "id": "contenido",
@@ -238,9 +238,9 @@
       "pricingType": "fixed_batch",
       "price": 12000,
       "minutes": 30,
-      "description": "Un lote de textos, fotos o datos sobre una estructura existente, hasta treinta minutos de edición. Nuevas secciones y funciones se cotizan aparte."
+      "description": "Textos, fotos y datos en páginas existentes. Hasta treinta minutos de edición por lote. Nuevas páginas o funciones se cotizan aparte."
     }
   ],
-  "integrationNote": "Los productos se implementan por separado. Unificar pedidos, productos, stock o caja entre un menú, Mesa y CRM requiere un relevamiento y presupuesto de integración.",
+  "integrationNote": "Menú, Mesa y CRM se implementan por separado. La sincronización de productos, pedidos, stock o caja se cotiza aparte.",
   "generalTerms": "Precios finales del servicio de Scalaris en ARS. Las referencias desde requieren presupuesto y aceptación antes de cobrar. Material y permisos de uso aportados por el cliente. Web incluye alojamiento, HTTPS y un dominio .com.ar, más configuración de Zoho Free sujeta a disponibilidad. Catálogo incluye alojamiento y HTTPS en una dirección de Scalaris; su dominio propio y correo son adicionales. Los plazos se acuerdan con el material completo."
 }
