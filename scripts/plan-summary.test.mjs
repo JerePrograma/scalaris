@@ -5,23 +5,24 @@ import { buildInquiry, readProductInterest, productInterestAnswers } from '../pu
 
 const offer = {
   currency: 'ARS',
-  billing: { annualMonths: 12, setupAnnualWaived: true },
+  billing: { annualMonths: 12, setupAnnualWaived: false },
   plans: [
-    { id: 'catalogo', annualMonthlyEquivalent: 10000, monthlyPrice: 15000, setupFee: 30000 },
-    { id: 'pedidos', annualMonthlyEquivalent: 20000, monthlyPrice: 30000, setupFee: 50000 },
-    { id: 'gestion', annualMonthlyEquivalent: 30000, monthlyPrice: 45000, setupFee: 80000 },
+    { id: 'catalogo', annualMonthlyEquivalent: 13500, monthlyPrice: 15000, setupFee: 50000 },
+    { id: 'pedidos', annualMonthlyEquivalent: 22500, monthlyPrice: 25000, setupFee: 75000 },
+    { id: 'gestion', annualMonthlyEquivalent: 31500, monthlyPrice: 35000, setupFee: 100000 },
   ],
 };
 const interest = (plan, billing) => ({ product: 'catalogo', plan, billing });
 
-test('annual review shows the complete prepaid period and waived installation for all plans', () => {
-  for (const [id, expected] of [['catalogo', 120000], ['pedidos', 240000], ['gestion', 360000]]) {
+test('annual review discounts only the subscription and charges installation for all plans', () => {
+  for (const [id, subscription, installation, expected] of [['catalogo', 162000, 50000, 212000], ['pedidos', 270000, 75000, 345000], ['gestion', 378000, 100000, 478000]]) {
     const plan = buildPlanSummary(offer, interest(id, 'annual'));
     assert.equal(plan.total, expected);
-    assert.equal(plan.subscription, expected);
+    assert.equal(plan.subscription, subscription);
     assert.equal(plan.periodMonths, 12);
-    assert.equal(plan.installation, 0);
-    assert.equal(plan.installationWaived, true);
+    assert.equal(plan.installation, installation);
+    assert.equal(plan.installationWaived, false);
+    assert.ok(!planSummaryText(plan).includes('Bonificada'));
     assert.match(planSummaryText(plan), /Plan anual · pago anticipado/);
     assert.match(planSummaryText(plan), /Esta consulta no contrata ni activa el servicio/);
   }
@@ -29,7 +30,7 @@ test('annual review shows the complete prepaid period and waived installation fo
 
 test('monthly review separates first month and one-time installation from recurring subscription', () => {
   for (const [id, firstPayment, recurring, installation] of [
-    ['catalogo', 45000, 15000, 30000], ['pedidos', 80000, 30000, 50000], ['gestion', 125000, 45000, 80000],
+    ['catalogo', 65000, 15000, 50000], ['pedidos', 100000, 25000, 75000], ['gestion', 135000, 35000, 100000],
   ]) {
     const plan = buildPlanSummary(offer, interest(id, 'monthly'));
     assert.equal(plan.total, firstPayment);
@@ -47,10 +48,11 @@ test('query prices cannot set charges and the plan review does not mutate inquir
   const inquiry = buildInquiry('SOFTWARE', { name: 'Prueba de consulta' }, productInterestAnswers(selection), 'test-id', '2026-10-27T00:00:00Z');
   const before = structuredClone(inquiry);
   const plan = buildPlanSummary(offer, selection);
-  assert.equal(plan.total, 360000);
-  assert.equal(plan.monthlyAmount, 30000);
+  assert.equal(plan.total, 478000);
+  assert.equal(plan.monthlyAmount, 31500);
   const shared = `${JSON.stringify(inquiry)}\n${planSummaryText(plan)}`;
-  assert.match(shared, /360.000/);
+  assert.match(shared, /478.000/);
+  assert.match(shared, /Dominio propio: registro y renovación a nombre y cargo del cliente/);
   assert.deepEqual(inquiry, before);
   assert.equal(inquiry.schema, 'scalaris.inquiry');
   assert.equal(inquiry.version, 1);
@@ -85,12 +87,15 @@ test('malformed amounts, duplicate plans and arithmetic overflow stop financial 
   }
 });
 
-test('a changed setup policy is included in the initial total instead of being silently waived', () => {
-  const changed = structuredClone(offer);
-  changed.billing.setupAnnualWaived = false;
-  const plan = buildPlanSummary(changed, interest('catalogo', 'annual'));
-  assert.equal(plan.total, 150000);
-  assert.equal(plan.installation, 30000);
+test('the same installation is charged separately in both billing modes without receiving the annual discount', () => {
+  const annual = buildPlanSummary(offer, interest('catalogo', 'annual'));
+  const monthly = buildPlanSummary(offer, interest('catalogo', 'monthly'));
+  assert.equal(annual.installation, 50000);
+  assert.equal(monthly.installation, annual.installation);
+  assert.equal(annual.subscription, monthly.subscription * 12 * 0.9);
+  const plan = annual;
+  assert.equal(plan.total, 212000);
+  assert.equal(plan.installation, 50000);
   assert.equal(plan.installationWaived, false);
 });
 
@@ -107,7 +112,7 @@ test('quote request uses the same-origin public offer without cached prices or b
       return { ok: true, json: async () => offer };
     },
   });
-  assert.equal(plan.total, 80000);
+  assert.equal(plan.total, 100000);
   await assert.rejects(loadPlanSummary(interest('catalogo', 'annual'), { fetchImpl: async () => ({ ok: false }) }));
   await assert.rejects(loadPlanSummary(interest('catalogo', 'annual'), { fetchImpl: async () => { throw new Error('offline'); } }));
 });
@@ -116,13 +121,13 @@ const webOffer = {
   currency:'ARS',
   billing:{annualMonths:12,setupAnnualWaived:false},
   plans:[
-    {id:'presencia',annualMonthlyEquivalent:8000,monthlyPrice:12000,setupFee:45000},
-    {id:'negocio',annualMonthlyEquivalent:15000,monthlyPrice:20000,setupFee:90000},
+    {id:'presencia',annualMonthlyEquivalent:13500,monthlyPrice:15000,setupFee:100000},
+    {id:'negocio',annualMonthlyEquivalent:22500,monthlyPrice:25000,setupFee:200000},
   ],
 };
 
 test('Web review charges the one-time installation in annual and monthly modes',()=>{
-  for(const [id,annual,monthly,installation]of [['presencia',141000,57000,45000],['negocio',270000,110000,90000]]){
+  for(const [id,annual,monthly,installation]of [['presencia',262000,115000,100000],['negocio',470000,225000,200000]]){
     for(const [billing,total]of [['annual',annual],['monthly',monthly]]){
       const plan=buildPlanSummary(webOffer,{product:'web',plan:id,billing});
       assert.equal(plan.total,total);
@@ -142,7 +147,7 @@ test('Web selection rejects URL amounts and preserves the original inquiry schem
   assert.equal(answers.topic,'Sitio web');
   const inquiry=buildInquiry('SOFTWARE',{name:'Prueba web'},answers,'test-web','2026-10-27T00:00:00Z');
   const snapshot=structuredClone(inquiry);
-  assert.equal(buildPlanSummary(webOffer,selection).total,141000);
+  assert.equal(buildPlanSummary(webOffer,selection).total,262000);
   assert.deepEqual(inquiry,snapshot);
   assert.deepEqual(Object.keys(inquiry).sort(),['answers','contact','createdAt','id','schema','service','version']);
   const invalid=structuredClone(webOffer);invalid.billing.annualMonths=Number.MAX_SAFE_INTEGER;
@@ -175,16 +180,16 @@ test('Web prices load only the fixed Web offer endpoint without accepting an end
     assert.equal(options.mode,'same-origin');
     return{ok:true,json:async()=>webOffer};
   }});
-  assert.equal(plan.total,110000);
+  assert.equal(plan.total,225000);
 });
 
-test('flyer plan names stay consistent across URL selection, inquiry text and price review without changing IDs or amounts',()=>{
+test('approved plan names and prices stay consistent across URL selection, inquiry text and price review',()=>{
   const cases=[
-    ['web','presencia','Origen',webOffer,141000,57000],
-    ['web','negocio','Web de hasta 5 páginas',webOffer,270000,110000],
-    ['catalogo','catalogo','Vidriera',offer,120000,45000],
-    ['catalogo','pedidos','Flujo',offer,240000,80000],
-    ['catalogo','gestion','Pulso',offer,360000,125000],
+    ['web','presencia','Origen',webOffer,262000,115000],
+    ['web','negocio','Web de hasta 5 páginas',webOffer,470000,225000],
+    ['catalogo','catalogo','Vidriera',offer,212000,65000],
+    ['catalogo','pedidos','Flujo',offer,345000,100000],
+    ['catalogo','gestion','Pulso',offer,478000,135000],
   ];
   for(const [product,id,name,data,annualTotal,monthlyTotal]of cases){
     for(const [billing,total]of [['annual',annualTotal],['monthly',monthlyTotal]]){
@@ -200,4 +205,15 @@ test('flyer plan names stay consistent across URL selection, inquiry text and pr
       assert.ok(planSummaryText(review).includes('Plan elegido: '+name));
     }
   }
+});
+
+test('fixed plan links default to monthly while unsupported billing never becomes an approved quote',()=>{
+  for(const [product,plan]of [['web','presencia'],['catalogo','catalogo']]){
+    const selection=readProductInterest('?'+new URLSearchParams({product,plan,amount:'1',setup:'0'}));
+    assert.equal(selection.billing,'monthly');
+    assert.equal(selection.billingName,'mes a mes');
+    assert.equal(hasPlanSelection(selection),true);
+    assert.equal(readProductInterest('?'+new URLSearchParams({product,plan,billing:'FREE'})).billing,null);
+  }
+  for(const product of ['menu','mesa','academia','crm'])assert.equal(readProductInterest('?product='+product).billing,null);
 });

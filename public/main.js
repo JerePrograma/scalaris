@@ -26,6 +26,6 @@ for (const header of document.querySelectorAll('.site-header')) {
   document.addEventListener('click', event => {
     if (!header.contains(event.target)) close();
   });
-  const desktop = window.matchMedia('(min-width: 861px)');
+  const desktop = window.matchMedia('(min-width: 981px)');
   desktop.addEventListener('change', () => close());
 }

@@ -27,7 +27,9 @@ export function readProductInterest(search = '') {
   const family=productFamilies[product];
   const requestedPlan = params.get('plan'), requestedBilling = params.get('billing');
   const plan = family.plans&&Object.hasOwn(family.plans,requestedPlan) ? requestedPlan : null;
-  const billing = family.plans&&Object.hasOwn(productBilling,requestedBilling) ? requestedBilling : null;
+  const billing = family.plans
+    ? !params.has('billing') ? 'monthly' : Object.hasOwn(productBilling,requestedBilling) ? requestedBilling : null
+    : null;
   return {product,productName:family.name,plan,planName:plan?family.plans[plan]:null,billing,billingName:billing?productBilling[billing]:null};
 }
 export function productInterestAnswers(interest) {

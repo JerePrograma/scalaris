@@ -67,6 +67,7 @@ export function planSummaryText(plan) {
     ...planSummaryRows(plan).map(([label, value]) => `${label}: ${value}`),
     `Total inicial: ${money(plan.total)}`,
     plan.nextPayment,
+    'Dominio propio: registro y renovación a nombre y cargo del cliente, por separado. No está incluido en este total.',
     'Precios finales en ARS. El alcance y las condiciones se confirman con Scalaris antes del pago. Esta consulta no contrata ni activa el servicio.',
   ].join('\n');
 }

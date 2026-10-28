@@ -15,21 +15,22 @@
       "annualMonths": 12,
       "annualPayment": "upfront",
       "setupAnnualWaived": false,
-      "renewalPolicy": "El plan anual mantiene el abono por doce meses desde la activación. El mensual garantiza su valor inicial tres meses; luego puede revisarse trimestralmente con aviso de treinta días. La instalación se abona una sola vez en ambas modalidades.",
+      "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego puede revisarse trimestralmente con aviso de treinta días. Anual opcional: doce meses abonados por adelantado con 10% de descuento sólo en el abono y precio fijo durante ese período; renovación a la tarifa informada con treinta días de anticipación. La instalación se abona una sola vez y por separado en ambas modalidades. El registro y la renovación del dominio propio quedan a cargo del cliente.",
       "support": {
         "businessDays": "Lunes a viernes",
         "hours": "9 a 18",
         "timezone": "America/Buenos_Aires",
         "firstResponseTarget": "un día hábil"
-      }
+      },
+      "priceDisplay": "monthly"
     },
     "plans": [
       {
         "id": "presencia",
         "name": "Origen",
-        "annualMonthlyEquivalent": 8000,
-        "monthlyPrice": 12000,
-        "setupFee": 45000,
+        "annualMonthlyEquivalent": 13500,
+        "monthlyPrice": 15000,
+        "setupFee": 100000,
         "audience": "Web de una página con hasta 5 secciones para presentar tu negocio y recibir consultas.",
         "limits": {
           "pages": 1,
@@ -44,7 +45,7 @@
           "Diseño adaptable a celular",
           "Títulos, descripción y sitemap básicos",
           "Alojamiento y HTTPS incluidos",
-          "Un dominio .com.ar a nombre del negocio",
+          "Dominio propio a nombre del negocio, a cargo del cliente",
           "Configuración de hasta cinco correos con Zoho Free, según disponibilidad"
         ],
         "contentService": "Mantenimiento técnico. Los cambios de contenido posteriores al alta se cotizan aparte."
@@ -52,9 +53,9 @@
       {
         "id": "negocio",
         "name": "Web de hasta 5 páginas",
-        "annualMonthlyEquivalent": 15000,
-        "monthlyPrice": 20000,
-        "setupFee": 90000,
+        "annualMonthlyEquivalent": 22500,
+        "monthlyPrice": 25000,
+        "setupFee": 200000,
         "audience": "Hasta 5 páginas y un lote mensual de cambios simples, de hasta 20 minutos.",
         "limits": {
           "pages": 5,
@@ -70,7 +71,7 @@
           "Títulos, descripción y sitemap básicos",
           "Un envío mensual de cambios simples, hasta veinte minutos de edición",
           "Alojamiento y HTTPS incluidos",
-          "Un dominio .com.ar a nombre del negocio",
+          "Dominio propio a nombre del negocio, a cargo del cliente",
           "Configuración de hasta cinco correos con Zoho Free, según disponibilidad"
         ],
         "contentService": "El lote mensual cubre textos, fotos y datos sobre la estructura existente. No es acumulable ni incluye nuevas páginas o funciones."
@@ -82,8 +83,8 @@
       "domain": {
         "extension": ".com.ar",
         "quantity": 1,
-        "registrationAndRenewal": true,
-        "condition": "Un dominio disponible, registrado a nombre del cliente. Registro y renovación incluidos mientras el plan esté activo; otras extensiones se cotizan aparte."
+        "registrationAndRenewal": false,
+        "condition": "El dominio propio se registra a nombre del cliente. Su compra y renovación se abonan por separado y quedan a su cargo; el precio se confirma con el registrador. No se incluyen en el abono ni en la instalación de Scalaris."
       },
       "email": {
         "provider": "Zoho Mail Free",
@@ -107,12 +108,12 @@
       "imageAlt": "Sitio institucional de Remodelaya como referencia de presentación web",
       "features": [
         "Una página o hasta cinco páginas",
-        "Dominio .com.ar y alojamiento incluidos",
-        "Correo con Zoho Free según disponibilidad"
+        "Alojamiento y HTTPS incluidos",
+        "Dominio propio a cargo del cliente"
       ],
       "detailsUrl": "/web/",
       "demoUrl": "https://remodelaya.com.ar/",
-      "boundary": "El contenido lo aporta el negocio. Sin panel de autogestión de páginas. Un dominio .com.ar incluido; otras extensiones, migración de correo y licencias pagas se cotizan aparte."
+      "boundary": "El contenido lo aporta el negocio. Sin panel de autogestión de páginas. Registro y renovación del dominio propio a cargo del cliente y por separado. Configuración de Zoho Free según disponibilidad; migración de correo y licencias pagas se cotizan aparte."
     },
     {
       "id": "catalogo",
@@ -132,7 +133,7 @@
       ],
       "detailsUrl": "/catalogo/",
       "demoUrl": "/catalogo/demos/",
-      "boundary": "Productos simples y una imagen por URL HTTPS. La carga cotidiana queda a cargo del negocio; pagos online y facturación no están incluidos."
+      "boundary": "Productos simples y una imagen por URL HTTPS. La carga cotidiana queda a cargo del negocio; pagos online y facturación no están incluidos. Dirección de Scalaris incluida; dominio propio y renovación a cargo del cliente."
     },
     {
       "id": "menu",
@@ -143,8 +144,7 @@
       "status": "assisted_quote",
       "statusLabel": "Instalación por negocio",
       "pricingType": "starting_quote",
-      "monthlyFrom": 25000,
-      "setupFrom": 90000,
+      "monthlyFrom": 20000,
       "image": "/assets/proyectos/tu-comida.webp",
       "imageAlt": "Menú gastronómico Tu Comida con productos y opciones",
       "features": [
@@ -154,7 +154,7 @@
       ],
       "detailsUrl": "/consulta/?service=SOFTWARE&product=menu",
       "demoUrl": "/tu-comida/",
-      "boundary": "Referencia para un negocio con menú acotado. Configuración, cantidad de opciones y presupuesto se confirman antes de instalar. No se sincroniza automáticamente con Mesa."
+      "boundary": "Referencia entre $20.000 y $25.000 por mes según menú y operación de un negocio. Implementación a cotizar tras revisar configuración y material. Presupuesto y aceptación antes de instalar. No se sincroniza automáticamente con Mesa."
     },
     {
       "id": "mesa",
@@ -165,8 +165,7 @@
       "status": "pilot_required",
       "statusLabel": "Requiere piloto en el local",
       "pricingType": "starting_quote",
-      "monthlyFrom": 29000,
-      "setupFrom": 120000,
+      "monthlyFrom": 25000,
       "image": "/assets/proyectos/scalaris-mesa.png",
       "imageAlt": "Demostración de Scalaris Mesa con plano del salón y cuenta",
       "features": [
@@ -176,7 +175,7 @@
       ],
       "detailsUrl": "/consulta/?service=SOFTWARE&product=mesa",
       "demoUrl": "/mesa/",
-      "boundary": "Precio de referencia sujeto a relevamiento de un local y aceptación del piloto. Facturación fiscal, cobros integrados y prueba de impresoras físicas se presupuestan y validan por separado."
+      "boundary": "Precio de referencia para un local, sujeto a relevamiento y aceptación del piloto. Implementación a cotizar. Facturación fiscal, cobros integrados y prueba de impresoras físicas se presupuestan y validan por separado."
     },
     {
       "id": "academia",
@@ -223,9 +222,9 @@
   "addons": [
     {
       "id": "dominio",
-      "name": "Dominio para Catálogo u otra extensión",
+      "name": "Dominio propio",
       "pricingType": "quote",
-      "description": "Registro y renovación para Catálogo, dominios adicionales u otras extensiones, a nombre del cliente."
+      "description": "Registro y renovación a nombre y cargo del cliente, separados del servicio de Scalaris. El costo y la disponibilidad se confirman con el registrador."
     },
     {
       "id": "correo",
@@ -243,5 +242,5 @@
     }
   ],
   "integrationNote": "Menú, Mesa y CRM se implementan por separado. La sincronización de productos, pedidos, stock o caja se cotiza aparte.",
-  "generalTerms": "Precios finales del servicio de Scalaris en ARS. Las referencias desde requieren presupuesto y aceptación antes de cobrar. Material y permisos de uso aportados por el cliente. Web incluye alojamiento, HTTPS y un dominio .com.ar, más configuración de Zoho Free sujeta a disponibilidad. Catálogo incluye alojamiento y HTTPS en una dirección de Scalaris; su dominio propio y correo son adicionales. Los plazos se acuerdan con el material completo."
+  "generalTerms": "Precios finales del servicio de Scalaris en ARS. La modalidad principal es mensual. El anual es opcional: doce meses por adelantado con 10% de descuento sólo en el abono; la instalación se cobra por única vez y por separado en ambas modalidades. Alojamiento y HTTPS incluidos. El dominio propio se registra a nombre del cliente y su compra y renovación quedan a su cargo, fuera del servicio. Web incluye configuración de Zoho Free sujeta a disponibilidad; migraciones y licencias pagas se cotizan. Catálogo utiliza una dirección de Scalaris; el correo se cotiza aparte. Las referencias desde requieren presupuesto y aceptación antes de cobrar. Material y permisos de uso aportados por el cliente; plazos con el material completo."
 }

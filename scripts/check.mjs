@@ -40,8 +40,8 @@ if (
 )
   errors.push("Enlace WhatsApp directo incorrecto");
 for (const ref of [
-  "consulta/index.html",
-  "consulta/index.html?service=SOFTWARE",
+  "/consulta/",
+  "/consulta/?service=SOFTWARE",
 ])
   if (!refs.includes(ref)) errors.push(`Acceso a consulta inexistente: ${ref}`);
 if ([...html.matchAll(/<details>/g)].length !== 4)
@@ -132,8 +132,8 @@ if(existsSync(publicOfferPath)){
   const money=value=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(value).replace(/\s/g," ");
   for(const plan of offer.plans||[]){
     const card=productPage.match(new RegExp(`<article\\b[^>]*data-catalog-plan="${plan.id}"[^>]*>[\\s\\S]*?<\\/article>`))?.[0]||"";
-    if(!card.includes(money(plan.annualMonthlyEquivalent))||!card.includes(money(plan.setupFee)))errors.push(`Precio mensual o instalación inconsistente en el plan ${plan.id}`);
-    if(!card.includes(`plan=${plan.id}`)||!card.includes("billing=annual"))errors.push(`Consulta sin contexto del plan ${plan.id}`);
+    if(!card.includes(money(plan.monthlyPrice))||!card.includes(money(plan.setupFee)))errors.push(`Precio mensual o puesta en marcha inconsistente en el plan ${plan.id}`);
+    if(!card.includes(`plan=${plan.id}`)||!card.includes("billing=monthly"))errors.push(`Consulta sin contexto mensual del plan ${plan.id}`);
   }
   for(const file of ["index.html","catalogo/index.html","catalogo/propuesta.html","catalogo/cartel-precios.svg"]){
     const content=readFileSync(resolve(root,file),"utf8");
@@ -142,7 +142,8 @@ if(existsSync(publicOfferPath)){
   const js=readFileSync(resolve(root,"catalogo/catalogo.js"),"utf8");
   try{
     const config=JSON.parse(js.match(/^const config=(.+);$/m)?.[1]||"null");
-    if(!config||config.months!==offer.billing.annualMonths||JSON.stringify(config.plans)!==JSON.stringify(offer.plans.map(({id,annualMonthlyEquivalent,monthlyPrice,setupFee})=>({id,annualMonthlyEquivalent,monthlyPrice,setupFee}))))errors.push("El selector de planes no coincide con la oferta pública.");
+    const prices=plans=>plans.map(({id,annualMonthlyEquivalent,monthlyPrice,setupFee})=>({id,annualMonthlyEquivalent,monthlyPrice,setupFee}));
+    if(!config||JSON.stringify(prices(config.plans))!==JSON.stringify(prices(offer.plans)))errors.push("El selector de planes no coincide con la oferta pública.");
   }catch{errors.push("Configuración pública del selector de planes inválida.");}
   // Local releases can compare the editable source; CI remains portable without a sibling checkout.
   const editableOffer=resolve(root,"../../scalaris-comercio/commercial/offer.json");

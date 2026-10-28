@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { version } from './site-shell.mjs';
 import { readProductInterest,productInterestAnswers,buildInquiry,summary } from '../public/consulta/model.js';
 
 test('product links preserve plan and billing interest without accepting prices or arbitrary query text',()=>{
@@ -30,15 +31,47 @@ test('public navigation pages keep one shared accessible menu and product entry 
     assert.equal((html.match(/id="site-navigation"/g)||[]).length,1,file);
     assert.match(html,/aria-controls="site-navigation"/);assert.match(html,/aria-expanded="false"/);
     assert.match(html,/class="footer-links"/);assert.match(html,/main\.js/);
-    assert.match(html,/styles\.css\?v=20261027-catalogo/);
-    assert.match(html,/main\.js\?v=20261027-catalogo/);
+    assert.ok(html.includes('/styles.css?v=' + version), file);
+    assert.ok(html.includes('/main.js?v=' + version), file);
+    const header = html.match(/<header\b[\s\S]*?<\/header>/)?.[0];
+    assert.ok(header, file);
+    for (const route of ['/productos/', '/productos/#planes', '/productos/#demos', '/#servicios', '/proyectos/', '/consulta/']) assert.ok(header.includes('href="' + route + '"'), file + ' ' + route);
+    const skip = html.match(/<a[^>]*class="skip-link"[^>]*href="#([^"]+)"/);
+    assert.ok(skip, file);
+    assert.ok(html.includes('id="' + skip[1] + '"'), file + ' skip target');
+    assert.equal((html.match(/<main\b/g)||[]).length, 1, file);
+    assert.equal((html.match(/<h1\b/g)||[]).length, 1, file);
     assert.match(html,/productos\/#planes/);assert.match(html,/productos\/#demos/);
     assert.doesNotMatch(html,/href="(?:\/|\.\.\/)tienda(?:\/|[?#"])/,file);
     assert.doesNotMatch(html,/Soporte y servicios|Software y soporte informático\.|Equipos y repuestos/,file);
   }
   const formPage=await readFile(new URL('../public/consulta/index.html',import.meta.url),'utf8');
   const formCode=await readFile(new URL('../public/consulta/form.js',import.meta.url),'utf8');
-  assert.match(formPage,/form\.js\?v=20261028-planes/);
-  assert.match(formCode,/from "\.\/model\.js\?v=20261028-planes"/);
-  assert.match(formCode,/from "\.\/plan-summary\.js\?v=20261028-planes"/);
+  assert.ok(formPage.includes('form.js?v=' + version));
+  assert.ok(formCode.includes('from "./model.js?v=' + version + '"'));
+  assert.ok(formCode.includes('from "./plan-summary.js?v=' + version + '"'));
+});
+
+
+test('monthly is the default for fixed plans while quoted products never acquire a billing commitment',()=>{
+  for (const [product, plan] of [['web','presencia'], ['catalogo','catalogo'], ['catalogo','pedidos'], ['catalogo','gestion']]) {
+    const interest = readProductInterest('?' + new URLSearchParams({product,plan,amount:'1',setup:'0'}));
+    assert.equal(interest.billing, 'monthly');
+    assert.equal(interest.billingName, 'mes a mes');
+    assert.match(productInterestAnswers(interest).scope, /mes a mes/);
+    assert.equal(interest.amount, undefined);
+  }
+  for (const product of ['menu','mesa','academia','crm']) {
+    const interest=readProductInterest('?product='+product+'&billing=annual&plan=gestion&amount=1');
+    assert.equal(interest.plan, null);
+    assert.equal(interest.billing, null);
+    assert.match(productInterestAnswers(interest).scope, /relevamiento|alcance|presupuesto/);
+  }
+});
+
+test('Web details retain domain ownership and email restrictions referenced from the product overview',async()=>{
+  const html=await readFile(new URL('../public/web/index.html',import.meta.url),'utf8');
+  assert.match(html, /Dominio propio[^<]*a cargo del cliente|dominio[^<]*a nombre y cargo del cliente/i);
+  assert.match(html, /IMAP\/POP/);
+  assert.match(html, /según disponibilidad|organizaciones elegibles/i);
 });

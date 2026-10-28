@@ -6,13 +6,33 @@ Sitio público: https://scalaris.com.ar
 
 Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
+## Refactor y precios vigentes — 28/10/2026
+
+La web comercial comparte identidad, navegación y componentes entre Inicio, Productos, Web, Catálogo, sus demos/propuesta, Proyectos y Consulta. Presenta seis familias por necesidad, capturas reales, diferencias de alcance, puesta en marcha y condiciones. La galería conserva 19 proyectos y distingue demos, publicaciones y propuestas en preparación.
+
+Precios finales en ARS aprobados por el usuario:
+
+| Plan | Abono mensual | Puesta en marcha única |
+| --- | ---: | ---: |
+| Origen | $15.000 | $100.000 |
+| Web de hasta 5 páginas | $25.000 | $200.000 |
+| Vidriera | $15.000 | $50.000 |
+| Flujo | $25.000 | $75.000 |
+| Pulso | $35.000 | $100.000 |
+
+Mensual por defecto. Anual opcional: 12 meses por adelantado, con 10% de descuento sólo sobre el abono. La puesta en marcha se cobra en ambas modalidades. Dominio propio, registro y renovación a nombre y cargo del cliente; alojamiento y HTTPS incluidos. Menú desde $20.000/mes, Mesa desde $25.000/mes y Gestudio desde $30.000/mes, con implementación a cotizar; CRM según relevamiento. Las referencias no reemplazan el presupuesto y la aceptación de cada implementación.
+
+Fuentes editables: `commercial/portfolio-offer.json` y `../scalaris-comercio/commercial/offer.json`. `npm run offers:build` regenera Catálogo, Productos, Web e Inicio en ese orden, mediante `scripts/site-shell.mjs` y los generadores de cada página. Las proyecciones públicas se versionan para que Cloudflare no dependa del repositorio hermano. Después ejecutar `npm run check`.
+
+La [nota de aceptación y arquitectura](docs/website-refactor-2026-10-28.md) y las [referencias de diseño](docs/redesign-references-2026-10-28.md) registran criterio, fuentes y comprobaciones. Los flyers locales anteriores conservan sus precios históricos y requieren actualización antes de volver a distribuirlos. Las secciones siguientes conservan antecedentes fechados; cualquier precio anterior queda reemplazado por esta oferta.
+
 ## Oferta pública de software — 28/10/2026
 
 Por solicitud del usuario, la web ofrece únicamente productos y desarrollo de software. Se retiraron la oferta de armado, reparación, mantenimiento y venta de equipos, su navegación y las ramas de hardware de la consulta. Se conservan Web, Catálogo, Menú, Mesa, Gestudio, CRM, las demos y el desarrollo a medida, las automatizaciones e integraciones. La consulta entra directamente a software en dos pasos y conserva el contexto del producto, plan y modalidad.
 
 La tienda y sus recursos históricos se archivaron en `legacy/hardware-store/`, fuera de `public/`. Los enlaces `/tienda` y `/tienda/*` redirigen a `/productos/`; la tienda ya no aparece en el sitemap. Los importadores y generadores históricos no deben escribir en `public/`. `npm run check` rechaza su reintroducción. La [nota del cambio](docs/software-only-2026-10-28.md) registra alcance, evaluación del estándar y verificaciones. Las menciones de la tienda en las secciones históricas siguientes describen publicaciones anteriores al retiro.
 
-## Nombres de planes y precio de Gestudio — 28/10/2026
+## Antecedente: nombres de planes y precio de Gestudio — 28/10/2026
 
 La web adopta los nombres del flyer aportado por el usuario: **Origen** para Web de una página; **Vidriera** para Catálogo para WhatsApp; **Flujo** para Catálogo con seguimiento de pedidos; **Pulso** para Catálogo con pedidos y caja manual. Se conservan los IDs `presencia`, `catalogo`, `pedidos` y `gestion`, los precios, la instalación y las modalidades. El segundo plan Web conserva su nombre. La descripción de alcance acompaña cada nombre en la comparación y en su página de planes.
 
@@ -24,7 +44,7 @@ Evaluación vigente del estándar: este cambio de nombres y presentación de pre
 
 Verificación local: `npm run offers:build` y `npm run check`, 165 pruebas aprobadas; 5 pruebas de la oferta comercial de Catálogo aprobadas. Navegador: nombres y selector mensual/anual en escritorio, planes de Catálogo y resumen de Gestudio en ancho móvil de 390 píxeles, sin desbordamiento horizontal en la consulta. La consulta de prueba no se envió. Evidencia visual local ignorada por Git: `artifacts/planes-2026-10-28/`. La publicación se comprueba contra el commit de Cloudflare Pages y el dominio público.
 
-## Portafolio y oferta comercial — 27/10/2026
+## Antecedente: portafolio y oferta comercial — 27/10/2026
 
 Criterio editorial y visual confirmado: presentación sobria, mensaje claro y directo. Usar títulos funcionales, descripciones breves y botones con acciones concretas. Mostrar abono, modalidad e instalación sin repetir aclaraciones; agrupar las condiciones detalladas sin ocultar costos o restricciones relevantes. Mantener fondos claros, acento azul y pocas etiquetas.
 

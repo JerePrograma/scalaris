@@ -14,8 +14,8 @@
     "domain": {
       "extension": ".com.ar",
       "quantity": 1,
-      "registrationAndRenewal": true,
-      "condition": "Un dominio disponible, registrado a nombre del cliente. Registro y renovación incluidos mientras el plan esté activo; otras extensiones se cotizan aparte."
+      "registrationAndRenewal": false,
+      "condition": "El dominio propio se registra a nombre del cliente. Su compra y renovación se abonan por separado y quedan a su cargo; el precio se confirma con el registrador. No se incluyen en el abono ni en la instalación de Scalaris."
     },
     "email": {
       "provider": "Zoho Mail Free",
@@ -28,7 +28,7 @@
     "annualMonths": 12,
     "annualPayment": "upfront",
     "setupAnnualWaived": false,
-    "renewalPolicy": "El plan anual mantiene el abono por doce meses desde la activación. El mensual garantiza su valor inicial tres meses; luego puede revisarse trimestralmente con aviso de treinta días. La instalación se abona una sola vez en ambas modalidades.",
+    "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego puede revisarse trimestralmente con aviso de treinta días. Anual opcional: doce meses abonados por adelantado con 10% de descuento sólo en el abono y precio fijo durante ese período; renovación a la tarifa informada con treinta días de anticipación. La instalación se abona una sola vez y por separado en ambas modalidades. El registro y la renovación del dominio propio quedan a cargo del cliente.",
     "support": {
       "businessDays": "Lunes a viernes",
       "hours": "9 a 18",
@@ -41,9 +41,9 @@
       "id": "presencia",
       "name": "Origen",
       "audience": "Web de una página con hasta 5 secciones para presentar tu negocio y recibir consultas.",
-      "annualMonthlyEquivalent": 8000,
-      "monthlyPrice": 12000,
-      "setupFee": 45000,
+      "annualMonthlyEquivalent": 13500,
+      "monthlyPrice": 15000,
+      "setupFee": 100000,
       "limits": {
         "pages": 1,
         "sections": 5,
@@ -57,7 +57,7 @@
         "Diseño adaptable a celular",
         "Títulos, descripción y sitemap básicos",
         "Alojamiento y HTTPS incluidos",
-        "Un dominio .com.ar a nombre del negocio",
+        "Dominio propio a nombre del negocio, a cargo del cliente",
         "Configuración de hasta cinco correos con Zoho Free, según disponibilidad"
       ],
       "contentService": "Mantenimiento técnico. Los cambios de contenido posteriores al alta se cotizan aparte."
@@ -66,9 +66,9 @@
       "id": "negocio",
       "name": "Web de hasta 5 páginas",
       "audience": "Hasta 5 páginas y un lote mensual de cambios simples, de hasta 20 minutos.",
-      "annualMonthlyEquivalent": 15000,
-      "monthlyPrice": 20000,
-      "setupFee": 90000,
+      "annualMonthlyEquivalent": 22500,
+      "monthlyPrice": 25000,
+      "setupFee": 200000,
       "limits": {
         "pages": 5,
         "revisionRounds": 1,
@@ -83,7 +83,7 @@
         "Títulos, descripción y sitemap básicos",
         "Un envío mensual de cambios simples, hasta veinte minutos de edición",
         "Alojamiento y HTTPS incluidos",
-        "Un dominio .com.ar a nombre del negocio",
+        "Dominio propio a nombre del negocio, a cargo del cliente",
         "Configuración de hasta cinco correos con Zoho Free, según disponibilidad"
       ],
       "contentService": "El lote mensual cubre textos, fotos y datos sobre la estructura existente. No es acumulable ni incluye nuevas páginas o funciones."
