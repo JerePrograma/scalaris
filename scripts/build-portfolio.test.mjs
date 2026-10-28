@@ -29,7 +29,7 @@ async function fixture(t, change = () => {}) {
   const run = () => execFileSync(process.execPath, [generator, '--source', sourcePath, '--catalog-source', catalogPath, '--public-root', output], { cwd: root, stdio: 'pipe' });
   run();
   const read = name => readFile(path.join(output, 'productos', name), 'utf8');
-  return { run, read, data, product };
+  return { run, read, data, product, output };
 }
 
 test('portfolio generation keeps six families, five fixed plans and explicit public boundaries', async t => {
@@ -43,6 +43,10 @@ test('portfolio generation keeps six families, five fixed plans and explicit pub
   assert.equal((html.match(/data-portfolio-plan="/g) || []).length, 5);
   for (const id of ['demos', 'planes', 'comparar']) assert.ok(html.includes(`id="${id}"`));
   assert.ok(html.includes('/productos/#planes') && html.includes('/productos/#demos'));
+  assert.match(html, /href="\/#servicios">Desarrollo<\/a>/);
+  assert.match(html, /<p>Software para tu negocio\.<\/p>/);
+  assert.doesNotMatch(html, /href="\/tienda(?:\/|[?#"])/);
+  assert.doesNotMatch(html, /Soporte y servicios|soporte informático|Equipos y repuestos/);
   assert.ok(html.includes('Configuración') || html.includes('configuración'));
   assert.ok(html.includes('No se sincroniza automáticamente con Mesa'));
   assert.ok(html.includes('Zoho Free') && html.includes('IMAP/POP'));
@@ -52,6 +56,26 @@ test('portfolio generation keeps six families, five fixed plans and explicit pub
   assert.deepEqual(publicOffer.fixedPlans.map(plan => plan.id), ['presencia', 'negocio', 'catalogo', 'pedidos', 'gestion']);
   assert.equal(publicOffer.webOffer.includedServices.domain.registrationAndRenewal, true);
   assert.equal(publicOffer.webOffer.includedServices.email.maxAccounts, 5);
+});
+
+test('regenerating an existing page removes hardware navigation while retaining software demos and development', async t => {
+  const { read, run, output } = await fixture(t);
+  const legacy = (await read('index.html'))
+    .replace('<a href="/#servicios">Desarrollo</a>', '<a href="/#servicios">Soporte y servicios</a><a href="../tienda/index.html?category=hardware">Equipos</a><a href="/comercio/t/tienda-demo">Demo de comercio</a>')
+    .replace('<p>Software para tu negocio.</p>', '<p>Software y soporte informático.</p>')
+    .replace('</footer>', '<a href="https://scalaris.com.ar/tienda/?q=ssd">Equipos y repuestos</a></footer>');
+  await writeFile(path.join(output, 'productos/index.html'), legacy);
+  run();
+  const regenerated = await read('index.html');
+  assert.match(regenerated, /href="\/#servicios">Desarrollo<\/a>/);
+  assert.match(regenerated, /href="\/comercio\/t\/tienda-demo">Demo de comercio<\/a>/);
+  assert.match(regenerated, /<p>Software para tu negocio\.<\/p>/);
+  assert.doesNotMatch(regenerated, /Soporte y servicios|soporte informático|Equipos y repuestos/);
+  for (const [, href] of regenerated.matchAll(/\bhref="([^"]+)"/g)) {
+    assert.ok(!/^\/tienda(?:\/|$)/.test(new URL(href, 'https://scalaris.com.ar').pathname), href);
+  }
+  run();
+  assert.equal(await read('index.html'), regenerated);
 });
 
 test('catalog prices follow their own public offer and regeneration is deterministic', async t => {

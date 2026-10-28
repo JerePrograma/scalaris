@@ -1,6 +1,6 @@
 # Catálogos de proveedores
 
-El sitio publica un catálogo de consulta. Los costos, las cantidades históricas del proveedor y las escalas mayoristas quedan en `.private/catalog-costs.json`, fuera del directorio público y excluidos de Git. El importador nunca calcula ni publica un precio de venta por su cuenta.
+La tienda se retiró de la web el 28/10/2026. El importador conserva un catálogo histórico en `legacy/hardware-store/` y rechaza salidas dentro de `public/`. Los costos, las cantidades históricas del proveedor y las escalas mayoristas quedan en `.private/catalog-costs.json`, fuera del directorio público y excluidos de Git. El importador nunca calcula ni publica un precio de venta por su cuenta.
 
 ## Importar una nueva lista
 
@@ -13,8 +13,8 @@ python scripts/import-catalog.py --nb "C:\ruta\lista-NB.xlsx" --distriland "C:\r
 La operación lee los originales y produce:
 
 - `.private/catalog-costs.json`: costos con moneda, IVA, origen y ubicación de cada registro. Conserva las variantes por SKU y las escalas de cantidad de TecnoPrices.
-- `public/tienda/catalog.json`: únicamente nombre, referencia, categoría, marca, foto y descripción para consultar. `price` queda en `null` y `currency` en `ARS`, la moneda prevista para la venta.
-- `public/tienda/assets/products/`: miniaturas originales de TecnoPrices. Se vinculan por la fila y el código del producto y se deduplican por contenido. NB utiliza las URL de imágenes incluidas en la planilla. El texto de DistriLand no aporta fotos, de modo que esos productos quedan sin imagen.
+- `legacy/hardware-store/catalog.json`: catálogo histórico con nombre, referencia, categoría, marca, foto y descripción. `price` queda en `null` y `currency` en `ARS`. No se publica.
+- `legacy/hardware-store/assets/products/`: miniaturas originales de TecnoPrices. Se vinculan por la fila y el código del producto y se deduplican por contenido. NB utiliza las URL de imágenes incluidas en la planilla. El texto de DistriLand no aporta fotos, de modo que esos productos quedan sin imagen.
 
 No copies el catálogo privado, las listas originales ni el CSV de costos a `public/`. Al actualizar listas cambian los precios y la disponibilidad del proveedor: cada pedido requiere una confirmación nueva. El stock del proveedor se conserva como dato histórico privado y nunca se convierte en stock propio.
 

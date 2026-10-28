@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import supplier snapshots. Only the sanitised catalogue belongs under public/."""
+"""Import supplier snapshots into the retired hardware archive, outside public/."""
 from __future__ import annotations
 
 import argparse
@@ -555,15 +555,18 @@ def main():
     parser.add_argument("--distriland", type=Path, help="Texto pegado DistriLand UTF-8")
     parser.add_argument("--tecnoprices", type=Path, help="Listado TecnoPrices PDF")
     parser.add_argument("--private-output", type=Path, default=Path(".private/catalog-costs.json"))
-    parser.add_argument("--public-output", type=Path, default=Path("public/tienda/catalog.json"))
-    parser.add_argument("--image-dir", type=Path, default=Path("public/tienda/assets/products"))
+    parser.add_argument("--public-output", type=Path, default=Path("legacy/hardware-store/catalog.json"), help="Archivo histórico fuera de la web pública")
+    parser.add_argument("--image-dir", type=Path, default=Path("legacy/hardware-store/assets/products"))
     parser.add_argument("--image-prefix", default="./assets/products")
     parser.add_argument("--skip-pdf-images", action="store_true")
     parser.add_argument("--as-of", default=date.today().isoformat(), help="Fecha de importación YYYY-MM-DD")
     args = parser.parse_args()
     date.fromisoformat(args.as_of)
-    # Fail closed: the private wholesale-cost snapshot must never be a public asset.
-    public_root = args.public_output.resolve().parents[1]
+    # The hardware catalogue is retired. No importer output may recreate it online.
+    public_root = Path(__file__).resolve().parents[1] / "public"
+    if any(output.resolve().is_relative_to(public_root) for output in (args.public_output, args.image_dir)):
+        raise ValueError("La tienda pública fue retirada; guardá el catálogo y sus fotos fuera de public/.")
+    # The private wholesale-cost snapshot must never be a public asset.
     if args.private_output.resolve().is_relative_to(public_root):
         raise ValueError("El catálogo privado debe guardarse fuera de public/.")
     if args.update_nb:

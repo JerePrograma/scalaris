@@ -280,7 +280,8 @@ export function sanitizePublicCatalog(publicCatalog, proposal) {
   };
 }
 
-export function buildStorePriceFiles({ generatedAt, applyPublic = false } = {}) {
+export function buildStorePriceFiles({ generatedAt, applyArchive = false, applyPublic = false } = {}) {
+  if (applyPublic) throw new Error("La tienda pública fue retirada. Usá applyArchive o --apply-archive para actualizar sólo el archivo histórico.");
   const folder = resolve(ROOT, ".private/market-research");
   const readJson = (file) => JSON.parse(readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
   const catalog = readJson(resolve(ROOT, ".private/catalog-costs.json"));
@@ -295,25 +296,26 @@ export function buildStorePriceFiles({ generatedAt, applyPublic = false } = {}) 
   const proposalPath = resolve(folder, "store-price-proposal.json");
   writeFileSync(policyPath, JSON.stringify(policy, null, 2) + "\n", "utf8");
   writeFileSync(proposalPath, JSON.stringify(proposal, null, 2) + "\n", "utf8");
-  let publicBackup = null;
-  if (applyPublic) {
-    const publicPath = resolve(ROOT, "public/tienda/catalog.json");
-    const sanitized = sanitizePublicCatalog(readJson(publicPath), proposal);
+  let archiveBackup = null;
+  if (applyArchive) {
+    const archivePath = resolve(ROOT, "legacy/hardware-store/catalog.json");
+    const sanitized = sanitizePublicCatalog(readJson(archivePath), proposal);
     const stamp = policy.generatedAt.replace(/[^0-9TZ]/g, "");
-    publicBackup = resolve(folder, `catalog.public.before-prices-${stamp}.json`);
-    copyFileSync(publicPath, publicBackup);
-    const temporaryPath = publicPath + ".pricing-tmp";
+    archiveBackup = resolve(folder, `catalog.archive.before-prices-${stamp}.json`);
+    copyFileSync(archivePath, archiveBackup);
+    const temporaryPath = archivePath + ".pricing-tmp";
     writeFileSync(temporaryPath, JSON.stringify(sanitized, null, 2) + "\n", "utf8");
-    renameSync(temporaryPath, publicPath);
+    renameSync(temporaryPath, archivePath);
   }
-  return { policyPath, proposalPath, publicApplied: applyPublic, publicBackup, summary: proposal.summary };
+  return { policyPath, proposalPath, archiveApplied: applyArchive, archiveBackup, summary: proposal.summary };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
     const args = process.argv.slice(2);
-    if (args.some((arg) => arg !== "--apply-public") || args.length > 1) throw new Error("Uso: node scripts/build-store-prices.mjs [--apply-public]. Sin bandera, solo genera propuestas privadas.");
-    console.log(JSON.stringify(buildStorePriceFiles({ applyPublic: args.includes("--apply-public") }), null, 2));
+    if (args.includes("--apply-public")) throw new Error("La tienda pública fue retirada. --apply-archive actualiza sólo el archivo histórico fuera de public/.");
+    if (args.some((arg) => arg !== "--apply-archive") || args.length > 1) throw new Error("Uso: node scripts/build-store-prices.mjs [--apply-archive]. Sin bandera, solo genera propuestas privadas.");
+    console.log(JSON.stringify(buildStorePriceFiles({ applyArchive: args.includes("--apply-archive") }), null, 2));
   } catch (error) {
     console.error(`No se pudo proponer precios: ${error.message}`);
     process.exitCode = 1;

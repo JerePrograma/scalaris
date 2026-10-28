@@ -13,7 +13,7 @@ main{max-width:860px;padding:44px 26px 24px;margin:auto}
 .intro h1{font-size:clamp(34px,5.2vw,50px);letter-spacing:-.05em;line-height:1.12;margin:19px 0}
 .intro>p{color:#496479;max-width:630px;font-size:15px;margin:0}
 .card{padding:34px;background:#fff;border:1px solid #d8e4ee;border-radius:20px;margin-top:30px;box-shadow:0 8px 32px #0b1f3305}
-.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0;margin:0 0 28px;list-style:none;color:#496479;font-size:11px}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0;margin:0 0 28px;list-style:none;color:#496479;font-size:11px}
 .steps li{padding:11px 9px;border-bottom:2px solid #dce6ee;line-height:1.4}
 .steps .active{color:#145cdb;border-color:#145cdb;font-weight:600;background:#eef5ff;border-radius:6px 6px 0 0}
 .steps .complete{color:#145cdb;border-color:#b4d2f6}

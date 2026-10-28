@@ -117,12 +117,14 @@ Ese comando genera `.private/market-research/market-evidence-dashboard.html`; no
 
 Revisar el resumen final de la cola y del reporte. Los errores no cuentan como completados y los índices no cuentan como precios verificados. Mantener separados los productos investigados sin coincidencia, los pendientes de lectura y los que tienen evidencia estricta. Los comandos de esta guía escriben salidas privadas; una actualización pública de precios debe seguir la política comercial y la autorización vigentes, nunca una cifra extraída de un snippet.
 
-## Publicar cada tanda terminada
+## Archivo histórico de cada tanda terminada
+
+Desde el 28/10/2026 la tienda de hardware está retirada. La autorización histórica de publicación indicada a continuación quedó reemplazada por esa decisión para el sitio público. Estos comandos actualizan sólo `legacy/hardware-store/`, fuera del hosting.
 
 La autorización del usuario del 20/10/2026 permite publicar en `main` el avance y las referencias aceptadas, conservando privados los costos, márgenes, proveedores y reportes completos. El resumen público cuenta búsquedas completadas; no afirma que esas búsquedas sean precios verificados.
 
 ```powershell
-node scripts/build-store-prices.mjs --apply-public
+node scripts/build-store-prices.mjs --apply-archive
 node scripts/build-public-market-progress.mjs
 npm run check
 git diff --check

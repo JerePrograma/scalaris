@@ -1,5 +1,7 @@
 # Estrategia de venta Scalaris
 
+Estado desde el 28/10/2026: la venta de hardware se retiró de la web. Esta guía conserva la operación histórica para herramientas internas; sus exportaciones van a `legacy/hardware-store/`, fuera del hosting. No autoriza volver a publicar la tienda.
+
 El 21/10/2026 el usuario pidió cerrar las búsquedas y fijar el patrón de recargos con los productos ya cargados. Se eliminó el heartbeat y se deshabilitó la investigación. Los checkpoints conservan evidencia histórica, con cobertura parcial del mercado.
 
 La tienda vende contra pedido, por transferencia y con envío al cliente cotizado aparte. El flete del proveedor a Scalaris es gratuito según el acuerdo confirmado. Antes de cobrar, confirmar disponibilidad y plazo.
@@ -25,12 +27,12 @@ Las referencias anteriores no alteran el patrón final. Sus importes sólo apare
 
 ```powershell
 node scripts/build-store-prices.mjs
-node scripts/build-store-prices.mjs --apply-public
+node scripts/build-store-prices.mjs --apply-archive
 node scripts/build-market-dashboard.mjs
 node scripts/build-public-market-progress.mjs
 npm run check
 ```
 
-El primer comando calcula la propuesta privada para revisar. `--apply-public` respalda el catálogo y copia sólo campos públicos de venta. Costos, recargos, márgenes y reportes permanecen fuera del hosting y del repositorio.
+El primer comando calcula la propuesta privada para revisar. `--apply-archive` respalda y actualiza únicamente el catálogo histórico fuera de `public/`. La bandera anterior `--apply-public` se rechaza. Costos, recargos, márgenes y reportes permanecen fuera del hosting y del repositorio.
 
 La validez de cada precio depende de la fecha del costo fuente. Regenerar el catálogo no renueva esa fecha. Recalcular sin cambiar el precio o sus condiciones conserva su fecha anterior. Productos vencidos o con costo pendiente siguen bloqueados. Para actualizar la política, editar la configuración privada, revisar todos los productos y publicar los cambios autorizados.

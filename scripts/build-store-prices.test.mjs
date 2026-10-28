@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createPricingPolicy, createEvidencePolicy, normalizeMarketEvidence, proposeStorePrices, sanitizePublicCatalog, PUBLIC_PRODUCT_KEYS } from "./build-store-prices.mjs";
+import { createPricingPolicy, createEvidencePolicy, normalizeMarketEvidence, proposeStorePrices, sanitizePublicCatalog, PUBLIC_PRODUCT_KEYS, buildStorePriceFiles } from "./build-store-prices.mjs";
+
+test("retired public application rejects before reading or changing any local catalogue", () => {
+  assert.throws(() => buildStorePriceFiles({ applyPublic: true }), /tienda pública fue retirada/);
+});
 
 const at = "2026-10-20T15:00:00.000Z";
 // Fictional deterministic settings; production business rates remain private.

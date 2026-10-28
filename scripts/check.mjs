@@ -1,5 +1,5 @@
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
-import { resolve, dirname, sep } from "node:path";
+import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { resolvePublicReference,validatePublicOffer } from "./public-references.mjs";
@@ -41,7 +41,6 @@ if (
   errors.push("Enlace WhatsApp directo incorrecto");
 for (const ref of [
   "consulta/index.html",
-  "consulta/index.html?service=EQUIPMENT",
   "consulta/index.html?service=SOFTWARE",
 ])
   if (!refs.includes(ref)) errors.push(`Acceso a consulta inexistente: ${ref}`);
@@ -75,7 +74,7 @@ if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);
 }
-// Validate all public pages and assets, including the gallery and shop.
+// Validate all software pages and assets, including the complete gallery.
 function walk(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
     const file = resolve(directory, entry.name);
@@ -83,6 +82,15 @@ function walk(directory) {
   });
 }
 const publicFiles = walk(root);
+for (const removed of ["tienda", "assets/notebook.png"]) {
+  if (existsSync(resolve(root, removed))) errors.push(`Contenido de hardware retirado dentro del sitio público: ${removed}`);
+}
+for (const file of publicFiles.filter(file => /\.(?:html|js|json|xml|txt|css)$/.test(file))) {
+  const content = readFileSync(file, "utf8");
+  if (/\b(?:EQUIPMENT|PARTS)\b/.test(content)) errors.push(`Servicio de hardware retirado dentro de ${relativeToPublic(file)}`);
+  if (/Soporte y servicios|Software y soporte informático\.|Equipos y repuestos/.test(content)) errors.push(`Oferta de hardware retirada dentro de ${relativeToPublic(file)}`);
+  if (file.endsWith("sitemap.xml") && /https:\/\/scalaris\.com\.ar\/tienda(?:\/|<)/.test(content)) errors.push("La tienda retirada no debe aparecer en el sitemap");
+}
 for (const file of publicFiles.filter(file => /\.(html|css)$/.test(file))) {
   const text = readFileSync(file, "utf8");
   const pageIds = new Set([...text.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]));
@@ -91,15 +99,17 @@ for (const file of publicFiles.filter(file => /\.(html|css)$/.test(file))) {
     ...[...text.matchAll(/url\(['"]?([^)'"\s]+)['"]?\)/g)].map(match => match[1]),
   ];
   for (const ref of pageRefs) {
+    const destination = new URL(ref, `https://scalaris.com.ar/${relativeToPublic(file).replaceAll("\\", "/")}`);
+    if (destination.origin === "https://scalaris.com.ar" && /^\/tienda(?:\/|$)/.test(destination.pathname)) errors.push(`Enlace a la tienda retirada en ${relativeToPublic(file)}: ${ref}`);
     verifyReference(file,ref);
   }
 }
 for (const file of publicFiles.filter(file => file.endsWith(".js"))) execFileSync(process.execPath, ["--check", file], { stdio: "pipe" });
-for (const file of ["proyectos/index.html", "tienda/index.html"]) {
+for (const file of ["proyectos/index.html"]) {
   if (!existsSync(resolve(root, file))) errors.push(`Página inexistente: ${file}`);
 }
 const requiredCanonical = new Map([
-  ["index.html","/"],["consulta/index.html","/consulta/"],["proyectos/index.html","/proyectos/"],["tienda/index.html","/tienda/"],
+  ["index.html","/"],["consulta/index.html","/consulta/"],["proyectos/index.html","/proyectos/"],
   ["productos/index.html","/productos/"],["web/index.html","/web/"],["catalogo/index.html","/catalogo/"],["catalogo/demos/index.html","/catalogo/demos/"],["catalogo/propuesta.html","/catalogo/propuesta"],
 ]);
 for(const [filename,route] of requiredCanonical){
@@ -111,7 +121,7 @@ for(const [filename,route] of requiredCanonical){
   if(!page.includes(`property="og:url" content="${expected}"`))errors.push(`OpenGraph URL incorrecta en ${filename}`);
 }
 const sitemap=readFileSync(resolve(root,"sitemap.xml"),"utf8");
-for(const route of ["/","/consulta/","/proyectos/","/tienda/","/productos/","/web/","/catalogo/","/catalogo/demos/"]){
+for(const route of ["/","/consulta/","/proyectos/","/productos/","/web/","/catalogo/","/catalogo/demos/"]){
   if(!sitemap.includes(`<loc>https://scalaris.com.ar${route}</loc>`))errors.push(`Ruta ausente del sitemap: ${route}`);
 }
 const publicOfferPath=resolve(root,"catalogo/offer.json");
@@ -178,24 +188,6 @@ if (!mesaProject.includes('src="../assets/proyectos/scalaris-mesa.png"')) errors
 if (!/por visitante/i.test(mesaProject) || !/datos ficticios/i.test(mesaProject)) errors.push("La ficha de Scalaris Mesa debe explicar el aislamiento por visitante y los datos ficticios");
 const mesaLinks = [...mesaProject.matchAll(/<a\b[^>]*\bhref="https:\/\/scalaris\.com\.ar\/mesa\/"[^>]*>/g)];
 if (mesaLinks.length !== 2 || mesaLinks.some(([link]) => !link.includes('target="_blank"') || !link.includes('rel="noopener noreferrer"'))) errors.push("La miniatura y el acceso de Scalaris Mesa deben abrir su demo en una pestaña nueva sin acceso a la ventana de origen");
-const catalog = JSON.parse(readFileSync(resolve(root, "tienda/catalog.json"), "utf8"));
-if (catalog.version !== 1 || !Array.isArray(catalog.products) || !catalog.products.length) errors.push("Catálogo público inválido");
-const productIds = new Set();
-const allowedKeys = new Set(["id", "name", "category", "brand", "image", "description", "price", "currency", "priceValidUntil", "priceUpdatedAt", "priceBasis", "orderable", "availabilityNote"]);
-for (const product of catalog.products || []) {
-  if (!product.id || productIds.has(product.id)) errors.push(`Referencia de producto repetida o ausente: ${product.id}`);
-  productIds.add(product.id);
-  if (!product.name || !product.category || !product.description || product.currency !== "ARS") errors.push(`Producto incompleto: ${product.id}`);
-  for (const key of Object.keys(product)) if (!allowedKeys.has(key)) errors.push(`Campo no público en catálogo: ${product.id}.${key}`);
-  if (product.price !== null && (!Number.isFinite(product.price) || product.price <= 0 || !Number.isFinite(Date.parse(product.priceValidUntil)))) errors.push(`Precio sin vigencia explícita: ${product.id}`);
-  if (product.orderable === false && product.price !== null) errors.push(`Referencia bloqueada con precio público activo: ${product.id}`);
-  if (product.orderable === true && !(Number.isFinite(product.price) && product.price > 0)) errors.push(`Referencia comprable sin precio: ${product.id}`);
-  if (product.image) {
-    if (product.image.startsWith("https://")) continue;
-    const image = resolve(root, "tienda", product.image);
-    if (!image.startsWith(root + sep) || !existsSync(image) || !/\.(png|jpe?g|webp)$/i.test(image)) errors.push(`Imagen inválida: ${product.id}`);
-  }
-}
 for (const file of publicFiles) {
   if (/catalog-costs|cotizador|pricing|\.xlsx$|\.pdf$/i.test(file)) errors.push(`Archivo interno dentro del sitio público: ${file}`);
   if (statSync(file).size > 25 * 1024 * 1024) errors.push(`Archivo público demasiado grande: ${file}`);
@@ -206,5 +198,5 @@ if (errors.length) {
 }
 execFileSync(process.execPath, ["--test", ...walk(resolve(root, "../scripts")).filter(file => file.endsWith(".test.mjs"))], { stdio: "inherit" });
 console.log(
-  `OK: portada, Productos, Catálogo, planes/demos, consulta guiada, galería con ${galleryProjectIds.size} proyectos, tienda, referencias locales/dinámicas y ${productIds.size} productos sin costos privados.`,
+  `OK: portada, Productos, Catálogo, planes/demos, consulta guiada de software, galería con ${galleryProjectIds.size} proyectos y referencias locales/dinámicas sin oferta de hardware ni datos privados.`,
 );

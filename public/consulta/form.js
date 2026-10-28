@@ -7,22 +7,19 @@ import {
   buildInquiry,
   readProductInterest,
   productInterestAnswers,
-} from "./model.js?v=20261027-names";
+} from "./model.js?v=20261028-software";
 import {
   hasPlanSelection,
   loadPlanSummary,
   planSummaryRows,
   planSummaryText,
   planSummaryTotal,
-} from "./plan-summary.js?v=20261027-names";
+} from "./plan-summary.js?v=20261028-software";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
   interest = readProductInterest(window.location.search),
-  requestedService = interest ? 'SOFTWARE' : new URLSearchParams(window.location.search).get("service");
-let step = Object.prototype.hasOwnProperty.call(services, requestedService)
-    ? 1
-    : 0,
-  service = step ? requestedService : "",
+  service = "SOFTWARE";
+let step = 1,
   contact = { name: "", phone: "" },
   answers = productInterestAnswers(interest),
   inquiry = null;
@@ -92,7 +89,8 @@ function render() {
   root.replaceChildren();
   document
     .querySelectorAll(".steps li")
-    .forEach((e, i) => {
+    .forEach(e => {
+      const i = Number(e.dataset.step);
       e.classList.toggle("active", i === step);
       e.classList.toggle("complete", i < step);
       if (i === step) e.setAttribute("aria-current", "step");
@@ -105,42 +103,6 @@ function render() {
       element('a','Volver a comparar los planes →',{href:interest.product==='web'?'../web/#planes':interest.product==='catalogo'?'../catalogo/#planes':'../productos/#planes'}));
     root.append(context);
   }
-  if (step === 0) {
-    root.append(element("h2", "¿Sobre qué querés consultar?"));
-    const options = element("div", null, { class: "choices" });
-    for (const [key, label] of Object.entries(services)) {
-      const b = button(
-        label,
-        () => {
-          if (service !== key) {
-            answers = key === 'SOFTWARE' ? productInterestAnswers(interest) : {};
-            service = key;
-          }
-          step = 1;
-          render();
-        },
-        true,
-      );
-      const descriptions = {
-        EQUIPMENT: "Tu equipo, su funcionamiento o la conexión.",
-        PARTS: "La pieza que buscás y su compatibilidad.",
-        SOFTWARE: "Tu idea, tu negocio o un proceso a mejorar.",
-      };
-      b.replaceChildren(
-        element("strong", label),
-        element("span", descriptions[key], { class: "choice-description" }),
-      );
-      options.append(b);
-    }
-    root.append(
-      options,
-      element(
-        "p",
-        "Este formulario prepara una consulta. El presupuesto se acuerda después de la revisión.",
-        { class: "note" },
-      ),
-    );
-  }
   if (step === 1) {
     root.append(element("h2", services[service]));
     const form = element("form");
@@ -149,38 +111,6 @@ function render() {
       ...conditionalQuestions(service, answers),
     ])
       form.append(field(q.label, q.key, answers, q));
-    if (service === "EQUIPMENT") {
-      const hint = element(
-        "p",
-        "Si no enciende, contá qué luces o sonidos notás. Si es mantenimiento, indicá el uso habitual. No incluyas accesos al equipo.",
-        { class: "note" },
-      );
-      form.append(hint);
-    }
-    if (service === "PARTS")
-      form.append(
-        element(
-          "p",
-          "Si no conocés la compatibilidad, podemos revisarla. No hace falta informar una dirección ni datos de pago.",
-          { class: "note" },
-        ),
-      );
-    // Questions change by the selected service; further hints depend on the equipment topic.
-    const topic = form.querySelector("select");
-    if (service === "EQUIPMENT" && topic) {
-      const conditional = element("p", null, { class: "conditional" });
-      const update = () => {
-        conditional.textContent =
-          answers.topic === "Redes / Wi-Fi"
-            ? "Contá si el problema afecta a un dispositivo o a toda la red. No compartas la clave Wi-Fi."
-            : answers.topic === "Armado / mejora"
-              ? "Indicá para qué usarías el equipo y qué querés mejorar."
-              : "Contá síntomas o necesidades sin incluir información privada.";
-      };
-      topic.addEventListener("change", update);
-      update();
-      form.append(conditional);
-    }
     form.append(
       element("h3", "¿Cómo te identificamos?"),
       field("Nombre o identificación útil *", "name", contact, {
@@ -190,12 +120,6 @@ function render() {
       field("Teléfono / WhatsApp (opcional)", "phone", contact, { max: 100 }),
     );
     const actions = element("div", null, { class: "actions" });
-    actions.append(
-      button("← Cambiar servicio", () => {
-        step = 0;
-        render();
-      }),
-    );
     const submit = element("button", "Revisar consulta", {
       type: "submit",
       class: "primary",

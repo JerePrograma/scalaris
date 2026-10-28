@@ -1,10 +1,16 @@
 # Scalaris
 
-Web estática de Scalaris: soporte informático, desarrollo de software, galería de proyectos y tienda contra pedido.
+Web estática de Scalaris: productos de software, desarrollo a medida, automatizaciones, integraciones y galería de proyectos.
 
 Sitio público: https://scalaris.com.ar
 
 Dirección anterior, con redirección permanente: https://scalaris.pages.dev
+
+## Oferta pública de software — 28/10/2026
+
+Por solicitud del usuario, la web ofrece únicamente productos y desarrollo de software. Se retiraron la oferta de armado, reparación, mantenimiento y venta de equipos, su navegación y las ramas de hardware de la consulta. Se conservan Web, Catálogo, Menú, Mesa, Gestudio, CRM, las demos y el desarrollo a medida, las automatizaciones e integraciones. La consulta entra directamente a software en dos pasos y conserva el contexto del producto, plan y modalidad.
+
+La tienda y sus recursos históricos se archivaron en `legacy/hardware-store/`, fuera de `public/`. Los enlaces `/tienda` y `/tienda/*` redirigen a `/productos/`; la tienda ya no aparece en el sitemap. Los importadores y generadores históricos no deben escribir en `public/`. `npm run check` rechaza su reintroducción. La [nota del cambio](docs/software-only-2026-10-28.md) registra alcance, evaluación del estándar y verificaciones. Las menciones de la tienda en las secciones históricas siguientes describen publicaciones anteriores al retiro.
 
 ## Portafolio y oferta comercial — 27/10/2026
 
@@ -43,14 +49,14 @@ node scripts/check.mjs
 node scripts/serve.mjs
 ```
 
-Abrir http://127.0.0.1:8080. Para abrirlo con doble clic, usar `VerSitio.cmd` y mantener su ventana abierta. La portada y la galería también pueden abrirse directamente; la tienda requiere la vista local o un hosting HTTP para cargar su catálogo.
+Abrir http://127.0.0.1:8080. Para abrirlo con doble clic, usar `VerSitio.cmd` y mantener su ventana abierta. La portada y la galería también pueden abrirse directamente; la consulta con importes vigentes requiere HTTP para cargar la oferta.
 
-## Galería y tienda
+## Galería y antecedentes de la tienda retirada
 
 - `public/proyectos/` reúne 19 fichas. Las tres primeras muestran las demos de Scalaris Comercio: Corralón Punto Obra, Ronda Mayorista y Almacén La Esquina, con acceso directo a `/comercio/t/corralon-demo`, `/comercio/t/mayorista-demo` y `/comercio/t/almacen-demo`. La cuarta presenta Scalaris Mesa en `/mesa/`, una demo de gestión para restaurantes y cafés con un entorno independiente y datos ficticios por visitante. Conserva Remodelaya, Shekinah, Tu Comida, E-MEDICAPP, Burger House, Gestudio, FourBubbles, Scalaris CRM, PharmaHome, Calendario de servicios, Inventarios Mueblería, Gym & Academy Manager, Presupuestador Flete, HogarIA y CJ Préstamos. Distingue los proyectos desplegados, las demos interactivas y los proyectos en preparación. Burger House es un proyecto desplegado y Tu Comida es una demo interactiva. Las fichas pendientes ofrecen una consulta, sin publicar una dirección de demo todavía inexistente. Tu Comida, E-MEDICAPP y Burger House se abren en `/tu-comida/`, `/e-medicapp/` y `/burger-house-3/`. Las 19 fichas tienen miniatura: trece capturas reales (nueve WebP, tres JPEG y un PNG) y seis portadas SVG originales identificadas como vistas ilustrativas. Gestudio, FourBubbles y Mesa muestran datos ficticios; PharmaHome muestra un formulario vacío. Shekinah conserva su captura local identificada porque el acceso público fue bloqueado por FortiGuard en este entorno.
 - Cada ficha declara `data-project` y `data-state` (`live`, `demo` o `preparation`). Al verificar una nueva publicación, actualizar juntos estado, etiqueta, nota y enlace de la ficha correspondiente. La verificación de publicación exige las 19 fichas, identificadores únicos, estados válidos y los enlaces de las demos de Comercio y Mesa. También comprueba que Mesa se presente como demo, use su captura y explique los datos ficticios y el entorno por visitante.
 - Evaluación del estándar (24/10/2026, fuentes: `package.json`, `wrangler.jsonc`, `.github/workflows/check.yml`, las páginas de `public/` y `functions/mesa/[[path]].js`): la galería usa HTML/CSS estáticos y Cloudflare Pages con CI; no necesita un backend ni base de datos propios. Conservar esa arquitectura permite agregar Mesa mediante una ficha, una captura y el control existente, con bajo esfuerzo y sin introducir otra compilación o despliegue para la galería. La aplicación Mesa mantiene su frontend React, backend Spring y PostgreSQL en el VPS, bajo el prefijo público `/mesa/`. La aceptación de esta ampliación es encontrar la ficha, identificarla como demo con datos ficticios por visitante y abrir `/mesa/` tanto desde la miniatura como desde el enlace. Las capturas de Comercio, Mesa y E-MEDICAPP se renovaron desde sus páginas públicas el 27/10/2026 con la paleta azul. Mesa conserva la vista del salón y una cuenta ficticia a 1440 × 900; E-MEDICAPP muestra su acceso y perfiles de demostración.
-- `public/tienda/` permite buscar por modelo/marca, filtrar por categoría, ordenar por precio, revisar fichas y agregar hasta 12 productos distintos a un pedido. Muestra precios unitarios, subtotales y total por transferencia; el envío se cotiza aparte por código postal. Las cantidades, referencias y el total se preparan en un enlace de WhatsApp; la persona revisa y envía el mensaje. No hay cobro automático ni reserva de stock. La selección se conserva en la sesión del navegador, sin datos personales.
+- La antigua `public/tienda/`, archivada desde el 28/10/2026 en `legacy/hardware-store/`, permitía buscar, filtrar y preparar pedidos de hardware. Su catálogo, imágenes y flujo de consulta ya no se publican. Los datos de importación y precios siguientes se conservan como antecedentes, sin vigencia comercial actual.
 - Importación del 20/10/2026: 7.305 productos (NB 1.409, DistriLand 2.796 y TecnoPrices 3.100). Las fotos de NB usan sus URL originales; las de TecnoPrices se extrajeron del PDF y se alojan localmente (2.730 archivos únicos, 12,3 MB). DistriLand queda con un marcador explícito de imagen pendiente. Las descripciones son las referencias disponibles en las fuentes; no se inventan especificaciones.
 - El catálogo público contiene nombres, categorías, fotos y referencias; no expone costo, escalas mayoristas, stock histórico ni información interna. El importador y los controles usan una lista explícita de campos públicos. Los nombres iguales entre proveedores conservan sus referencias: no se asume que variantes diferentes sean el mismo producto.
 - Hay 7.292 productos habilitados con precio de venta ARS por transferencia. Otros 13 quedan fuera de venta: 12 titulados “VENCIDO” y una referencia NB sin costo actual. Un precio público sólo se muestra si es positivo y tiene `priceValidUntil` vigente; al vencer aparece “No disponible” y se impide agregarlo al pedido. La vigencia queda limitada a siete días desde el costo de origen, sin renovarse por regenerar archivos. Confirmar disponibilidad, envío y plazo antes de cobrar sigue siendo parte de la operación contra pedido.
@@ -76,7 +82,7 @@ Abrir `.private/cotizador.html` con doble clic. Es una herramienta local autóno
 
 Para regenerarlo después de importar listas: `node scripts/build-price-calculator.mjs`. Ver [Criterio de precios y uso](scripts/PRECIOS.md). El cotizador permite simular condiciones distintas; no publica datos en la tienda. `build-store-prices.mjs` genera la propuesta y requiere `--apply-public` para actualizar el catálogo público. `.private/` necesita respaldo local independiente si se quiere conservar.
 
-El control de publicación verifica recursos de todas las páginas, sintaxis, campos del catálogo y las pruebas de consultas y precios: `node scripts/check.mjs`. Las pruebas del importador se ejecutan con Python según su documentación.
+El control de publicación verifica recursos de todas las páginas, sintaxis, ofertas de software, ausencia de hardware público y las pruebas de consultas y herramientas históricas: `node scripts/check.mjs`. Las pruebas del importador se ejecutan con Python según su documentación.
 
 ## Cloudflare Pages
 

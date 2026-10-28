@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { filterProducts, sanitizeSelection, inquiryMessage, displayPrice, canOrder, selectionTotals } from "../public/tienda/model.js";
+import { filterProducts, sanitizeSelection, inquiryMessage, displayPrice, canOrder, selectionTotals } from "../legacy/hardware-store/model.js";
 
 const products = [
   { id: "nb-1", name: "Teclado inalámbrico Logitech", category: "Periféricos", brand: "Logitech", currency: "ARS", price: 2000, priceValidUntil: "2099-01-01T00:00:00Z", orderable: true },

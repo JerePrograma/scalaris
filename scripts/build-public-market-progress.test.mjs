@@ -101,7 +101,7 @@ class Node {
 }
 
 async function storefront() {
-  const html = readFileSync(new URL("../public/tienda/index.html", import.meta.url), "utf8");
+  const html = readFileSync(new URL("../legacy/hardware-store/index.html", import.meta.url), "utf8");
   const nodes = new Map([...html.matchAll(/\bid="([^"]+)"/g)].map(match => [match[1], new Node()]));
   for (const id of ["product-dialog", "selection-dialog"]) { const close = new Node("button"); close.className = "close-dialog"; nodes.get(id).append(close); }
   nodes.get("sort").value = "featured";
@@ -125,7 +125,7 @@ async function storefront() {
     selectionTotals: selection => ({ subtotal: selection.reduce((sum, row) => sum + row.quantity * 100, 0), hasUnavailable: false }), money: value => `$ ${value}`,
     fetch: async (url, options) => { requests.push({ url, options }); return url.includes("market-progress") ? progress : { ok: true, json: async () => ({ version: 1, products: [product] }) }; },
   };
-  const source = readFileSync(new URL("../public/tienda/tienda.js", import.meta.url), "utf8").replace(/^import[^\n]+\n/, "");
+  const source = readFileSync(new URL("../legacy/hardware-store/tienda.js", import.meta.url), "utf8").replace(/^import[^\n]+\n/, "");
   vm.runInNewContext(source, context);
   const flush = async () => { await new Promise(resolve => setImmediate(resolve)); };
   await flush();

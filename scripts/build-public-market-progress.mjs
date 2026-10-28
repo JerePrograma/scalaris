@@ -96,12 +96,12 @@ export function buildPublicMarketProgressFile({ generatedAt } = {}) {
   const researchPath = resolve(folder, "market-references.json");
   const seedPath = resolve(folder, "normalized-seeds.json");
   const result = buildPublicMarketProgress(
-    readJson(resolve(ROOT, "public/tienda/catalog.json")),
+    readJson(resolve(ROOT, "legacy/hardware-store/catalog.json")),
     existsSync(researchPath) ? readJson(researchPath) : null,
     existsSync(seedPath) ? readJson(seedPath) : [],
     generatedAt,
   );
-  const target = resolve(ROOT, "public/tienda/market-progress.json");
+  const target = resolve(ROOT, "legacy/hardware-store/market-progress.json");
   const temporary = target + ".tmp";
   writeFileSync(temporary, JSON.stringify(result, null, 2) + "\n", "utf8");
   renameSync(temporary, target);
