@@ -1,15 +1,24 @@
+import { priceReferences } from './price-references.js?v=20261028-planes';
+
 export const services = {
   SOFTWARE: "Web / software",
 };
 const productFamilies = Object.freeze({
-  catalogo: {name:'Scalaris Catálogo',topic:'Sitio web',plans:{catalogo:'Catálogo para WhatsApp',pedidos:'Catálogo con seguimiento de pedidos',gestion:'Catálogo con pedidos y caja manual'}},
-  web: {name:'Scalaris Web',topic:'Sitio web',plans:{presencia:'Web de una página',negocio:'Web de hasta 5 páginas'}},
+  catalogo: {name:'Scalaris Catálogo',topic:'Sitio web',plans:{catalogo:'Vidriera',pedidos:'Flujo',gestion:'Pulso'}},
+  web: {name:'Scalaris Web',topic:'Sitio web',plans:{presencia:'Origen',negocio:'Web de hasta 5 páginas'}},
   menu: {name:'Menú gastronómico',topic:'Software a medida',plans:null},
   mesa: {name:'Scalaris Mesa',topic:'Software a medida',plans:null},
   academia: {name:'Gestudio',topic:'Software a medida',plans:null},
   crm: {name:'CRM Scalaris',topic:'Software a medida',plans:null},
 });
 const productBilling = Object.freeze({annual:'pago anual anticipado',monthly:'mes a mes'});
+/** Informational reference from the generated offer, never a closed quote or URL amount. */
+export function productPriceReference(interest) {
+  const reference = interest && Object.hasOwn(priceReferences, interest.product) ? priceReferences[interest.product] : null;
+  if (!reference) return null;
+  const amount = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(reference.monthlyFrom);
+  return `Desde $${amount} ARS por mes para una institución. Implementación y migración a cotizar según alcance, con piloto de aceptación antes del uso operativo.`;
+}
 /** A URL expresses interest only. Prices and contract terms never come from query values. */
 export function readProductInterest(search = '') {
   const params = new URLSearchParams(search);
@@ -29,7 +38,7 @@ export function productInterestAnswers(interest) {
   const family=productFamilies[safe.product];
   return {topic:family.topic,need:`Quiero conocer ${safe.productName} para mi negocio.`,scope:family.plans
     ? `Me interesa ${safe.planName?`el plan ${safe.planName}`:'definir qué plan me conviene'}${safe.billingName?`, con modalidad ${safe.billingName}`:''}. Quiero revisar el alcance y las condiciones antes de contratar.`
-    : `Quiero un relevamiento para implementar ${safe.productName}. Necesito revisar el funcionamiento, el alcance y el presupuesto antes de contratar.`};
+    : `Quiero un relevamiento para implementar ${safe.productName}. Necesito revisar el funcionamiento, el alcance y el presupuesto antes de contratar.${productPriceReference(safe) ? ` Referencia: ${productPriceReference(safe)}` : ''}`};
 }
 export const labels = {
   topic: "Motivo",

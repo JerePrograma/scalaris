@@ -7,14 +7,15 @@ import {
   buildInquiry,
   readProductInterest,
   productInterestAnswers,
-} from "./model.js?v=20261028-software";
+  productPriceReference,
+} from "./model.js?v=20261028-planes";
 import {
   hasPlanSelection,
   loadPlanSummary,
   planSummaryRows,
   planSummaryText,
   planSummaryTotal,
-} from "./plan-summary.js?v=20261028-software";
+} from "./plan-summary.js?v=20261028-planes";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
   interest = readProductInterest(window.location.search),
@@ -101,6 +102,8 @@ function render() {
     context.append(element('strong',interest.planName || interest.productName),
       element('p',`${interest.billingName?`Modalidad de interés: ${interest.billingName}. `:''}Podés editar las respuestas. Esta consulta no confirma una contratación ni un pago.`),
       element('a','Volver a comparar los planes →',{href:interest.product==='web'?'../web/#planes':interest.product==='catalogo'?'../catalogo/#planes':'../productos/#planes'}));
+    const priceReference = productPriceReference(interest);
+    if (priceReference) context.insertBefore(element('p', priceReference), context.lastChild);
     root.append(context);
   }
   if (step === 1) {

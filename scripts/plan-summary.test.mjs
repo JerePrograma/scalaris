@@ -137,7 +137,7 @@ test('Web review charges the one-time installation in annual and monthly modes',
 test('Web selection rejects URL amounts and preserves the original inquiry schema',()=>{
   const selection=readProductInterest('?product=web&plan=presencia&billing=annual&amount=1&setup=0&total=1');
   assert.equal(selection.productName,'Scalaris Web');
-  assert.equal(selection.planName,'Web de una página');
+  assert.equal(selection.planName,'Origen');
   const answers=productInterestAnswers(selection);
   assert.equal(answers.topic,'Sitio web');
   const inquiry=buildInquiry('SOFTWARE',{name:'Prueba web'},answers,'test-web','2026-10-27T00:00:00Z');
@@ -178,13 +178,13 @@ test('Web prices load only the fixed Web offer endpoint without accepting an end
   assert.equal(plan.total,110000);
 });
 
-test('descriptive plan names stay consistent across URL selection, inquiry text and price review without changing IDs or amounts',()=>{
+test('flyer plan names stay consistent across URL selection, inquiry text and price review without changing IDs or amounts',()=>{
   const cases=[
-    ['web','presencia','Web de una página',webOffer,141000,57000],
+    ['web','presencia','Origen',webOffer,141000,57000],
     ['web','negocio','Web de hasta 5 páginas',webOffer,270000,110000],
-    ['catalogo','catalogo','Catálogo para WhatsApp',offer,120000,45000],
-    ['catalogo','pedidos','Catálogo con seguimiento de pedidos',offer,240000,80000],
-    ['catalogo','gestion','Catálogo con pedidos y caja manual',offer,360000,125000],
+    ['catalogo','catalogo','Vidriera',offer,120000,45000],
+    ['catalogo','pedidos','Flujo',offer,240000,80000],
+    ['catalogo','gestion','Pulso',offer,360000,125000],
   ];
   for(const [product,id,name,data,annualTotal,monthlyTotal]of cases){
     for(const [billing,total]of [['annual',annualTotal],['monthly',monthlyTotal]]){

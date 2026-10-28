@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-10-27",
+  "reviewedAt": "2026-10-28",
   "currency": "ARS",
   "product": {
     "name": "Scalaris Catálogo",
@@ -22,8 +22,8 @@
   "plans": [
     {
       "id": "catalogo",
-      "name": "Catálogo para WhatsApp",
-      "audience": "Productos y precios editables. El cliente arma y envía el pedido por WhatsApp.",
+      "name": "Vidriera",
+      "audience": "Catálogo para WhatsApp. Productos y precios editables; el cliente arma y envía el pedido por WhatsApp.",
       "featured": false,
       "annualMonthlyEquivalent": 10000,
       "monthlyPrice": 15000,
@@ -48,8 +48,8 @@
     },
     {
       "id": "pedidos",
-      "name": "Catálogo con seguimiento de pedidos",
-      "audience": "Catálogo para WhatsApp más pedidos guardados, estados y enlace de seguimiento.",
+      "name": "Flujo",
+      "audience": "Catálogo + seguimiento de pedidos. Pedidos guardados, estados y enlace de seguimiento.",
       "featured": true,
       "annualMonthlyEquivalent": 20000,
       "monthlyPrice": 30000,
@@ -63,7 +63,7 @@
         "revisionRounds": 1
       },
       "features": [
-        "Todo el Catálogo para WhatsApp",
+        "Todo el plan Vidriera",
         "Pedidos guardados con referencia",
         "Panel para revisar y actualizar estados",
         "Enlace de seguimiento para el cliente",
@@ -73,8 +73,8 @@
     },
     {
       "id": "gestion",
-      "name": "Catálogo con pedidos y caja manual",
-      "audience": "Catálogo y seguimiento de pedidos más ingresos, egresos y cierre de caja manual.",
+      "name": "Pulso",
+      "audience": "Catálogo + pedidos y caja manual. Ingresos, egresos y cierre de caja.",
       "featured": false,
       "annualMonthlyEquivalent": 30000,
       "monthlyPrice": 45000,
@@ -88,7 +88,7 @@
         "revisionRounds": 1
       },
       "features": [
-        "Todo el Catálogo con seguimiento de pedidos",
+        "Todo el plan Flujo",
         "Apertura de caja con saldo inicial",
         "Registro manual de ingresos y egresos",
         "Movimientos con concepto y responsable",

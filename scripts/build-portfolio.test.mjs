@@ -95,6 +95,32 @@ test('catalog prices follow their own public offer and regeneration is determini
   assert.deepEqual(after, before);
 });
 
+test('Gestudio publishes a monthly reference with quoted implementation and no invented setup amount', async t => {
+  const { read, output, data } = await fixture(t);
+  const html = await read('index.html'), offer = JSON.parse(await read('offer.json'));
+  const academy = offer.families.find(family => family.id === 'academia');
+  assert.equal(academy.pricingType, 'starting_quote');
+  assert.equal(academy.monthlyFrom, 30000);
+  assert.equal(Object.hasOwn(academy, 'setupFrom'), false);
+  const card = html.match(/<article[^>]*id="solucion-academia"[\s\S]*?<\/article>/)?.[0];
+  const reference = html.match(/<article class="portfolio-reference"><div><span class="eyebrow">Gestudio[\s\S]*?<\/article>/)?.[0];
+  for (const block of [card, reference]) {
+    assert.ok(block);
+    assert.match(block, /Desde \$ 30\.000/);
+    assert.match(block, /Implementación y migración a cotizar/);
+    assert.match(block, /una institución/);
+    assert.doesNotMatch(block, /NaN|undefined|Bonificada|Instalación desde/);
+  }
+  assert.ok(!offer.fixedPlans.some(plan => plan.product === 'academia'));
+  for (const family of data.families.filter(family => ['menu', 'mesa'].includes(family.id))) {
+    const amount = new Intl.NumberFormat('es-AR', {style:'currency',currency:'ARS',maximumFractionDigits:0}).format(family.setupFrom).replace(/\s/g,' ');
+    assert.ok(html.includes(`Instalación desde <strong>${amount}</strong>`));
+  }
+  const generatedReference = await readFile(path.join(output, 'consulta/price-references.js'), 'utf8');
+  const values = await import('data:text/javascript,' + encodeURIComponent(generatedReference));
+  assert.deepEqual(values.priceReferences, {academia:{currency:'ARS', monthlyFrom:30000}});
+});
+
 test('billing selector preserves product, plan and installation rules for both families', async t => {
   const { read } = await fixture(t);
   const controls = ['annual', 'monthly'].map(mode => ({ dataset: { portfolioBilling: mode }, attributes: {}, setAttribute(key, value) { this.attributes[key] = value; }, addEventListener() {} }));

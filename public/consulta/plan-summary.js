@@ -1,6 +1,6 @@
 const families = Object.freeze({
-  catalogo: {endpoint:'/catalogo/offer.json',plans:{catalogo:'Catálogo para WhatsApp',pedidos:'Catálogo con seguimiento de pedidos',gestion:'Catálogo con pedidos y caja manual'}},
-  web: {endpoint:'/web/offer.json',plans:{presencia:'Web de una página',negocio:'Web de hasta 5 páginas'}},
+  catalogo: {endpoint:'/catalogo/offer.json',plans:{catalogo:'Vidriera',pedidos:'Flujo',gestion:'Pulso'}},
+  web: {endpoint:'/web/offer.json',plans:{presencia:'Origen',negocio:'Web de hasta 5 páginas'}},
 });
 const modes = new Set(['annual', 'monthly']);
 const money = value => new Intl.NumberFormat('es-AR', {
