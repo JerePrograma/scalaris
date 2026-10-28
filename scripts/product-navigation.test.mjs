@@ -53,12 +53,12 @@ test('public navigation pages keep one shared accessible menu and product entry 
 });
 
 
-test('monthly is the default for fixed plans while quoted products never acquire a billing commitment',()=>{
+test('annual interest is the default for fixed plans while quoted products never acquire a billing commitment',()=>{
   for (const [product, plan] of [['web','presencia'], ['catalogo','catalogo'], ['catalogo','pedidos'], ['catalogo','gestion']]) {
     const interest = readProductInterest('?' + new URLSearchParams({product,plan,amount:'1',setup:'0'}));
-    assert.equal(interest.billing, 'monthly');
-    assert.equal(interest.billingName, 'mes a mes');
-    assert.match(productInterestAnswers(interest).scope, /mes a mes/);
+    assert.equal(interest.billing, 'annual');
+    assert.equal(interest.billingName, 'pago anual anticipado');
+    assert.match(productInterestAnswers(interest).scope, /pago anual anticipado/);
     assert.equal(interest.amount, undefined);
   }
   for (const product of ['menu','mesa','academia','crm']) {
@@ -83,8 +83,9 @@ test('launch navigation explains real benefits, shared eligibility and initial a
   assert.match(home,/id="lanzamiento"/);
   assert.match(home,/30\/11\/2026/);
   assert.match(home,/sujet[oa]s? a confirmación/i);
-  assert.ok(home.includes('$ 162.000'));
-  assert.match(home,/total por 12 meses/);
+  assert.ok(home.includes('$ 13.500'));
+  assert.match(home,/Abono equivalente con pago anual anticipado de 12 meses/);
+  assert.doesNotMatch(home,/\$[ \u00a0]?(?:162|160|307|305|428|425|370)\.000/);
   assert.match(home,/30, 60 o 100 productos/);
   assert.match(home,/60 minutos/);
   assert.doesNotMatch(home,/quedan (?:sólo )?5|5 cupos disponibles|subdominio de regalo/i);
@@ -92,4 +93,12 @@ test('launch navigation explains real benefits, shared eligibility and initial a
   assert.match(form,/href="#form-root"/);
   assert.match(form,/tres cuotas sin recargo/);
   assert.match(form,/sujeto a confirmación de cupo/i);
+  const promotion=await readFile(new URL('../public/promociones/index.html',import.meta.url),'utf8');
+  assert.match(promotion,/importe exacto antes de compartir la consulta/);
+  assert.match(promotion,/ajuste adicional de lanzamiento que redondea el total hacia abajo/);
+  assert.match(promotion,/100% bonificada/);
+  assert.match(promotion,/50% bonificada/);
+  assert.match(promotion,/tres cuotas sin recargo/);
+  assert.match(promotion,/treinta días de anticipación/);
+  assert.doesNotMatch(promotion,/Total anticipado|Abono por 12 meses|\$[ \u00a0]?(?:162|160|307|305|428|425|370|216|270|324)\.000/);
 });

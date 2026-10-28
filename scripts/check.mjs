@@ -3,6 +3,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { resolvePublicReference,validatePublicOffer } from "./public-references.mjs";
+import {getLaunchQuote} from "./launch-promotion.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../public");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
@@ -120,6 +121,12 @@ for(const [filename,route] of requiredCanonical){
   if(canonicals.length!==1||canonicals[0][1]!==expected)errors.push(`Canonical incorrecto en ${filename}`);
   if(!page.includes(`property="og:url" content="${expected}"`))errors.push(`OpenGraph URL incorrecta en ${filename}`);
 }
+// Marketing compares recurring charges. Exact payable totals belong to the review.
+const marketingFiles=[...requiredCanonical.keys()].filter(f=>f!=='consulta/index.html').concat(['flyers/manifest.json','catalogo/cartel-precios.svg','productos/productos.js','web/web.js','catalogo/catalogo.js']);
+for(const filename of marketingFiles){
+  const text=readFileSync(resolve(root,filename),'utf8');
+  if(/\$\s?(?:160\.000|162\.000|305\.000|307\.500|425\.000|428\.000|370\.000)\b/.test(text)||/data-plan-total|data-total-heading|Total anticipado|Desembolso completo/i.test(text))errors.push(`Total anual destacado en marketing: ${filename}`);
+}
 const sitemap=readFileSync(resolve(root,"sitemap.xml"),"utf8");
 for(const route of ["/","/consulta/","/proyectos/","/productos/","/web/","/catalogo/","/catalogo/demos/","/promociones/","/flyers/"]){
   if(!sitemap.includes(`<loc>https://scalaris.com.ar${route}</loc>`))errors.push(`Ruta ausente del sitemap: ${route}`);
@@ -132,8 +139,10 @@ if(existsSync(publicOfferPath)){
   const money=value=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(value).replace(/\s/g," ");
   for(const plan of offer.plans||[]){
     const card=productPage.match(new RegExp(`<article\\b[^>]*data-catalog-plan="${plan.id}"[^>]*>[\\s\\S]*?<\\/article>`))?.[0]||"";
-    if(!card.includes(money(plan.monthlyPrice))||!card.includes(money(plan.setupFee)))errors.push(`Precio mensual o puesta en marcha inconsistente en el plan ${plan.id}`);
-    if(!card.includes(`plan=${plan.id}`)||!card.includes("billing=monthly"))errors.push(`Consulta sin contexto mensual del plan ${plan.id}`);
+    const q=getLaunchQuote(plan,{product:'catalogo',billing:'annual'});
+    if(!card.includes(money(plan.annualMonthlyEquivalent))||!card.includes(q.setupDue===0?'Bonificada':money(q.setupDue)))errors.push(`Precio mensual equivalente o puesta en marcha inconsistente en el plan ${plan.id}`);
+    if(!/pago anual anticipado de 12 meses/i.test(card))errors.push(`Falta aclaración junto al precio anual equivalente: ${plan.id}`);
+    if(!card.includes(`plan=${plan.id}`)||!card.includes("billing=annual"))errors.push(`Consulta sin contexto anual del plan ${plan.id}`);
   }
   if(!productPage.includes('/promociones/'))errors.push('Catálogo debe enlazar las condiciones de lanzamiento.');
   const js=readFileSync(resolve(root,"catalogo/catalogo.js"),"utf8");

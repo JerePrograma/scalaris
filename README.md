@@ -6,7 +6,15 @@ Sitio público: https://scalaris.com.ar
 
 Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
-## Lanzamiento y flyers — 28/10/2026
+## Presentación mensual y flyers vigentes — 28/10/2026
+
+La comunicación vigente destaca el abono mensual equivalente con pago anual anticipado de doce meses: Origen/Vidriera $13.500, Flujo/Web de cinco páginas $22.500 y Pulso $31.500. Menú desde $18.000, Mesa desde $22.500 y Gestudio desde $27.000, con implementación a cotizar. El selector abre en anual; la opción mes a mes mantiene sus tarifas base y el alta en tres cuotas durante el lanzamiento. La condición anual queda junto al precio.
+
+Los importes completos se muestran en el segundo paso de Consulta, antes de compartir o pagar. Una bonificación adicional redondea hacia abajo el total de los cinco planes fijos a múltiplos de $5.000: $160.000/$160.000/$305.000/$425.000/$370.000 (Origen/Vidriera/Flujo/Pulso/Web cinco páginas). No cambia el abono base, el descuento anual del 10% ni los porcentajes de alta. Esa línea se detalla en la revisión y no se aplica a mensual, promociones vencidas o presupuestos de otros sistemas.
+
+Galería pública: https://scalaris.com.ar/flyers/ con 46 piezas y 92 PNG. Fuentes, 92 SVG, textos y ZIPs en `../contenido-redes/flyers-mensuales-2026-10-28/`. `npm run flyers:sync` publica los PNG y los dos ZIP de redes, con versión de caché nueva. El ZIP de editables permanece local por su tamaño. Las colecciones anteriores conservan valor histórico. Investigación, decisiones y verificación en [presentación mensual](docs/monthly-pricing-presentation-2026-10-28.md).
+
+## Antecedente: lanzamiento y flyers — 28/10/2026
 
 La web aplica la oferta confirmada de lanzamiento a los primeros cinco clientes nuevos o hasta el 30/11/2026, sujeta a confirmación de cupo. Anual: 10% sobre el abono, alta 100% bonificada en Origen/Vidriera y 50% en Flujo/Pulso/Web de cinco páginas, más primer año de dominio disponible a nombre del cliente. Totales anuales: $162.000/$162.000/$307.500/$428.000/$370.000. Mensual: alta completa en tres cuotas sin recargo más abono. Incluye ayuda inicial de contenido hasta 60 minutos y carga de 30/60/100 productos en Catálogo.
 

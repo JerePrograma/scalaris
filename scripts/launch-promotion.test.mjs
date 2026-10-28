@@ -7,7 +7,7 @@ import {readProductInterest,productInterestAnswers} from '../public/consulta/mod
 const at='2026-10-28T12:00:00-03:00';
 const web=JSON.parse(await readFile(new URL('../public/web/offer.json',import.meta.url),'utf8'));
 const catalog=JSON.parse(await readFile(new URL('../public/catalogo/offer.json',import.meta.url),'utf8'));
-const cases=[['web','presencia',web,162000,0,48333.33],['catalogo','catalogo',catalog,162000,0,31666.67],['catalogo','pedidos',catalog,307500,37500,50000],['catalogo','gestion',catalog,428000,50000,68333.33],['web','negocio',web,370000,100000,91666.67]];
+const cases=[['web','presencia',web,160000,0,48333.33],['catalogo','catalogo',catalog,160000,0,31666.67],['catalogo','pedidos',catalog,305000,37500,50000],['catalogo','gestion',catalog,425000,50000,68333.33],['web','negocio',web,370000,100000,91666.67]];
 test('launch is bounded by Buenos Aires dates and shares five new-customer slots without an invented remaining count',()=>{
   assert.equal(launchPromotion.maxNewCustomers,5);assert.equal(launchPromotion.sharedAcrossProducts,true);
   assert.equal(launchPromotion.availability,'subject_to_confirmation');assert.equal(launchPromotion.remainingSlots,undefined);
@@ -18,14 +18,18 @@ test('launch is bounded by Buenos Aires dates and shares five new-customer slots
   assert.equal(launchIsActive('not-a-date'),false);
   assert.equal(launchIsActive(at,{...launchPromotion,availability:'closed'}),false);
 });
-test('all five annual totals include correct setup waivers and first-year domain without applying the other-product cap to Web',()=>{
+test('all five annual quotes apply real rounding credits, setup waivers and domain without applying the other-product cap to Web',()=>{
   for(const[product,id,offer,total,setup]of cases){
     const plan=offer.plans.find(p=>p.id===id);const q=quoteLaunch(plan,{product,billing:'annual',at});
     assert.equal(q.annualTotal,total,id);assert.equal(q.totalInitial,total);assert.equal(q.setupDue,setup);
     assert.equal(q.annualSubscription,plan.monthlyPrice*12*.9);assert.equal(q.setupDiscount,plan.setupFee-setup);
+    assert.equal(q.annualTotalBeforeRounding,q.annualSubscription+q.setupDue);
+    assert.equal(q.roundingDiscount,q.annualTotalBeforeRounding-total);assert.equal(total%5000,0);assert.ok(q.roundingDiscount>=0&&q.roundingDiscount<5000);
     assert.equal(q.domainIncluded,true);assert.equal(q.subjectToConfirmation,true);
     const review=buildPlanSummary(offer,{product,plan:id,billing:'annual'},{at});
-    assert.equal(review.total,total);assert.equal(review.installation,setup);assert.match(planSummaryText(review),/Primer año de un \.com\.ar/);
+    assert.equal(review.total,total);assert.equal(review.roundingDiscount,q.roundingDiscount);
+    if(q.roundingDiscount>0)assert.match(planSummaryText(review),/Bonificación adicional de redondeo/);
+    else assert.doesNotMatch(planSummaryText(review),/Bonificación adicional de redondeo/);assert.equal(review.installation,setup);assert.match(planSummaryText(review),/Primer año de un \.com\.ar/);
     assert.match(planSummaryText(review),/sujeta a confirmación de cupo/);
   }
 });
@@ -34,7 +38,7 @@ test('three monthly setup installments conserve every cent and the review separa
     const plan=offer.plans.find(p=>p.id===id);const q=quoteLaunch(plan,{product,billing:'monthly',at});
     assert.equal(q.setupInstallments.length,3);assert.equal(q.monthlyPayments.length,3);assert.equal(q.totalInitial,first);
     assert.equal(q.setupInstallments.reduce((sum,n)=>sum+Math.round(n*100),0),plan.setupFee*100);
-    assert.equal(q.domainIncluded,false);assert.equal(q.setupDiscount,0);
+    assert.equal(q.domainIncluded,false);assert.equal(q.setupDiscount,0);assert.equal(q.roundingDiscount,0);
     assert.equal(Math.round((q.totalInitial-plan.monthlyPrice+q.setupBalanceAfterInitial)*100),plan.setupFee*100);
     const review=buildPlanSummary(offer,{product,plan:id,billing:'monthly'},{at});
     assert.equal(review.total,first);assert.equal(review.installation,plan.setupFee);
@@ -46,7 +50,7 @@ test('expired or ineligible launch requests return standard setup and no include
   for(const[product,id,offer]of cases){for(const options of [{at:'2026-12-01T00:00:00-03:00'},{at,eligible:false}]){
     const plan=offer.plans.find(p=>p.id===id);
     const annual=quoteLaunch(plan,{product,billing:'annual',...options});
-    assert.equal(annual.setupDiscount,0);assert.equal(annual.domainIncluded,false);assert.equal(annual.annualTotal,plan.annualMonthlyEquivalent*12+plan.setupFee);
+    assert.equal(annual.roundingDiscount,0);assert.equal(annual.setupDiscount,0);assert.equal(annual.domainIncluded,false);assert.equal(annual.annualTotal,plan.annualMonthlyEquivalent*12+plan.setupFee);
     const monthly=quoteLaunch(plan,{product,billing:'monthly',...options});
     assert.equal(monthly.setupInstallments.length,1);assert.equal(monthly.totalInitial,plan.monthlyPrice+plan.setupFee);
   }}
@@ -54,7 +58,7 @@ test('expired or ineligible launch requests return standard setup and no include
 test('other individually quoted implementations receive 50 percent up to 50000, without invented fixed setup prices',()=>{
   for(const[setup,pay]of [[0,0],[80000,40000],[150000,100000],[250000,200000]]){
     const q=quoteLaunch({id:'quoted',monthlyPrice:30000,annualMonthlyEquivalent:27000,setupFee:setup},{product:'crm',billing:'annual',at});
-    assert.equal(q.setupDue,pay);assert.equal(q.annualTotal,324000+pay);assert.ok(q.setupDiscount<=50000);
+    assert.equal(q.roundingDiscount,0);assert.equal(q.setupDue,pay);assert.equal(q.annualTotal,324000+pay);assert.ok(q.setupDiscount<=50000);
   }
 });
 test('malformed or overflowing prices and unsupported billing fail before a financial summary',()=>{
@@ -72,5 +76,13 @@ test('new prebuilt product links preserve only allowlisted context and never bec
     assert.match(productInterestAnswers(interest).scope,/relevamiento/);assert.equal(buildPlanSummary(catalog,interest,{at}),null);
   }
   const interest=readProductInterest('?product=web&plan=presencia&billing=annual&amount=1&setup=0&eligible=false&promotion=free');
-  assert.equal(buildPlanSummary(web,interest,{at}).total,162000);
+  assert.equal(buildPlanSummary(web,interest,{at}).total,160000);
+});
+
+test('invalid billing does not silently reappear as a selected modality in consultation copy',()=>{
+  for(const billing of ['bad','FREE','']){
+    const interest=readProductInterest('?product=web&plan=presencia&billing='+billing);
+    assert.equal(interest.billing,null);assert.equal(buildPlanSummary(web,interest,{at}),null);
+    assert.doesNotMatch(productInterestAnswers(interest).scope,/con modalidad/);
+  }
 });

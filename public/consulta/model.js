@@ -1,4 +1,4 @@
-import { priceReferences } from './price-references.js?v=20261028-lanzamiento';
+import { priceReferences } from './price-references.js?v=20261028-mensual';
 
 export const services = {
   SOFTWARE: "Web / software",
@@ -35,13 +35,13 @@ export function readProductInterest(search = '') {
   const requestedPlan = params.get('plan'), requestedBilling = params.get('billing');
   const plan = family.plans&&Object.hasOwn(family.plans,requestedPlan) ? requestedPlan : null;
   const billing = family.plans
-    ? !params.has('billing') ? 'monthly' : Object.hasOwn(productBilling,requestedBilling) ? requestedBilling : null
+    ? !params.has('billing') ? 'annual' : Object.hasOwn(productBilling,requestedBilling) ? requestedBilling : null
     : null;
   return {product,productName:family.name,plan,planName:plan?family.plans[plan]:null,billing,billingName:billing?productBilling[billing]:null};
 }
 export function productInterestAnswers(interest) {
   const safe = interest&&Object.hasOwn(productFamilies,interest.product)
-    ? readProductInterest(new URLSearchParams({product:interest.product,...(interest.plan?{plan:interest.plan}:{}),...(interest.billing?{billing:interest.billing}:{})}).toString())
+    ? readProductInterest(new URLSearchParams({product:interest.product,...(interest.plan?{plan:interest.plan}:{}),...(Object.hasOwn(interest,'billing')?{billing:interest.billing??''}:{})}).toString())
     : null;
   if (!safe) return {};
   const family=productFamilies[safe.product];

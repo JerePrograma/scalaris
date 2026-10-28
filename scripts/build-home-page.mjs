@@ -12,7 +12,7 @@ catch(error){if(error.code!=='ENOENT')throw error;catalog=JSON.parse(await readF
 const webBase=portfolio.webOffer.plans[0],catalogBase=catalog.plans[0];
 const productPrices={web:{monthly:webBase.monthlyPrice,setup:webBase.setupFee},catalogo:{monthly:catalogBase.monthlyPrice,setup:catalogBase.setupFee}};
 const launchQuotes={web:getLaunchQuote(webBase,{product:'web',billing:'annual'}),catalogo:getLaunchQuote(catalogBase,{product:'catalogo',billing:'annual'})};
-const launchFrom=Math.min(launchQuotes.web.annualTotal,launchQuotes.catalogo.annualTotal);
+const launchFrom=Math.min(launchQuotes.web.annualMonthlyEquivalent,launchQuotes.catalogo.annualMonthlyEquivalent);
 const launchEnd=launchPromotion.endsOn.split('-').reverse().join('/');
 const arrows='<span aria-hidden="true">↗</span>';
 const icons={
@@ -34,13 +34,13 @@ const needs={
 };
 function priceFor(family){
   const fixed=productPrices[family.id];
-  if(fixed)return `<strong>Desde ${esc(money(fixed.monthly))}<small>/mes</small></strong><span>Puesta en marcha desde ${esc(money(fixed.setup))}, en 3 cuotas sin recargo.</span><span class="home-product-offer">Lanzamiento anual desde ${esc(money(launchQuotes[family.id].annualTotal))} total.</span>`;
-  if(family.pricingType==='starting_quote')return `<strong>Desde ${esc(money(family.monthlyFrom))}<small>/mes</small></strong><span>${family.id==='academia'?'Implementación y migración a cotizar.':'Implementación a cotizar.'}</span>`;
+  if(fixed)return `<strong>Desde ${esc(money(launchQuotes[family.id].annualMonthlyEquivalent))}<small>/mes</small></strong><span class="home-billing-label">Abono equivalente con pago anual anticipado de 12 meses.</span><span class="home-product-offer">Puesta en marcha 100% bonificada en el plan inicial.</span><span>O mes a mes desde ${esc(money(fixed.monthly))}, más alta en 3 cuotas.</span>`;
+  if(family.pricingType==='starting_quote')return `<strong>Desde ${esc(money(family.monthlyFrom*(1-launchPromotion.annualDiscountRate)))}<small>/mes</small></strong><span class="home-billing-label">Equivalente con anual anticipado de 12 meses, sujeto a presupuesto.</span><span>${family.id==='academia'?'Implementación y migración a cotizar.':'Implementación a cotizar.'}</span><span>Mes a mes desde ${esc(money(family.monthlyFrom))}. Alcance a confirmar.</span>`;
   return '<strong>A cotizar</strong><span>Según relevamiento y alcance.</span>';
 }
 const productCards=portfolio.families.map(family=>{
   const n=needs[family.id];
-  const link=['web','catalogo'].includes(family.id)?`${family.detailsUrl}?billing=monthly#planes`:inquiry(family.id);
+  const link=['web','catalogo'].includes(family.id)?`${family.detailsUrl}?billing=annual#planes`:inquiry(family.id);
   return `<article class="home-product"><div class="home-product-icon">${icon(family.id)}</div><p class="home-product-name">${esc(family.name)}</p><h3>${esc(n.title)}</h3><p class="home-product-description">${esc(n.copy)}</p><div class="home-product-price">${priceFor(family)}</div><a class="text-link" href="${esc(link)}">${esc(n.link)} ${arrows}</a></article>`;
 }).join('');
 const steps=[
@@ -63,24 +63,25 @@ const demoCards=[
 ].map(d=>`<article class="home-demo"><a class="home-demo-image" href="${d.url}" aria-label="${esc('Ver '+d.type.toLowerCase()+' de '+d.title)}"><img src="${d.image}" alt="${esc(d.alt)}" width="${d.width}" height="${d.height}" loading="lazy"></a><div class="home-demo-copy"><span>${esc(d.type)}</span><h3>${esc(d.title)}</h3><p>${esc(d.copy)}</p><a class="text-link" href="${d.url}">Ver demo ${arrows}</a></div></article>`).join('');
 const faq=[
   ['¿El software se hace desde cero para cada negocio?','Los productos de Scalaris parten de una base propia que configuramos con tu marca y el alcance de cada plan. Si necesitás funciones o un flujo específico, relevamos esa adaptación y la cotizamos por separado.'],
-  ['¿Qué tengo que pagar para empezar?',`Mes a mes, pagás el abono más una cuota de puesta en marcha durante los primeros tres meses, sin recargo; después, sólo el abono vigente. Con anual anticipado tenés 10% de descuento en el abono, alta bonificada según el plan y el primer año de un dominio .com.ar disponible a tu nombre. La promoción alcanza a los primeros cinco clientes nuevos o hasta el ${launchEnd}, lo que ocurra primero, sujeta a confirmación de cupo. Revisamos el total y el alcance antes de contratar.`],
+  ['¿Cómo se paga el precio mensual que veo?',`El importe mensual del plan anual es una referencia para comparar: se abonan doce meses por adelantado. Antes de confirmar revisás el desglose completo, la puesta en marcha bonificada según el plan y cualquier ajuste de lanzamiento. Si elegís mes a mes, pagás el abono más una cuota del alta durante los primeros tres meses, sin recargo. La promoción alcanza a los primeros cinco clientes nuevos o hasta el ${launchEnd}, lo que ocurra primero, sujeta a confirmación de cupo.`],
   ['¿Puedo conocer el producto antes de decidir?','Sí. Podés recorrer las demos disponibles con datos ficticios. Algunas permiten interacción y otras son de consulta; cada una lo indica. En los productos que lo requieren, acordamos un piloto y su aceptación antes del uso operativo.'],
   ['¿Qué pasa después de la promoción?','El anual mantiene el precio del servicio doce meses desde la activación acordada. Antes de renovar te informamos la nueva tarifa; no repetimos la puesta en marcha del mismo alcance y el dominio queda a tu cargo. La ayuda de contenido y la carga inicial se entregan al comienzo. Nuevas funciones, migraciones complejas y trabajos fuera del alcance se cotizan aparte.'],
 ].map(([question,answer])=>`<details><summary>${esc(question)}</summary><p>${esc(answer)}</p></details>`).join('');
 const whatsapp='https://wa.me/5491172789289?text='+encodeURIComponent('Hola Scalaris, quiero conversar sobre software para mi negocio.');
 const html=`<!doctype html>
 <html lang="es-AR">
-${head({title:'Scalaris | Software para tu negocio y beneficios para empezar',description:'Web, catálogos y sistemas con implementación asistida. Promoción de lanzamiento: anual con 10% en el abono, alta bonificada según plan y primer año de dominio.',path:'/',css:['/home.css?v='+version]})}
+${head({title:'Scalaris | Tu negocio online, con ayuda para empezar',description:'Web, catálogos y sistemas para tu negocio. Precios mensuales equivalentes con anual anticipado, puesta en marcha asistida y beneficios de lanzamiento.',path:'/',css:['/home.css?v='+version]})}
 <body>
 ${header()}
 <main id="contenido">
   <section class="home-hero wrap" aria-labelledby="hero-title">
     <div class="home-hero-copy">
       <span class="eyebrow">SOFTWARE PARA COMERCIOS Y PYMES</span>
-      <h1 id="hero-title">Tu negocio,<br>un paso más adelante<span>.</span></h1>
-      <p class="home-hero-lead">Web, catálogos y sistemas para trabajar mejor. Elegí tu producto y lo ponemos en marcha con vos.</p>
-      <div class="actions home-hero-actions"><a class="button" href="/productos/#planes">Elegí tu plan <span aria-hidden="true">→</span></a><a class="button secondary" href="${esc(inquiry())}">Contanos tu proyecto ${arrows}</a></div>
-      <p class="home-hero-price">Web y Catálogo desde <strong>${esc(money(Math.min(webBase.monthlyPrice,catalogBase.monthlyPrice)))}/mes</strong>,<br>y puesta en marcha en 3 cuotas sin recargo.<br><a href="#lanzamiento">Conocé los beneficios del anual anticipado ↓</a></p>
+      <h1 id="hero-title">Tu negocio online.<br>Con ayuda para empezar<span>.</span></h1>
+      <p class="home-hero-lead">Una web para mostrar lo que hacés, un catálogo para recibir pedidos y sistemas para organizar tu trabajo. Elegí tu solución y la preparamos con vos.</p>
+      <div class="home-hero-offer"><span>Web y Catálogo desde</span><strong>${esc(money(launchFrom))}<small>/mes</small></strong><p>Abono equivalente con pago anual anticipado de 12 meses.</p><div class="home-offer-points"><span>Alta bonificada según el plan</span><span>Primer año de .com.ar incluido</span></div></div>
+      <div class="actions home-hero-actions"><a class="button" href="/productos/?billing=annual#planes">Elegí tu plan <span aria-hidden="true">→</span></a><a class="button secondary" href="${esc(inquiry())}">Contanos tu proyecto ${arrows}</a></div>
+      <p class="home-hero-alternative">¿Preferís mes a mes? Desde ${esc(money(Math.min(webBase.monthlyPrice,catalogBase.monthlyPrice)))}/mes, más puesta en marcha en 3 cuotas sin recargo. <a href="/productos/?billing=monthly#planes">Ver modalidad mensual →</a></p>
     </div>
     <div class="home-product-preview" aria-label="Vistas de productos de Scalaris">
       <div class="preview-browser preview-browser-main"><div class="preview-browser-bar"><i></i><i></i><i></i><span>Scalaris Catálogo</span></div><img src="/assets/proyectos/almacen-demo.jpg" alt="Vista real de la demo de Catálogo: productos, categorías y carrito de un negocio ficticio" width="1265" height="712" fetchpriority="high"><div class="preview-browser-label"><strong>Productos y pedidos.</strong><span>Para tu comercio.</span></div></div>
@@ -89,7 +90,7 @@ ${header()}
     </div>
   </section>
 
-  <section class="home-launch" id="lanzamiento" aria-labelledby="launch-title" data-launch-promotion><div class="wrap"><div class="home-launch-top"><div><span class="eyebrow">LANZAMIENTO SCALARIS</span><h2 id="launch-title">Más ayuda para empezar.<br>Más beneficios al elegir el año.</h2><p>Tu producto configurado, una hora de ayuda para preparar el contenido y un recorrido de entrega acordado.</p></div><div class="home-launch-price"><span>Web y Catálogo · anual anticipado desde</span><strong>${esc(money(launchFrom))}<small>total por 12 meses</small></strong><p>Origen o Vidriera, con puesta en marcha 100% bonificada y primer año de dominio .com.ar incluido.</p><a class="button light" href="/productos/?billing=annual#planes">Ver la oferta anual ${arrows}</a></div></div><div class="home-launch-benefits"><article><span>01</span><h3>10% menos en el abono</h3><p>Pagás doce meses por adelantado y mantenés el precio del servicio durante ese período.</p></article><article><span>02</span><h3>Puesta en marcha bonificada</h3><p>100% en Origen y Vidriera; 50% en Flujo, Pulso y Web de hasta cinco páginas.</p></article><article><span>03</span><h3>Tu primer año de dominio</h3><p>Un .com.ar disponible, a tu nombre. Registro y conexión se confirman antes de contratar; la renovación posterior queda a tu cargo.</p></article></div><div class="home-launch-terms"><p>Para los primeros ${launchPromotion.maxNewCustomers} clientes nuevos o hasta el ${esc(launchEnd)}, lo que ocurra primero. Cupos compartidos entre productos, sujetos a confirmación. Otros prearmados: 50% de bonificación en implementación estándar hasta $50.000, con anual anticipado y presupuesto individual.</p><a href="/promociones/">Ver alcance y condiciones ${arrows}</a></div></div></section>
+  <section class="home-launch" id="lanzamiento" aria-labelledby="launch-title" data-launch-promotion><div class="wrap"><div class="home-launch-top"><div><span class="eyebrow">LANZAMIENTO SCALARIS</span><h2 id="launch-title">El primer paso,<br>con beneficios reales.</h2><p>Tu producto configurado, una hora de ayuda para preparar el contenido y un recorrido de entrega acordado.</p></div><div class="home-launch-price"><span>CON ANUAL ANTICIPADO</span><strong>10% menos<small>en el abono mensual equivalente</small></strong><p>Alta bonificada según el plan, primer año de dominio y ayuda inicial para que puedas empezar.</p><a class="button light" href="/productos/?billing=annual#planes">Comparar los planes ${arrows}</a></div></div><div class="home-launch-benefits"><article><span>01</span><h3>10% menos en el abono</h3><p>Pagás doce meses por adelantado y mantenés el precio del servicio durante ese período.</p></article><article><span>02</span><h3>Puesta en marcha bonificada</h3><p>100% en Origen y Vidriera; 50% en Flujo, Pulso y Web de hasta cinco páginas.</p></article><article><span>03</span><h3>Tu primer año de dominio</h3><p>Un .com.ar disponible, a tu nombre. Registro y conexión se confirman antes de contratar; la renovación posterior queda a tu cargo.</p></article></div><div class="home-launch-terms"><p>Para los primeros ${launchPromotion.maxNewCustomers} clientes nuevos o hasta el ${esc(launchEnd)}, lo que ocurra primero. Cupos compartidos entre productos, sujetos a confirmación. Otros prearmados: 50% de bonificación en implementación estándar hasta $50.000, con anual anticipado y presupuesto individual.</p><a href="/promociones/">Ver alcance y condiciones ${arrows}</a></div></div></section>
 
   <div class="home-routes wrap" aria-label="Elegí cómo empezar"><a href="/productos/"><span>01</span><div><strong>Elegí un producto.</strong><p>Alcances definidos, precios publicados y puesta en marcha asistida.</p></div>${arrows}</a><a href="#servicios"><span>02</span><div><strong>Construyamos tu solución.</strong><p>Software a medida, automatizaciones e integraciones según tu operación.</p></div>${arrows}</a></div>
 
@@ -111,4 +112,4 @@ ${footer()}
 </body></html>
 `;
 await writeFile(path.join(root,'public/index.html'),html);
-console.log(JSON.stringify({status:'generated',file:'public/index.html',families:portfolio.families.length,webMonthly:webBase.monthlyPrice,catalogMonthly:catalogBase.monthlyPrice,billingDefault:'monthly'}));
+console.log(JSON.stringify({status:'generated',file:'public/index.html',families:portfolio.families.length,webMonthly:webBase.monthlyPrice,catalogMonthly:catalogBase.monthlyPrice,billingDefault:'annual'}));

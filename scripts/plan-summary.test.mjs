@@ -211,11 +211,11 @@ test('standard tariff: approved plan names and prices stay consistent across URL
   }
 });
 
-test('standard tariff: fixed plan links default to monthly while unsupported billing never becomes an approved quote',()=>{
+test('standard tariff: fixed plan links default to annual while unsupported billing never becomes an approved quote',()=>{
   for(const [product,plan]of [['web','presencia'],['catalogo','catalogo']]){
     const selection=readProductInterest('?'+new URLSearchParams({product,plan,amount:'1',setup:'0'}));
-    assert.equal(selection.billing,'monthly');
-    assert.equal(selection.billingName,'mes a mes');
+    assert.equal(selection.billing,'annual');
+    assert.equal(selection.billingName,'pago anual anticipado');
     assert.equal(hasPlanSelection(selection),true);
     assert.equal(readProductInterest('?'+new URLSearchParams({product,plan,billing:'FREE'})).billing,null);
   }

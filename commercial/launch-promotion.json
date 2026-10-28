@@ -10,11 +10,26 @@
   "availability": "subject_to_confirmation",
   "annualDiscountRate": 0.1,
   "monthlySetupInstallments": 3,
-  "domain": {"extension": ".com.ar", "includedMonths": 12, "customerOwned": true, "subsequentRenewalPaidByCustomer": true},
+  "domain": {
+    "extension": ".com.ar",
+    "includedMonths": 12,
+    "customerOwned": true,
+    "subsequentRenewalPaidByCustomer": true
+  },
   "contentMinutes": 60,
   "revisionRounds": 1,
-  "catalogInitialProducts": {"catalogo": 30, "pedidos": 60, "gestion": 100},
-  "setupWaivers": {"web:presencia": 1, "catalogo:catalogo": 1, "catalogo:pedidos": 0.5, "catalogo:gestion": 0.5, "web:negocio": 0.5},
+  "catalogInitialProducts": {
+    "catalogo": 30,
+    "pedidos": 60,
+    "gestion": 100
+  },
+  "setupWaivers": {
+    "web:presencia": 1,
+    "catalogo:catalogo": 1,
+    "catalogo:pedidos": 0.5,
+    "catalogo:gestion": 0.5,
+    "web:negocio": 0.5
+  },
   "otherSetupDiscountRate": 0.5,
   "otherSetupDiscountCap": 50000,
   "slotAssignment": "Presupuesto aceptado y primer pago confirmado. Cinco clientes nuevos en total; cupo sujeto a confirmación.",
@@ -23,5 +38,22 @@
   "domainCondition": "Un dominio .com.ar disponible, registrado a nombre del cliente. Disponibilidad y vinculación a la solución se confirman antes de contratar. Primer año incluido sólo con anual anticipado; renovación posterior a cargo del cliente.",
   "renewal": "Doce meses desde la activación acordada. Renovación a la tarifa informada con treinta días de anticipación, sin repetir la puesta en marcha del mismo alcance. El dominio se renueva a cargo del cliente.",
   "monthlyCancellation": "Las cuotas corresponden a trabajo inicial contratado, separado del abono. Antes del primer pago se acuerdan por escrito la entrega, la baja y el tratamiento del saldo pendiente, sin recargos no informados.",
-  "exclusions": ["Fotografía", "Identidad de marca", "Producción audiovisual", "Migraciones complejas", "Funciones nuevas", "Gastos de terceros"]
+  "exclusions": [
+    "Fotografía",
+    "Identidad de marca",
+    "Producción audiovisual",
+    "Migraciones complejas",
+    "Funciones nuevas",
+    "Gastos de terceros"
+  ],
+  "annualRoundingStep": 5000,
+  "annualRoundingPlans": [
+    "web:presencia",
+    "catalogo:catalogo",
+    "catalogo:pedidos",
+    "catalogo:gestion",
+    "web:negocio"
+  ],
+  "pricePresentation": "monthly_subscription_equivalent",
+  "roundingDescription": "Bonificación adicional para redondear hacia abajo el total anual de los cinco planes fijos a múltiplos de $5.000. Se muestra en el desglose previo al pago; no modifica el abono mensual de referencia ni las cuotas mensuales."
 }
