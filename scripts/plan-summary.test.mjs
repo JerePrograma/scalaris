@@ -1,7 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildPlanSummary, hasPlanSelection, loadPlanSummary, planSummaryText } from '../public/consulta/plan-summary.js';
+import { buildPlanSummary as standardSummary, hasPlanSelection, loadPlanSummary as standardLoad, planSummaryText } from '../public/consulta/plan-summary.js';
 import { buildInquiry, readProductInterest, productInterestAnswers } from '../public/consulta/model.js';
+
+// Standard tariffs remain covered independently of the limited launch campaign.
+const buildPlanSummary=(offer,interest)=>standardSummary(offer,interest,{eligible:false});
+const loadPlanSummary=(interest,options={})=>standardLoad(interest,{...options,eligible:false});
 
 const offer = {
   currency: 'ARS',
@@ -14,7 +18,7 @@ const offer = {
 };
 const interest = (plan, billing) => ({ product: 'catalogo', plan, billing });
 
-test('annual review discounts only the subscription and charges installation for all plans', () => {
+test('standard tariff: annual review discounts only the subscription and charges installation for all plans', () => {
   for (const [id, subscription, installation, expected] of [['catalogo', 162000, 50000, 212000], ['pedidos', 270000, 75000, 345000], ['gestion', 378000, 100000, 478000]]) {
     const plan = buildPlanSummary(offer, interest(id, 'annual'));
     assert.equal(plan.total, expected);
@@ -28,7 +32,7 @@ test('annual review discounts only the subscription and charges installation for
   }
 });
 
-test('monthly review separates first month and one-time installation from recurring subscription', () => {
+test('standard tariff: monthly review separates first month and one-time installation from recurring subscription', () => {
   for (const [id, firstPayment, recurring, installation] of [
     ['catalogo', 65000, 15000, 50000], ['pedidos', 100000, 25000, 75000], ['gestion', 135000, 35000, 100000],
   ]) {
@@ -43,7 +47,7 @@ test('monthly review separates first month and one-time installation from recurr
   }
 });
 
-test('query prices cannot set charges and the plan review does not mutate inquiry schema v1', () => {
+test('standard tariff: query prices cannot set charges and the plan review does not mutate inquiry schema v1', () => {
   const selection = readProductInterest('?product=catalogo&plan=gestion&billing=annual&amount=1&setup=0&total=1&monthlyPrice=1');
   const inquiry = buildInquiry('SOFTWARE', { name: 'Prueba de consulta' }, productInterestAnswers(selection), 'test-id', '2026-10-27T00:00:00Z');
   const before = structuredClone(inquiry);
@@ -59,7 +63,7 @@ test('query prices cannot set charges and the plan review does not mutate inquir
   assert.deepEqual(Object.keys(inquiry).sort(), ['answers', 'contact', 'createdAt', 'id', 'schema', 'service', 'version']);
 });
 
-test('missing or unsupported selection does not invent a plan or fetch a quote', async () => {
+test('standard tariff: missing or unsupported selection does not invent a plan or fetch a quote', async () => {
   let fetches = 0;
   const fetchImpl = async () => { fetches++; throw new Error('Unexpected request'); };
   for (const selection of [null, interest(null, 'annual'), interest('catalogo', null), interest('__proto__', 'annual'), interest('catalogo', 'free'), { product: 'other', plan: 'catalogo', billing: 'annual' }]) {
@@ -70,7 +74,7 @@ test('missing or unsupported selection does not invent a plan or fetch a quote',
   assert.equal(fetches, 0);
 });
 
-test('malformed amounts, duplicate plans and arithmetic overflow stop financial confirmation', () => {
+test('standard tariff: malformed amounts, duplicate plans and arithmetic overflow stop financial confirmation', () => {
   for (const mutate of [
     data => { data.currency = 'USD'; },
     data => { data.billing.annualMonths = 0; },
@@ -87,7 +91,7 @@ test('malformed amounts, duplicate plans and arithmetic overflow stop financial 
   }
 });
 
-test('the same installation is charged separately in both billing modes without receiving the annual discount', () => {
+test('standard tariff: the same installation is charged separately in both billing modes without receiving the annual discount', () => {
   const annual = buildPlanSummary(offer, interest('catalogo', 'annual'));
   const monthly = buildPlanSummary(offer, interest('catalogo', 'monthly'));
   assert.equal(annual.installation, 50000);
@@ -99,7 +103,7 @@ test('the same installation is charged separately in both billing modes without 
   assert.equal(plan.installationWaived, false);
 });
 
-test('quote request uses the same-origin public offer without cached prices or browser credentials', async () => {
+test('standard tariff: quote request uses the same-origin public offer without cached prices or browser credentials', async () => {
   const signal = new AbortController().signal;
   const plan = await loadPlanSummary(interest('pedidos', 'monthly'), {
     signal,
@@ -126,7 +130,7 @@ const webOffer = {
   ],
 };
 
-test('Web review charges the one-time installation in annual and monthly modes',()=>{
+test('standard tariff: Web review charges the one-time installation in annual and monthly modes',()=>{
   for(const [id,annual,monthly,installation]of [['presencia',262000,115000,100000],['negocio',470000,225000,200000]]){
     for(const [billing,total]of [['annual',annual],['monthly',monthly]]){
       const plan=buildPlanSummary(webOffer,{product:'web',plan:id,billing});
@@ -139,7 +143,7 @@ test('Web review charges the one-time installation in annual and monthly modes',
   }
 });
 
-test('Web selection rejects URL amounts and preserves the original inquiry schema',()=>{
+test('standard tariff: Web selection rejects URL amounts and preserves the original inquiry schema',()=>{
   const selection=readProductInterest('?product=web&plan=presencia&billing=annual&amount=1&setup=0&total=1');
   assert.equal(selection.productName,'Scalaris Web');
   assert.equal(selection.planName,'Origen');
@@ -156,7 +160,7 @@ test('Web selection rejects URL amounts and preserves the original inquiry schem
   assert.equal(hasPlanSelection({product:'web',plan:'gestion',billing:'annual'}),false);
 });
 
-test('operational family inquiries request a scoped assessment instead of inventing plan charges',async()=>{
+test('standard tariff: operational family inquiries request a scoped assessment instead of inventing plan charges',async()=>{
   for(const product of ['menu','mesa','academia','crm']){
     const selection=readProductInterest('?product='+product+'&plan=gestion&billing=annual&amount=1');
     assert.equal(selection.product,product);
@@ -171,7 +175,7 @@ test('operational family inquiries request a scoped assessment instead of invent
   }
 });
 
-test('Web prices load only the fixed Web offer endpoint without accepting an endpoint from the URL',async()=>{
+test('standard tariff: Web prices load only the fixed Web offer endpoint without accepting an endpoint from the URL',async()=>{
   const selection=readProductInterest('?product=web&plan=negocio&billing=monthly&endpoint=https://evil.invalid/offer.json');
   const plan=await loadPlanSummary(selection,{fetchImpl:async(url,options)=>{
     assert.equal(url,'/web/offer.json');
@@ -183,7 +187,7 @@ test('Web prices load only the fixed Web offer endpoint without accepting an end
   assert.equal(plan.total,225000);
 });
 
-test('approved plan names and prices stay consistent across URL selection, inquiry text and price review',()=>{
+test('standard tariff: approved plan names and prices stay consistent across URL selection, inquiry text and price review',()=>{
   const cases=[
     ['web','presencia','Origen',webOffer,262000,115000],
     ['web','negocio','Web de hasta 5 páginas',webOffer,470000,225000],
@@ -207,7 +211,7 @@ test('approved plan names and prices stay consistent across URL selection, inqui
   }
 });
 
-test('fixed plan links default to monthly while unsupported billing never becomes an approved quote',()=>{
+test('standard tariff: fixed plan links default to monthly while unsupported billing never becomes an approved quote',()=>{
   for(const [product,plan]of [['web','presencia'],['catalogo','catalogo']]){
     const selection=readProductInterest('?'+new URLSearchParams({product,plan,amount:'1',setup:'0'}));
     assert.equal(selection.billing,'monthly');

@@ -109,7 +109,7 @@ for (const file of ["proyectos/index.html"]) {
   if (!existsSync(resolve(root, file))) errors.push(`Página inexistente: ${file}`);
 }
 const requiredCanonical = new Map([
-  ["index.html","/"],["consulta/index.html","/consulta/"],["proyectos/index.html","/proyectos/"],
+  ["index.html","/"],["consulta/index.html","/consulta/"],["proyectos/index.html","/proyectos/"],["promociones/index.html","/promociones/"],["flyers/index.html","/flyers/"],
   ["productos/index.html","/productos/"],["web/index.html","/web/"],["catalogo/index.html","/catalogo/"],["catalogo/demos/index.html","/catalogo/demos/"],["catalogo/propuesta.html","/catalogo/propuesta"],
 ]);
 for(const [filename,route] of requiredCanonical){
@@ -121,7 +121,7 @@ for(const [filename,route] of requiredCanonical){
   if(!page.includes(`property="og:url" content="${expected}"`))errors.push(`OpenGraph URL incorrecta en ${filename}`);
 }
 const sitemap=readFileSync(resolve(root,"sitemap.xml"),"utf8");
-for(const route of ["/","/consulta/","/proyectos/","/productos/","/web/","/catalogo/","/catalogo/demos/"]){
+for(const route of ["/","/consulta/","/proyectos/","/productos/","/web/","/catalogo/","/catalogo/demos/","/promociones/","/flyers/"]){
   if(!sitemap.includes(`<loc>https://scalaris.com.ar${route}</loc>`))errors.push(`Ruta ausente del sitemap: ${route}`);
 }
 const publicOfferPath=resolve(root,"catalogo/offer.json");
@@ -135,10 +135,7 @@ if(existsSync(publicOfferPath)){
     if(!card.includes(money(plan.monthlyPrice))||!card.includes(money(plan.setupFee)))errors.push(`Precio mensual o puesta en marcha inconsistente en el plan ${plan.id}`);
     if(!card.includes(`plan=${plan.id}`)||!card.includes("billing=monthly"))errors.push(`Consulta sin contexto mensual del plan ${plan.id}`);
   }
-  for(const file of ["index.html","catalogo/index.html","catalogo/propuesta.html","catalogo/cartel-precios.svg"]){
-    const content=readFileSync(resolve(root,file),"utf8");
-    for(const plan of offer.plans||[])if(content.includes(money(plan.annualMonthlyEquivalent*offer.billing.annualMonths)))errors.push(`Total anual prematuro en marketing: ${file}`);
-  }
+  if(!productPage.includes('/promociones/'))errors.push('Catálogo debe enlazar las condiciones de lanzamiento.');
   const js=readFileSync(resolve(root,"catalogo/catalogo.js"),"utf8");
   try{
     const config=JSON.parse(js.match(/^const config=(.+);$/m)?.[1]||"null");

@@ -8,6 +8,7 @@
     "dev": "node scripts/serve.mjs",
     "test": "node --test scripts/*.test.mjs",
     "cotizador": "node scripts/build-price-calculator.mjs",
-    "offers:build": "node scripts/sync-product-offers.mjs"
+    "offers:build": "node scripts/sync-product-offers.mjs",
+    "flyers:sync": "node scripts/sync-launch-flyers.mjs"
   }
 }

@@ -32,7 +32,7 @@
         "products": 100,
         "imagesPerProduct": 1,
         "administrators": 1,
-        "initialProductsLoaded": 10,
+        "initialProductsLoaded": 30,
         "onboardingMinutes": 20,
         "revisionRounds": 1
       },
@@ -58,7 +58,7 @@
         "products": 300,
         "imagesPerProduct": 1,
         "administrators": 2,
-        "initialProductsLoaded": 20,
+        "initialProductsLoaded": 60,
         "onboardingMinutes": 30,
         "revisionRounds": 1
       },
@@ -83,7 +83,7 @@
         "products": 1000,
         "imagesPerProduct": 1,
         "administrators": 3,
-        "initialProductsLoaded": 30,
+        "initialProductsLoaded": 100,
         "onboardingMinutes": 45,
         "revisionRounds": 1
       },

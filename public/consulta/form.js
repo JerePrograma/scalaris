@@ -8,14 +8,14 @@ import {
   readProductInterest,
   productInterestAnswers,
   productPriceReference,
-} from "./model.js?v=20261028-refactor";
+} from "./model.js?v=20261028-lanzamiento";
 import {
   hasPlanSelection,
   loadPlanSummary,
   planSummaryRows,
   planSummaryText,
   planSummaryTotal,
-} from "./plan-summary.js?v=20261028-refactor";
+} from "./plan-summary.js?v=20261028-lanzamiento";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
   interest = readProductInterest(window.location.search),
@@ -101,7 +101,7 @@ function render() {
     const context = element('aside',null,{class:'product-context','aria-label':'Producto consultado'});
     context.append(element('strong',interest.planName || interest.productName),
       element('p',`${interest.billingName?`Modalidad de interés: ${interest.billingName}. `:''}Podés editar las respuestas. Esta consulta no confirma una contratación ni un pago.`),
-      element('a','Volver a comparar los planes →',{href:interest.product==='web'?'../web/#planes':interest.product==='catalogo'?'../catalogo/#planes':'../productos/#planes'}));
+      element('a','Volver a comparar los planes →',{href:['web','catalogo'].includes(interest.product)?'../'+interest.product+'/?'+new URLSearchParams({billing:interest.billing||'monthly'})+'#planes':'../productos/#planes'}));
     const priceReference = productPriceReference(interest);
     if (priceReference) context.insertBefore(element('p', priceReference), context.lastChild);
     root.append(context);
@@ -295,6 +295,8 @@ function render() {
             lines,
             total,
             element('p', plan.nextPayment, { class: 'note' }),
+            element('p', plan.domainText, { class: 'note' }),
+            element('p', plan.promotionNote, { class: 'note' }),
             element('p', 'Precios finales en ARS. El alcance y las condiciones se confirman con Scalaris antes del pago. Esta consulta no contrata ni activa el servicio.', { class: 'note' }),
           );
           shareText = `${summary(inquiry)}\n\n${planSummaryText(plan)}`;

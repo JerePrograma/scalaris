@@ -44,7 +44,7 @@
           "Diseño adaptable a celular",
           "Títulos, descripción y sitemap básicos",
           "Alojamiento y HTTPS incluidos",
-          "Dominio propio a nombre del negocio, a cargo del cliente",
+          "Dominio propio a tu nombre; primer año incluido con anual de lanzamiento",
           "Configuración de hasta cinco correos con Zoho Free, según disponibilidad"
         ],
         "contentService": "Mantenimiento técnico. Los cambios de contenido posteriores al alta se cotizan aparte."
@@ -70,7 +70,7 @@
           "Títulos, descripción y sitemap básicos",
           "Un envío mensual de cambios simples, hasta veinte minutos de edición",
           "Alojamiento y HTTPS incluidos",
-          "Dominio propio a nombre del negocio, a cargo del cliente",
+          "Dominio propio a tu nombre; primer año incluido con anual de lanzamiento",
           "Configuración de hasta cinco correos con Zoho Free, según disponibilidad"
         ],
         "contentService": "El lote mensual cubre textos, fotos y datos sobre la estructura existente. No es acumulable ni incluye nuevas páginas o funciones."
@@ -83,7 +83,7 @@
         "extension": ".com.ar",
         "quantity": 1,
         "registrationAndRenewal": false,
-        "condition": "El dominio propio se registra a nombre del cliente. Su compra y renovación se abonan por separado y quedan a su cargo; el precio se confirma con el registrador. No se incluyen en el abono ni en la instalación de Scalaris."
+        "condition": "Dominio a nombre del cliente. En el anual de lanzamiento, primer año de un .com.ar disponible incluido; disponibilidad y vinculación se confirman antes de contratar. Renovación posterior a cargo del cliente. En mensual, registro y renovación por separado."
       },
       "email": {
         "provider": "Zoho Mail Free",
@@ -170,11 +170,11 @@
       "features": [
         "Una página o hasta cinco páginas",
         "Alojamiento y HTTPS incluidos",
-        "Dominio propio a cargo del cliente"
+        "Dominio propio: primer año incluido con anual de lanzamiento"
       ],
       "detailsUrl": "/web/",
       "demoUrl": "https://remodelaya.com.ar/",
-      "boundary": "El contenido lo aporta el negocio. Sin panel de autogestión de páginas. Registro y renovación del dominio propio a cargo del cliente y por separado. Configuración de Zoho Free según disponibilidad; migración de correo y licencias pagas se cotizan aparte."
+      "boundary": "El contenido se prepara con el negocio: hasta 60 minutos iniciales de ayuda y una revisión en el lanzamiento. Sin panel de autogestión de páginas. Primer año de .com.ar con anual de lanzamiento, sujeto a disponibilidad y vinculación; luego renovación a cargo del cliente. Zoho Free según disponibilidad; migraciones y licencias pagas aparte."
     },
     {
       "id": "catalogo",
@@ -194,7 +194,7 @@
       ],
       "detailsUrl": "/catalogo/",
       "demoUrl": "/catalogo/demos/",
-      "boundary": "Productos simples y una imagen por URL HTTPS. La carga cotidiana queda a cargo del negocio; pagos online y facturación no están incluidos. Dirección de Scalaris incluida; dominio propio y renovación a cargo del cliente."
+      "boundary": "Productos simples y una imagen por URL HTTPS. Dirección de Scalaris incluida. Lanzamiento: carga inicial 30/60/100 según plan y hasta 60 minutos de ayuda con contenido. Con anual, primer año de .com.ar sujeto a disponibilidad y vinculación confirmadas antes de contratar; renovación posterior a cargo del cliente. Sin pagos online ni facturación fiscal."
     },
     {
       "id": "menu",
@@ -303,5 +303,5 @@
     }
   ],
   "integrationNote": "Menú, Mesa y CRM se implementan por separado. La sincronización de productos, pedidos, stock o caja se cotiza aparte.",
-  "generalTerms": "Precios finales del servicio de Scalaris en ARS. La modalidad principal es mensual. El anual es opcional: doce meses por adelantado con 10% de descuento sólo en el abono; la instalación se cobra por única vez y por separado en ambas modalidades. Alojamiento y HTTPS incluidos. El dominio propio se registra a nombre del cliente y su compra y renovación quedan a su cargo, fuera del servicio. Web incluye configuración de Zoho Free sujeta a disponibilidad; migraciones y licencias pagas se cotizan. Catálogo utiliza una dirección de Scalaris; el correo se cotiza aparte. Las referencias desde requieren presupuesto y aceptación antes de cobrar. Material y permisos de uso aportados por el cliente; plazos con el material completo."
+  "generalTerms": "Precios finales en ARS. Lanzamiento para los primeros cinco clientes nuevos o hasta el 30/11/2026, sujeto a cupo. Anual: 10% de descuento en el abono y alta bonificada según plan; primer año de .com.ar disponible a nombre del cliente, con vinculación confirmada antes de contratar y renovación posterior a su cargo. Mensual: puesta en marcha en tres cuotas sin recargo más el abono. Incluye alojamiento, HTTPS y soporte según alcance. Ayuda inicial de contenido de hasta 60 minutos. Material y aprobación del cliente; adicionales a cotizar. Condiciones completas en /promociones/."
 }

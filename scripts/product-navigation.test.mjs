@@ -26,7 +26,7 @@ test('product enquiry keeps existing schema v1 and only allowed answer fields fo
 });
 
 test('public navigation pages keep one shared accessible menu and product entry points',async()=>{
-  for(const file of ['index.html','productos/index.html','web/index.html','proyectos/index.html','consulta/index.html','catalogo/index.html','catalogo/demos/index.html','catalogo/propuesta.html']){
+  for(const file of ['index.html','productos/index.html','web/index.html','proyectos/index.html','consulta/index.html','catalogo/index.html','catalogo/demos/index.html','catalogo/propuesta.html','promociones/index.html']){
     const html=await readFile(new URL(`../public/${file}`,import.meta.url),'utf8');
     assert.equal((html.match(/id="site-navigation"/g)||[]).length,1,file);
     assert.match(html,/aria-controls="site-navigation"/);assert.match(html,/aria-expanded="false"/);
@@ -35,7 +35,7 @@ test('public navigation pages keep one shared accessible menu and product entry 
     assert.ok(html.includes('/main.js?v=' + version), file);
     const header = html.match(/<header\b[\s\S]*?<\/header>/)?.[0];
     assert.ok(header, file);
-    for (const route of ['/productos/', '/productos/#planes', '/productos/#demos', '/#servicios', '/proyectos/', '/consulta/']) assert.ok(header.includes('href="' + route + '"'), file + ' ' + route);
+    for (const route of ['/promociones/', '/productos/', '/productos/#planes', '/productos/#demos', '/#servicios', '/proyectos/', '/consulta/']) assert.ok(header.includes('href="' + route + '"'), file + ' ' + route);
     const skip = html.match(/<a[^>]*class="skip-link"[^>]*href="#([^"]+)"/);
     assert.ok(skip, file);
     assert.ok(html.includes('id="' + skip[1] + '"'), file + ' skip target');
@@ -71,7 +71,25 @@ test('monthly is the default for fixed plans while quoted products never acquire
 
 test('Web details retain domain ownership and email restrictions referenced from the product overview',async()=>{
   const html=await readFile(new URL('../public/web/index.html',import.meta.url),'utf8');
-  assert.match(html, /Dominio propio[^<]*a cargo del cliente|dominio[^<]*a nombre y cargo del cliente/i);
+  assert.match(html, /dominio[^<]*a tu nombre|dominio[^<]*a nombre del cliente/i);
+  assert.match(html, /renovación posterior a cargo del cliente|renovación[^<]*a tu cargo/i);
+  assert.match(html, /Primer año[^<]*incluido|primer año de dominio[^<]*incluido/i);
   assert.match(html, /IMAP\/POP/);
   assert.match(html, /según disponibilidad|organizaciones elegibles/i);
+});
+
+test('launch navigation explains real benefits, shared eligibility and initial assistance',async()=>{
+  const home=await readFile(new URL('../public/index.html',import.meta.url),'utf8');
+  assert.match(home,/id="lanzamiento"/);
+  assert.match(home,/30\/11\/2026/);
+  assert.match(home,/sujet[oa]s? a confirmación/i);
+  assert.ok(home.includes('$ 162.000'));
+  assert.match(home,/total por 12 meses/);
+  assert.match(home,/30, 60 o 100 productos/);
+  assert.match(home,/60 minutos/);
+  assert.doesNotMatch(home,/quedan (?:sólo )?5|5 cupos disponibles|subdominio de regalo/i);
+  const form=await readFile(new URL('../public/consulta/index.html',import.meta.url),'utf8');
+  assert.match(form,/href="#form-root"/);
+  assert.match(form,/tres cuotas sin recargo/);
+  assert.match(form,/sujeto a confirmación de cupo/i);
 });

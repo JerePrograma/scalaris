@@ -1,0 +1,880 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-28",
+  "pieces": 46,
+  "pngCount": 92,
+  "formats": {
+    "facebookInstagram": [
+      1080,
+      1350
+    ],
+    "whatsapp": [
+      1080,
+      1920
+    ]
+  },
+  "campaign": "Primeros cinco clientes nuevos o hasta el 30/11/2026, lo que ocurra primero. Cupo a confirmar.",
+  "entries": [
+    {
+      "slug": "plan-origen",
+      "title": "Origen",
+      "category": "plan",
+      "categoryLabel": "Planes",
+      "headline": "Tu primera web, con lo esencial.",
+      "price": "$162.000",
+      "priceQualifier": "Abono $162.000 (10% menos) + alta $0.",
+      "setup": "Puesta en marcha 100% bonificada",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Precios finales en ARS. Anual: 12 meses por adelantado.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Incluye 60 min de ayuda inicial de contenido y una revisión."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=web&plan=presencia&billing=annual",
+      "thumbnail": "miniaturas/plan-origen.webp",
+      "facebookInstagram": "facebook-instagram/plan-origen.png",
+      "whatsapp": "whatsapp/plan-origen.png"
+    },
+    {
+      "slug": "plan-web-hasta-5-paginas",
+      "title": "Web de hasta 5 páginas",
+      "category": "plan",
+      "categoryLabel": "Planes",
+      "headline": "Más espacio para contar lo que hacés.",
+      "price": "$370.000",
+      "priceQualifier": "Abono $270.000 (10% menos) + alta $100.000.",
+      "setup": "Puesta en marcha 50% bonificada: pagás $100.000",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Precios finales en ARS. Anual: 12 meses por adelantado.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Incluye 60 min de ayuda inicial de contenido y una revisión."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=web&plan=negocio&billing=annual",
+      "thumbnail": "miniaturas/plan-web-hasta-5-paginas.webp",
+      "facebookInstagram": "facebook-instagram/plan-web-hasta-5-paginas.png",
+      "whatsapp": "whatsapp/plan-web-hasta-5-paginas.png"
+    },
+    {
+      "slug": "plan-vidriera",
+      "title": "Vidriera",
+      "category": "plan",
+      "categoryLabel": "Planes",
+      "headline": "Tu catálogo, a mano de tus clientes.",
+      "price": "$162.000",
+      "priceQualifier": "Abono $162.000 (10% menos) + alta $0.",
+      "setup": "Puesta en marcha 100% bonificada",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Precios finales en ARS. Anual: 12 meses por adelantado.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Incluye 60 min de ayuda inicial de contenido y una revisión."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=catalogo&plan=catalogo&billing=annual",
+      "thumbnail": "miniaturas/plan-vidriera.webp",
+      "facebookInstagram": "facebook-instagram/plan-vidriera.png",
+      "whatsapp": "whatsapp/plan-vidriera.png"
+    },
+    {
+      "slug": "plan-flujo",
+      "title": "Flujo",
+      "category": "plan",
+      "categoryLabel": "Planes",
+      "headline": "Del catálogo al seguimiento del pedido.",
+      "price": "$307.500",
+      "priceQualifier": "Abono $270.000 (10% menos) + alta $37.500.",
+      "setup": "Puesta en marcha 50% bonificada: pagás $37.500",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Precios finales en ARS. Anual: 12 meses por adelantado.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Incluye 60 min de ayuda inicial de contenido y una revisión."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=catalogo&plan=pedidos&billing=annual",
+      "thumbnail": "miniaturas/plan-flujo.webp",
+      "facebookInstagram": "facebook-instagram/plan-flujo.png",
+      "whatsapp": "whatsapp/plan-flujo.png"
+    },
+    {
+      "slug": "plan-pulso",
+      "title": "Pulso",
+      "category": "plan",
+      "categoryLabel": "Planes",
+      "headline": "Pedidos y caja, con más control.",
+      "price": "$428.000",
+      "priceQualifier": "Abono $378.000 (10% menos) + alta $50.000.",
+      "setup": "Puesta en marcha 50% bonificada: pagás $50.000",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Precios finales en ARS. Anual: 12 meses por adelantado.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Incluye 60 min de ayuda inicial de contenido y una revisión."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=catalogo&plan=gestion&billing=annual",
+      "thumbnail": "miniaturas/plan-pulso.webp",
+      "facebookInstagram": "facebook-instagram/plan-pulso.png",
+      "whatsapp": "whatsapp/plan-pulso.png"
+    },
+    {
+      "slug": "producto-web",
+      "title": "Scalaris Web",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Tu negocio, con su propia web.",
+      "price": "Desde $162.000",
+      "priceQualifier": "Origen · una página, hasta cinco secciones.",
+      "setup": "Alta 100% bonificada en Origen y Vidriera.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Precios finales en ARS. Anual: 12 meses por adelantado.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "60 min de ayuda inicial de contenido incluidos."
+      ],
+      "url": "https://scalaris.com.ar/web/",
+      "thumbnail": "miniaturas/producto-web.webp",
+      "facebookInstagram": "facebook-instagram/producto-web.png",
+      "whatsapp": "whatsapp/producto-web.png"
+    },
+    {
+      "slug": "producto-catalogo",
+      "title": "Scalaris Catálogo",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Tus productos, listos para WhatsApp.",
+      "price": "Desde $162.000",
+      "priceQualifier": "Vidriera · catálogo y carrito para WhatsApp.",
+      "setup": "Alta 100% bonificada en Origen y Vidriera.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Precios finales en ARS. Anual: 12 meses por adelantado.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "60 min de ayuda inicial de contenido incluidos."
+      ],
+      "url": "https://scalaris.com.ar/catalogo/",
+      "thumbnail": "miniaturas/producto-catalogo.webp",
+      "facebookInstagram": "facebook-instagram/producto-catalogo.png",
+      "whatsapp": "whatsapp/producto-catalogo.png"
+    },
+    {
+      "slug": "producto-menu",
+      "title": "Menú gastronómico",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Tu menú, con todas sus opciones.",
+      "price": "Desde $20.000/mes",
+      "priceQualifier": "Abono y alcance según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Implementación y aceptación a acordar. Adicionales y migraciones complejas aparte."
+      ],
+      "url": "https://scalaris.com.ar/tu-comida/",
+      "thumbnail": "miniaturas/producto-menu.webp",
+      "facebookInstagram": "facebook-instagram/producto-menu.png",
+      "whatsapp": "whatsapp/producto-menu.png"
+    },
+    {
+      "slug": "producto-mesa",
+      "title": "Scalaris Mesa",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Mesas, comandas y cuentas en orden.",
+      "price": "Desde $25.000/mes",
+      "priceQualifier": "Abono y alcance según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Implementación y aceptación a acordar. Adicionales y migraciones complejas aparte."
+      ],
+      "url": "https://scalaris.com.ar/mesa/",
+      "thumbnail": "miniaturas/producto-mesa.webp",
+      "facebookInstagram": "facebook-instagram/producto-mesa.png",
+      "whatsapp": "whatsapp/producto-mesa.png"
+    },
+    {
+      "slug": "producto-gestudio",
+      "title": "Gestudio",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Más orden para tu institución.",
+      "price": "Desde $30.000/mes",
+      "priceQualifier": "Abono y alcance según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Implementación y aceptación a acordar. Adicionales y migraciones complejas aparte.",
+        "Demo de consulta. Implementación y migración a cotizar."
+      ],
+      "url": "https://scalaris.com.ar/gestudio/",
+      "thumbnail": "miniaturas/producto-gestudio.webp",
+      "facebookInstagram": "facebook-instagram/producto-gestudio.png",
+      "whatsapp": "whatsapp/producto-gestudio.png"
+    },
+    {
+      "slug": "producto-crm",
+      "title": "CRM Scalaris",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Cada oportunidad, con seguimiento.",
+      "price": "Presupuesto a tu medida",
+      "priceQualifier": "Abono y alcance según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Implementación y aceptación a acordar. Adicionales y migraciones complejas aparte.",
+        "Sin envíos automáticos de WhatsApp o correo activos."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=crm",
+      "thumbnail": "miniaturas/producto-crm.webp",
+      "facebookInstagram": "facebook-instagram/producto-crm.png",
+      "whatsapp": "whatsapp/producto-crm.png"
+    },
+    {
+      "slug": "servicio-desarrollo-a-medida",
+      "title": "Software a medida",
+      "category": "desarrollo",
+      "categoryLabel": "Desarrollo",
+      "headline": "Un sistema para tus procesos.",
+      "price": "Presupuesto por alcance",
+      "priceQualifier": "Primero revisamos tu proceso y tus herramientas.",
+      "setup": "",
+      "conditions": [
+        "Relevamiento y presupuesto antes de comenzar.",
+        "Nuevas funciones e integraciones se cotizan por alcance.",
+        "Los beneficios de prearmados se aplican sólo cuando corresponda."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE",
+      "thumbnail": "miniaturas/servicio-desarrollo-a-medida.webp",
+      "facebookInstagram": "facebook-instagram/servicio-desarrollo-a-medida.png",
+      "whatsapp": "whatsapp/servicio-desarrollo-a-medida.png"
+    },
+    {
+      "slug": "servicio-automatizaciones",
+      "title": "Automatizá tareas repetitivas",
+      "category": "desarrollo",
+      "categoryLabel": "Desarrollo",
+      "headline": "Dale más tiempo a tu negocio.",
+      "price": "Presupuesto por alcance",
+      "priceQualifier": "Primero revisamos tu proceso y tus herramientas.",
+      "setup": "",
+      "conditions": [
+        "Relevamiento y presupuesto antes de comenzar.",
+        "Nuevas funciones e integraciones se cotizan por alcance.",
+        "Los beneficios de prearmados se aplican sólo cuando corresponda."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE",
+      "thumbnail": "miniaturas/servicio-automatizaciones.webp",
+      "facebookInstagram": "facebook-instagram/servicio-automatizaciones.png",
+      "whatsapp": "whatsapp/servicio-automatizaciones.png"
+    },
+    {
+      "slug": "servicio-integraciones",
+      "title": "Conectá tus sistemas",
+      "category": "desarrollo",
+      "categoryLabel": "Desarrollo",
+      "headline": "Tus herramientas, mejor conectadas.",
+      "price": "Presupuesto por alcance",
+      "priceQualifier": "Primero revisamos tu proceso y tus herramientas.",
+      "setup": "",
+      "conditions": [
+        "Relevamiento y presupuesto antes de comenzar.",
+        "Nuevas funciones e integraciones se cotizan por alcance.",
+        "Los beneficios de prearmados se aplican sólo cuando corresponda."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE",
+      "thumbnail": "miniaturas/servicio-integraciones.webp",
+      "facebookInstagram": "facebook-instagram/servicio-integraciones.png",
+      "whatsapp": "whatsapp/servicio-integraciones.png"
+    },
+    {
+      "slug": "general-portafolio",
+      "title": "Scalaris",
+      "category": "general",
+      "categoryLabel": "Scalaris",
+      "headline": "Tu negocio, un paso más adelante.",
+      "price": "Desde $15.000/mes",
+      "priceQualifier": "Web y Catálogo · mes a mes, más puesta en marcha.",
+      "setup": "Alta en 3 cuotas sin recargo.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 10% en abono, alta bonificada según plan y primer año de .com.ar incluido.",
+        "Dominio disponible y vinculación a confirmar. Renovación a tu cargo."
+      ],
+      "url": "https://scalaris.com.ar/productos/",
+      "thumbnail": "miniaturas/general-portafolio.webp",
+      "facebookInstagram": "facebook-instagram/general-portafolio.png",
+      "whatsapp": "whatsapp/general-portafolio.png"
+    },
+    {
+      "slug": "demo-corralon-demo",
+      "title": "Corralón Punto Obra",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Mostrá materiales y organizá las solicitudes por cantidad.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa.",
+        "Sin pagos online ni facturación fiscal."
+      ],
+      "url": "https://scalaris.com.ar/comercio/t/corralon-demo",
+      "thumbnail": "miniaturas/demo-corralon-demo.webp",
+      "facebookInstagram": "facebook-instagram/demo-corralon-demo.png",
+      "whatsapp": "whatsapp/demo-corralon-demo.png"
+    },
+    {
+      "slug": "demo-mayorista-demo",
+      "title": "Ronda Mayorista",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Presentá tu oferta por caja, pack o bulto.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa.",
+        "Sin pagos online ni facturación fiscal."
+      ],
+      "url": "https://scalaris.com.ar/comercio/t/mayorista-demo",
+      "thumbnail": "miniaturas/demo-mayorista-demo.webp",
+      "facebookInstagram": "facebook-instagram/demo-mayorista-demo.png",
+      "whatsapp": "whatsapp/demo-mayorista-demo.png"
+    },
+    {
+      "slug": "demo-almacen-demo",
+      "title": "Almacén La Esquina",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Llevá el catálogo de tu almacén al celular de tus clientes.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa.",
+        "Sin pagos online ni facturación fiscal."
+      ],
+      "url": "https://scalaris.com.ar/comercio/t/almacen-demo",
+      "thumbnail": "miniaturas/demo-almacen-demo.webp",
+      "facebookInstagram": "facebook-instagram/demo-almacen-demo.png",
+      "whatsapp": "whatsapp/demo-almacen-demo.png"
+    },
+    {
+      "slug": "demo-scalaris-mesa",
+      "title": "Scalaris Mesa",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Organizá el salón y acompañá cada comanda hasta el cierre.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa.",
+        "Sin pagos online ni facturación fiscal."
+      ],
+      "url": "https://scalaris.com.ar/mesa/",
+      "thumbnail": "miniaturas/demo-scalaris-mesa.webp",
+      "facebookInstagram": "facebook-instagram/demo-scalaris-mesa.png",
+      "whatsapp": "whatsapp/demo-scalaris-mesa.png"
+    },
+    {
+      "slug": "proyecto-remodelaya",
+      "title": "Remodelaya",
+      "category": "proyecto",
+      "categoryLabel": "Proyectos",
+      "headline": "Presentá tus servicios y recibí consultas desde tu web.",
+      "price": "Conocé el desarrollo",
+      "priceQualifier": "Una referencia de nuestro trabajo.",
+      "setup": "",
+      "conditions": [
+        "Referencia del portafolio. Nuevas implementaciones a cotizar."
+      ],
+      "url": "https://remodelaya.com.ar/",
+      "thumbnail": "miniaturas/proyecto-remodelaya.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-remodelaya.png",
+      "whatsapp": "whatsapp/proyecto-remodelaya.png"
+    },
+    {
+      "slug": "proyecto-shekinah",
+      "title": "Shekinah",
+      "category": "proyecto",
+      "categoryLabel": "Proyectos",
+      "headline": "Un catálogo para explorar productos con la identidad del negocio.",
+      "price": "Conocé el desarrollo",
+      "priceQualifier": "Una referencia de nuestro trabajo.",
+      "setup": "",
+      "conditions": [
+        "Referencia del portafolio. Nuevas implementaciones a cotizar."
+      ],
+      "url": "http://shekinah.ar/",
+      "thumbnail": "miniaturas/proyecto-shekinah.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-shekinah.png",
+      "whatsapp": "whatsapp/proyecto-shekinah.png"
+    },
+    {
+      "slug": "demo-tu-comida",
+      "title": "Tu Comida",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Un menú que tus clientes pueden armar y enviar por WhatsApp.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa."
+      ],
+      "url": "https://scalaris.com.ar/tu-comida/",
+      "thumbnail": "miniaturas/demo-tu-comida.webp",
+      "facebookInstagram": "facebook-instagram/demo-tu-comida.png",
+      "whatsapp": "whatsapp/demo-tu-comida.png"
+    },
+    {
+      "slug": "demo-e-medicapp",
+      "title": "E-MEDICAPP",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Coordiná solicitudes y presupuestos para compras en farmacias.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa."
+      ],
+      "url": "https://scalaris.com.ar/e-medicapp/",
+      "thumbnail": "miniaturas/demo-e-medicapp.webp",
+      "facebookInstagram": "facebook-instagram/demo-e-medicapp.png",
+      "whatsapp": "whatsapp/demo-e-medicapp.png"
+    },
+    {
+      "slug": "proyecto-burger-house-3",
+      "title": "Burger House",
+      "category": "proyecto",
+      "categoryLabel": "Proyectos",
+      "headline": "Menú digital y pedidos con la identidad de tu local.",
+      "price": "Conocé el desarrollo",
+      "priceQualifier": "Una referencia de nuestro trabajo.",
+      "setup": "",
+      "conditions": [
+        "Referencia del portafolio. Nuevas implementaciones a cotizar."
+      ],
+      "url": "https://scalaris.com.ar/burger-house-3/",
+      "thumbnail": "miniaturas/proyecto-burger-house-3.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-burger-house-3.png",
+      "whatsapp": "whatsapp/proyecto-burger-house-3.png"
+    },
+    {
+      "slug": "demo-gestudio",
+      "title": "Gestudio",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Ordená alumnos, inscripciones y cuotas de tu academia.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa.",
+        "Acceso de consulta. Relevamiento y aceptación antes de uso operativo."
+      ],
+      "url": "https://scalaris.com.ar/gestudio/",
+      "thumbnail": "miniaturas/demo-gestudio.webp",
+      "facebookInstagram": "facebook-instagram/demo-gestudio.png",
+      "whatsapp": "whatsapp/demo-gestudio.png"
+    },
+    {
+      "slug": "demo-fourbubbles",
+      "title": "FourBubbles",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Seguí el trabajo de tu lavandería desde la recepción hasta el control final.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa.",
+        "Acceso de consulta. Relevamiento y aceptación antes de uso operativo."
+      ],
+      "url": "https://scalaris.com.ar/fourbubbles/",
+      "thumbnail": "miniaturas/demo-fourbubbles.webp",
+      "facebookInstagram": "facebook-instagram/demo-fourbubbles.png",
+      "whatsapp": "whatsapp/demo-fourbubbles.png"
+    },
+    {
+      "slug": "proyecto-crm-platform",
+      "title": "Scalaris CRM",
+      "category": "proyecto",
+      "categoryLabel": "Proyectos",
+      "headline": "Reuní contactos, tareas y oportunidades en una agenda comercial.",
+      "price": "Conocé la propuesta",
+      "priceQualifier": "Presupuesto y entrega a definir.",
+      "setup": "",
+      "conditions": [
+        "En preparación. Alcance, precio y aceptación antes de implementar.",
+        "Envíos automáticos no activos."
+      ],
+      "url": "https://scalaris.com.ar/consulta/index.html?service=SOFTWARE",
+      "thumbnail": "miniaturas/proyecto-crm-platform.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-crm-platform.png",
+      "whatsapp": "whatsapp/proyecto-crm-platform.png"
+    },
+    {
+      "slug": "proyecto-pharmahome",
+      "title": "PharmaHome",
+      "category": "herramienta",
+      "categoryLabel": "Herramientas",
+      "headline": "Tené a mano el registro de tus medicamentos y existencias.",
+      "price": "Conocé la herramienta",
+      "priceQualifier": "Sin nuevo abono por el uso actual.",
+      "setup": "",
+      "conditions": [
+        "Herramienta pública. Adaptaciones adicionales se cotizan por separado.",
+        "Datos guardados sólo en tu dispositivo, sin sincronización."
+      ],
+      "url": "https://scalaris.com.ar/pharmahome/",
+      "thumbnail": "miniaturas/proyecto-pharmahome.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-pharmahome.png",
+      "whatsapp": "whatsapp/proyecto-pharmahome.png"
+    },
+    {
+      "slug": "proyecto-calendario-servicios",
+      "title": "¿Cuándo me toca servicio?",
+      "category": "herramienta",
+      "categoryLabel": "Herramientas",
+      "headline": "Consultá tus próximas jornadas y organizá tu calendario.",
+      "price": "Conocé la herramienta",
+      "priceQualifier": "Sin nuevo abono por el uso actual.",
+      "setup": "",
+      "conditions": [
+        "Herramienta pública. Adaptaciones adicionales se cotizan por separado."
+      ],
+      "url": "https://scalaris.com.ar/calendario-servicios/",
+      "thumbnail": "miniaturas/proyecto-calendario-servicios.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-calendario-servicios.png",
+      "whatsapp": "whatsapp/proyecto-calendario-servicios.png"
+    },
+    {
+      "slug": "proyecto-inventarios-muebleria",
+      "title": "Inventarios Mueblería",
+      "category": "proyecto",
+      "categoryLabel": "Proyectos",
+      "headline": "Una propuesta para reunir inventario y operación comercial.",
+      "price": "Conocé la propuesta",
+      "priceQualifier": "Presupuesto y entrega a definir.",
+      "setup": "",
+      "conditions": [
+        "En preparación. Alcance, precio y aceptación antes de implementar."
+      ],
+      "url": "https://scalaris.com.ar/consulta/index.html?service=SOFTWARE",
+      "thumbnail": "miniaturas/proyecto-inventarios-muebleria.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-inventarios-muebleria.png",
+      "whatsapp": "whatsapp/proyecto-inventarios-muebleria.png"
+    },
+    {
+      "slug": "proyecto-gym-academy-manager",
+      "title": "Gym & Academy Manager",
+      "category": "proyecto",
+      "categoryLabel": "Proyectos",
+      "headline": "Una propuesta para ordenar membresías, inscripciones y cuotas.",
+      "price": "Conocé la propuesta",
+      "priceQualifier": "Presupuesto y entrega a definir.",
+      "setup": "",
+      "conditions": [
+        "En preparación. Alcance, precio y aceptación antes de implementar."
+      ],
+      "url": "https://scalaris.com.ar/consulta/index.html?service=SOFTWARE",
+      "thumbnail": "miniaturas/proyecto-gym-academy-manager.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-gym-academy-manager.png",
+      "whatsapp": "whatsapp/proyecto-gym-academy-manager.png"
+    },
+    {
+      "slug": "proyecto-presupuestador-flete",
+      "title": "Presupuestador Flete",
+      "category": "proyecto",
+      "categoryLabel": "Proyectos",
+      "headline": "Una propuesta para preparar y administrar presupuestos de fletes.",
+      "price": "Conocé la propuesta",
+      "priceQualifier": "Presupuesto y entrega a definir.",
+      "setup": "",
+      "conditions": [
+        "En preparación. Alcance, precio y aceptación antes de implementar."
+      ],
+      "url": "https://scalaris.com.ar/consulta/index.html?service=SOFTWARE",
+      "thumbnail": "miniaturas/proyecto-presupuestador-flete.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-presupuestador-flete.png",
+      "whatsapp": "whatsapp/proyecto-presupuestador-flete.png"
+    },
+    {
+      "slug": "proyecto-hogaria",
+      "title": "HogarIA",
+      "category": "proyecto",
+      "categoryLabel": "Proyectos",
+      "headline": "Una propuesta para ordenar la economía familiar por perfil.",
+      "price": "Conocé la propuesta",
+      "priceQualifier": "Presupuesto y entrega a definir.",
+      "setup": "",
+      "conditions": [
+        "En preparación. Alcance, precio y aceptación antes de implementar."
+      ],
+      "url": "https://scalaris.com.ar/consulta/index.html?service=SOFTWARE",
+      "thumbnail": "miniaturas/proyecto-hogaria.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-hogaria.png",
+      "whatsapp": "whatsapp/proyecto-hogaria.png"
+    },
+    {
+      "slug": "proyecto-cjprestamos",
+      "title": "CJ Préstamos",
+      "category": "proyecto",
+      "categoryLabel": "Proyectos",
+      "headline": "Una propuesta para organizar el registro administrativo de préstamos.",
+      "price": "Conocé la propuesta",
+      "priceQualifier": "Presupuesto y entrega a definir.",
+      "setup": "",
+      "conditions": [
+        "En preparación. Alcance, precio y aceptación antes de implementar."
+      ],
+      "url": "https://scalaris.com.ar/consulta/index.html?service=SOFTWARE",
+      "thumbnail": "miniaturas/proyecto-cjprestamos.webp",
+      "facebookInstagram": "facebook-instagram/proyecto-cjprestamos.png",
+      "whatsapp": "whatsapp/proyecto-cjprestamos.png"
+    },
+    {
+      "slug": "demo-demo-vidriera-cocina-barrio",
+      "title": "La Cocina de Barrio",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Probá un menú simple y prepará el pedido para WhatsApp.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa.",
+        "Sin pagos online ni facturación fiscal.",
+        "El carrito prepara WhatsApp; no guarda pedidos."
+      ],
+      "url": "https://scalaris.com.ar/comercio/t/menu-demo",
+      "thumbnail": "miniaturas/demo-demo-vidriera-cocina-barrio.webp",
+      "facebookInstagram": "facebook-instagram/demo-demo-vidriera-cocina-barrio.png",
+      "whatsapp": "whatsapp/demo-demo-vidriera-cocina-barrio.png"
+    },
+    {
+      "slug": "demo-demo-flujo-despensa",
+      "title": "La Despensa",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Conocé cómo ordenar pedidos con estados y seguimiento.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa.",
+        "Sin pagos online ni facturación fiscal."
+      ],
+      "url": "https://scalaris.com.ar/comercio/t/tienda-demo",
+      "thumbnail": "miniaturas/demo-demo-flujo-despensa.webp",
+      "facebookInstagram": "facebook-instagram/demo-demo-flujo-despensa.png",
+      "whatsapp": "whatsapp/demo-demo-flujo-despensa.png"
+    },
+    {
+      "slug": "demo-demo-pulso-mesa-cafe",
+      "title": "Mesa y Café",
+      "category": "demo",
+      "categoryLabel": "Demos",
+      "headline": "Explorá la caja manual de un comercio.",
+      "price": "Explorá la demo",
+      "priceQualifier": "Conocé el recorrido antes de conversar.",
+      "setup": "",
+      "conditions": [
+        "Demostración con datos ficticios; no acredita una implementación operativa.",
+        "Sin pagos online ni facturación fiscal.",
+        "Caja manual. No procesa cobros."
+      ],
+      "url": "https://scalaris.com.ar/comercio/t/gestion-demo",
+      "thumbnail": "miniaturas/demo-demo-pulso-mesa-cafe.webp",
+      "facebookInstagram": "facebook-instagram/demo-demo-pulso-mesa-cafe.png",
+      "whatsapp": "whatsapp/demo-demo-pulso-mesa-cafe.png"
+    },
+    {
+      "slug": "producto-fourbubbles",
+      "title": "FourBubbles",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Seguí el trabajo de tu lavandería desde la recepción hasta el control final.",
+      "price": "Presupuesto por alcance",
+      "priceQualifier": "Abono y trabajo inicial según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Demo con datos ficticios. Aceptación de la implementación concreta.",
+        "Migraciones complejas, funciones nuevas y terceros se cotizan aparte."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=fourbubbles",
+      "thumbnail": "miniaturas/producto-fourbubbles.webp",
+      "facebookInstagram": "facebook-instagram/producto-fourbubbles.png",
+      "whatsapp": "whatsapp/producto-fourbubbles.png"
+    },
+    {
+      "slug": "producto-e-medicapp",
+      "title": "E-MEDICAPP",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Coordiná solicitudes y presupuestos para compras en farmacias.",
+      "price": "Presupuesto por alcance",
+      "priceQualifier": "Abono y trabajo inicial según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "Demo con datos ficticios. Aceptación de la implementación concreta.",
+        "Migraciones complejas, funciones nuevas y terceros se cotizan aparte."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=e-medicapp",
+      "thumbnail": "miniaturas/producto-e-medicapp.webp",
+      "facebookInstagram": "facebook-instagram/producto-e-medicapp.png",
+      "whatsapp": "whatsapp/producto-e-medicapp.png"
+    },
+    {
+      "slug": "producto-inventarios-muebleria",
+      "title": "Inventarios Mueblería",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Una propuesta para reunir inventario y operación comercial.",
+      "price": "Presupuesto por alcance",
+      "priceQualifier": "Abono y trabajo inicial según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "En preparación: entrega y aceptación a definir antes de contratar.",
+        "Migraciones complejas, funciones nuevas y terceros se cotizan aparte."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=inventarios-muebleria",
+      "thumbnail": "miniaturas/producto-inventarios-muebleria.webp",
+      "facebookInstagram": "facebook-instagram/producto-inventarios-muebleria.png",
+      "whatsapp": "whatsapp/producto-inventarios-muebleria.png"
+    },
+    {
+      "slug": "producto-gym-academy-manager",
+      "title": "Gym & Academy Manager",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Una propuesta para ordenar membresías, inscripciones y cuotas.",
+      "price": "Presupuesto por alcance",
+      "priceQualifier": "Abono y trabajo inicial según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "En preparación: entrega y aceptación a definir antes de contratar.",
+        "Migraciones complejas, funciones nuevas y terceros se cotizan aparte."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=gym-academy-manager",
+      "thumbnail": "miniaturas/producto-gym-academy-manager.webp",
+      "facebookInstagram": "facebook-instagram/producto-gym-academy-manager.png",
+      "whatsapp": "whatsapp/producto-gym-academy-manager.png"
+    },
+    {
+      "slug": "producto-presupuestador-flete",
+      "title": "Presupuestador Flete",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Una propuesta para preparar y administrar presupuestos de fletes.",
+      "price": "Presupuesto por alcance",
+      "priceQualifier": "Abono y trabajo inicial según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "En preparación: entrega y aceptación a definir antes de contratar.",
+        "Migraciones complejas, funciones nuevas y terceros se cotizan aparte."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=presupuestador-flete",
+      "thumbnail": "miniaturas/producto-presupuestador-flete.webp",
+      "facebookInstagram": "facebook-instagram/producto-presupuestador-flete.png",
+      "whatsapp": "whatsapp/producto-presupuestador-flete.png"
+    },
+    {
+      "slug": "producto-hogaria",
+      "title": "HogarIA",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Una propuesta para ordenar la economía familiar por perfil.",
+      "price": "Presupuesto por alcance",
+      "priceQualifier": "Abono y trabajo inicial según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "En preparación: entrega y aceptación a definir antes de contratar.",
+        "Migraciones complejas, funciones nuevas y terceros se cotizan aparte."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=hogaria",
+      "thumbnail": "miniaturas/producto-hogaria.webp",
+      "facebookInstagram": "facebook-instagram/producto-hogaria.png",
+      "whatsapp": "whatsapp/producto-hogaria.png"
+    },
+    {
+      "slug": "producto-cjprestamos",
+      "title": "CJ Préstamos",
+      "category": "producto",
+      "categoryLabel": "Productos",
+      "headline": "Una propuesta para organizar el registro administrativo de préstamos.",
+      "price": "Presupuesto por alcance",
+      "priceQualifier": "Abono y trabajo inicial según relevamiento.",
+      "setup": "Anual: 10% en abono + 50% en implementación estándar, hasta $50.000 de bonificación.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 1 año de .com.ar a tu nombre. Disponibilidad y conexión a confirmar; renovación a tu cargo.",
+        "En preparación: entrega y aceptación a definir antes de contratar.",
+        "Migraciones complejas, funciones nuevas y terceros se cotizan aparte."
+      ],
+      "url": "https://scalaris.com.ar/consulta/?service=SOFTWARE&product=cjprestamos",
+      "thumbnail": "miniaturas/producto-cjprestamos.webp",
+      "facebookInstagram": "facebook-instagram/producto-cjprestamos.png",
+      "whatsapp": "whatsapp/producto-cjprestamos.png"
+    },
+    {
+      "slug": "general-lanzamiento-anual",
+      "title": "Arrancá con beneficios.",
+      "category": "promocion",
+      "categoryLabel": "Promociones",
+      "headline": "Una solución para tu negocio. Un comienzo más accesible.",
+      "price": "Desde $162.000",
+      "priceQualifier": "Origen o Vidriera · alta 100% bonificada.",
+      "setup": "Primer año de dominio .com.ar incluido a tu nombre.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Anual: 12 meses por adelantado. Precios finales en ARS.",
+        "Dominio disponible y vinculación a confirmar. Renovación a tu cargo.",
+        "Otros prearmados: 50% de implementación, hasta $50.000 de bonificación."
+      ],
+      "url": "https://scalaris.com.ar/productos/#planes",
+      "thumbnail": "miniaturas/general-lanzamiento-anual.webp",
+      "facebookInstagram": "facebook-instagram/general-lanzamiento-anual.png",
+      "whatsapp": "whatsapp/general-lanzamiento-anual.png"
+    },
+    {
+      "slug": "general-alta-en-cuotas",
+      "title": "Un comienzo más fácil.",
+      "category": "promocion",
+      "categoryLabel": "Promociones",
+      "headline": "Poné tu negocio online y distribuí el trabajo inicial.",
+      "price": "3 cuotas sin recargo",
+      "priceQualifier": "Cada cuota se suma al abono del mes.",
+      "setup": "Desde el cuarto mes pagás sólo el abono.",
+      "conditions": [
+        "Primeros 5 clientes nuevos o 30/11/2026, lo que ocurra primero. Sujeto a cupo.",
+        "Las cuotas financian sólo la puesta en marcha.",
+        "Dominio propio aparte en mensual. Precios finales en ARS.",
+        "Se informan alcance, cronograma y condiciones antes de contratar."
+      ],
+      "url": "https://scalaris.com.ar/productos/#planes",
+      "thumbnail": "miniaturas/general-alta-en-cuotas.webp",
+      "facebookInstagram": "facebook-instagram/general-alta-en-cuotas.png",
+      "whatsapp": "whatsapp/general-alta-en-cuotas.png"
+    }
+  ]
+}

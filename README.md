@@ -6,7 +6,15 @@ Sitio público: https://scalaris.com.ar
 
 Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
-## Refactor y precios vigentes — 28/10/2026
+## Lanzamiento y flyers — 28/10/2026
+
+La web aplica la oferta confirmada de lanzamiento a los primeros cinco clientes nuevos o hasta el 30/11/2026, sujeta a confirmación de cupo. Anual: 10% sobre el abono, alta 100% bonificada en Origen/Vidriera y 50% en Flujo/Pulso/Web de cinco páginas, más primer año de dominio disponible a nombre del cliente. Totales anuales: $162.000/$162.000/$307.500/$428.000/$370.000. Mensual: alta completa en tres cuotas sin recargo más abono. Incluye ayuda inicial de contenido hasta 60 minutos y carga de 30/60/100 productos en Catálogo.
+
+La política única está en `commercial/launch-promotion.json`; `public/offer-policy.js` comparte el cálculo entre selectores y consulta. Otros prearmados: 50% de implementación estándar hasta $50.000, con anual y presupuesto individual; no aplica ese tope a los cinco planes fijos. Condiciones en /promociones/. No se publica contador ficticio; al completar las cinco altas se cierra la política, se regenera y se actualizan las piezas. Dominio/vinculación y elegibilidad se confirman antes de contratar.
+
+La galería /flyers/ aloja 46 piezas en dos formatos, con búsqueda y descarga de 92 PNG. Editables y ZIP completos: `../contenido-redes/flyers-lanzamiento-2026-10-28/`. Las colecciones anteriores son históricas. Alcance, evaluación del estándar y pruebas en [nota de lanzamiento](docs/launch-redesign-2026-10-28.md).
+
+## Antecedente: refactor y tarifas base — 28/10/2026
 
 La web comercial comparte identidad, navegación y componentes entre Inicio, Productos, Web, Catálogo, sus demos/propuesta, Proyectos y Consulta. Presenta seis familias por necesidad, capturas reales, diferencias de alcance, puesta en marcha y condiciones. La galería conserva 19 proyectos y distingue demos, publicaciones y propuestas en preparación.
 

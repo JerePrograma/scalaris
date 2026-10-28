@@ -1,4 +1,4 @@
-import { priceReferences } from './price-references.js?v=20261028-planes';
+import { priceReferences } from './price-references.js?v=20261028-lanzamiento';
 
 export const services = {
   SOFTWARE: "Web / software",
@@ -10,6 +10,13 @@ const productFamilies = Object.freeze({
   mesa: {name:'Scalaris Mesa',topic:'Software a medida',plans:null},
   academia: {name:'Gestudio',topic:'Software a medida',plans:null},
   crm: {name:'CRM Scalaris',topic:'Software a medida',plans:null},
+  fourbubbles: {name:'FourBubbles',topic:'Software a medida',plans:null},
+  'e-medicapp': {name:'E-MEDICAPP',topic:'Software a medida',plans:null},
+  'inventarios-muebleria': {name:'Inventarios Mueblería',topic:'Software a medida',plans:null},
+  'gym-academy-manager': {name:'Gym & Academy Manager',topic:'Software a medida',plans:null},
+  'presupuestador-flete': {name:'Presupuestador Flete',topic:'Software a medida',plans:null},
+  hogaria: {name:'HogarIA',topic:'Software a medida',plans:null},
+  cjprestamos: {name:'CJ Préstamos',topic:'Software a medida',plans:null},
 });
 const productBilling = Object.freeze({annual:'pago anual anticipado',monthly:'mes a mes'});
 /** Informational reference from the generated offer, never a closed quote or URL amount. */
