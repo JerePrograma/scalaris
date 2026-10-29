@@ -6,6 +6,10 @@ Sitio público: https://scalaris.com.ar
 
 Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
+## Integración de Indumentaria — 29/10/2026
+
+La ruta pública prevista es `https://scalaris.com.ar/indumentaria/`. `functions/indumentaria/[[path]].js` conecta exclusivamente ese prefijo con el origen fijo del VPS mediante el proxy estático existente; `_routes.json` incluye la ruta y sus subrutas. La tienda React/TypeScript y su despliegue independiente pertenecen al proyecto hermano `scalaris-indumentaria`. La verificación remota corresponde al cierre de su publicación.
+
 ## Presentación mensual y flyers vigentes — 28/10/2026
 
 La comunicación vigente destaca el abono mensual equivalente con pago anual anticipado de doce meses: Origen/Vidriera $13.500, Flujo/Web de cinco páginas $22.500 y Pulso $31.500. Menú desde $18.000, Mesa desde $22.500 y Gestudio desde $27.000, con implementación a cotizar. El selector abre en anual; la opción mes a mes mantiene sus tarifas base y el alta en tres cuotas durante el lanzamiento. La condición anual queda junto al precio.

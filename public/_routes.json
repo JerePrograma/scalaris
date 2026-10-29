@@ -20,7 +20,9 @@
     "/comercio",
     "/comercio/*",
     "/mesa",
-    "/mesa/*"
+    "/mesa/*",
+    "/indumentaria",
+    "/indumentaria/*"
   ],
   "exclude": []
 }
