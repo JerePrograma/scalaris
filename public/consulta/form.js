@@ -8,14 +8,14 @@ import {
   readProductInterest,
   productInterestAnswers,
   productPriceReference,
-} from "./model.js?v=20261028-mensual";
+} from "./model.js?v=20261101-precios";
 import {
   hasPlanSelection,
   loadPlanSummary,
   planSummaryRows,
   planSummaryText,
   planSummaryTotal,
-} from "./plan-summary.js?v=20261028-mensual";
+} from "./plan-summary.js?v=20261101-precios";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
   interest = readProductInterest(window.location.search),
@@ -101,9 +101,9 @@ function render() {
     const context = element('aside',null,{class:'product-context','aria-label':'Producto consultado'});
     context.append(element('strong',interest.planName || interest.productName),
       element('p',`${interest.billingName?`Modalidad de interés: ${interest.billingName}. `:''}Podés editar las respuestas. Esta consulta no confirma una contratación ni un pago.`),
-      element('a','Volver a comparar los planes →',{href:['web','catalogo'].includes(interest.product)?'../'+interest.product+'/?'+new URLSearchParams({billing:interest.billing||'annual'})+'#planes':'../productos/#planes'}));
+      element('a','Volver a comparar los planes →',{href:['web','catalogo'].includes(interest.product)?'../'+interest.product+'/?'+new URLSearchParams({billing:interest.billing||'monthly'})+'#planes':'../productos/#planes'}));
     const priceReference = productPriceReference(interest);
-    if (priceReference) context.insertBefore(element('p', priceReference), context.lastChild);
+    if (priceReference) context.insertBefore(element('p', priceReference, {class:'product-price-reference'}), context.lastChild);
     root.append(context);
   }
   if (step === 1) {

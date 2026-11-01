@@ -6,6 +6,16 @@ Sitio público: https://scalaris.com.ar
 
 Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
+## Oferta vigente — 01/11/2026
+
+La plataforma presenta los abonos mensuales por defecto, implementación completa por separado y anual opcional sólo con las condiciones de cada producto. Se adopta la revisión por valor y competencia autorizada por el fundador el 01/11. Sustituye para nuevas propuestas las campañas y presentaciones históricas que se documentan más abajo; los acuerdos aceptados conservan sus condiciones.
+
+Web y Catálogo mantienen sus planes base. Menú, Mesa y CRM muestran referencias sujetas a relevamiento. Gestudio publica su escala canónica por alumnos activos y conserva el programa piloto administrado. No se arrastran descuentos de Web/Catálogo a otros productos. Dominio propio, gastos de terceros y funciones adicionales se informan por separado.
+
+Fuentes: [portfolio](commercial/portfolio-offer.json), [Catálogo](../scalaris-comercio/commercial/offer.json) y [Gestudio](../Gestudio/docs/comercial/estrategia-comercial.md). `npm run offers:build` genera sus proyecciones; `npm run flyers:sync` construye material vigente desde esas proyecciones, sin importar la colección histórica. Después ejecutar `npm run check`. La generación de flyers requiere las bibliotecas locales indicadas en la [decisión, alcance y verificación](docs/precios-por-valor-2026-11-01.md).
+
+La campaña anterior está cerrada para nuevas propuestas. El material anterior se conserva en `legacy/flyers-2026-10-28/`, fuera de `public/`; la galería vigente reúne once piezas y veintidós PNG. Las secciones siguientes conservan evidencia fechada y no son la fuente de precios actuales.
+
 ## Integración de Indumentaria — 29/10/2026
 
 La ruta pública prevista es `https://scalaris.com.ar/indumentaria/`. `functions/indumentaria/[[path]].js` conecta exclusivamente ese prefijo con el origen fijo del VPS mediante el proxy estático existente; `_routes.json` incluye la ruta y sus subrutas. La tienda React/TypeScript y su despliegue independiente pertenecen al proyecto hermano `scalaris-indumentaria`. La verificación remota corresponde al cierre de su publicación.

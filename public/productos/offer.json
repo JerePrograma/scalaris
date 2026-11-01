@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-10-28",
+  "reviewedAt": "2026-11-01",
   "currency": "ARS",
   "validUntil": "2026-11-30",
   "webOffer": {
@@ -15,7 +15,7 @@
       "annualMonths": 12,
       "annualPayment": "upfront",
       "setupAnnualWaived": false,
-      "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego puede revisarse trimestralmente con aviso de treinta días. Anual opcional: doce meses abonados por adelantado con 10% de descuento sólo en el abono y precio fijo durante ese período; renovación a la tarifa informada con treinta días de anticipación. La instalación se abona una sola vez y por separado en ambas modalidades. El registro y la renovación del dominio propio quedan a cargo del cliente.",
+      "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego revisión trimestral con aviso de treinta días, sin ajustes retroactivos. Anual opcional: doce meses abonados por adelantado con 10% de descuento sólo en el abono y precio fijo durante ese período; renovación a la tarifa informada con treinta días de anticipación. La implementación se abona una sola vez al comenzar, por separado del abono, en ambas modalidades. Dominio propio y renovación a nombre y cargo del cliente.",
       "support": {
         "businessDays": "Lunes a viernes",
         "hours": "9 a 18",
@@ -44,7 +44,7 @@
           "Diseño adaptable a celular",
           "Títulos, descripción y sitemap básicos",
           "Alojamiento y HTTPS incluidos",
-          "Dominio propio a tu nombre; primer año incluido con anual de lanzamiento",
+          "Dominio propio a tu nombre, con registro y renovación por separado",
           "Configuración de hasta cinco correos con Zoho Free, según disponibilidad"
         ],
         "contentService": "Mantenimiento técnico. Los cambios de contenido posteriores al alta se cotizan aparte."
@@ -70,7 +70,7 @@
           "Títulos, descripción y sitemap básicos",
           "Un envío mensual de cambios simples, hasta veinte minutos de edición",
           "Alojamiento y HTTPS incluidos",
-          "Dominio propio a tu nombre; primer año incluido con anual de lanzamiento",
+          "Dominio propio a tu nombre, con registro y renovación por separado",
           "Configuración de hasta cinco correos con Zoho Free, según disponibilidad"
         ],
         "contentService": "El lote mensual cubre textos, fotos y datos sobre la estructura existente. No es acumulable ni incluye nuevas páginas o funciones."
@@ -83,7 +83,7 @@
         "extension": ".com.ar",
         "quantity": 1,
         "registrationAndRenewal": false,
-        "condition": "Dominio a nombre del cliente. En el anual de lanzamiento, primer año de un .com.ar disponible incluido; disponibilidad y vinculación se confirman antes de contratar. Renovación posterior a cargo del cliente. En mensual, registro y renovación por separado."
+        "condition": "Dominio propio a nombre del cliente. Registro, renovación y gastos del registrador a su cargo, separados del servicio. Disponibilidad y vinculación se confirman antes de contratar."
       },
       "email": {
         "provider": "Zoho Mail Free",
@@ -170,11 +170,11 @@
       "features": [
         "Una página o hasta cinco páginas",
         "Alojamiento y HTTPS incluidos",
-        "Dominio propio: primer año incluido con anual de lanzamiento"
+        "Dominio propio a tu nombre; registro y renovación por separado"
       ],
       "detailsUrl": "/web/",
       "demoUrl": "https://remodelaya.com.ar/",
-      "boundary": "El contenido se prepara con el negocio: hasta 60 minutos iniciales de ayuda y una revisión en el lanzamiento. Sin panel de autogestión de páginas. Primer año de .com.ar con anual de lanzamiento, sujeto a disponibilidad y vinculación; luego renovación a cargo del cliente. Zoho Free según disponibilidad; migraciones y licencias pagas aparte."
+      "boundary": "El contenido se prepara con el negocio: ayuda inicial con el material y una revisión en la implementación. Sin panel de autogestión de páginas. Dominio a nombre y cargo del cliente. Zoho Free según disponibilidad; migraciones y licencias pagas aparte."
     },
     {
       "id": "catalogo",
@@ -194,7 +194,7 @@
       ],
       "detailsUrl": "/catalogo/",
       "demoUrl": "/catalogo/demos/",
-      "boundary": "Productos simples y una imagen por URL HTTPS. Dirección de Scalaris incluida. Lanzamiento: carga inicial 30/60/100 según plan y hasta 60 minutos de ayuda con contenido. Con anual, primer año de .com.ar sujeto a disponibilidad y vinculación confirmadas antes de contratar; renovación posterior a cargo del cliente. Sin pagos online ni facturación fiscal."
+      "boundary": "Productos simples y una imagen por URL HTTPS. Dirección de Scalaris incluida. Carga inicial de 30/60/100 productos según plan, con material ordenado aportado por el cliente. Dominio propio y renovación por separado. Sin pagos online ni facturación fiscal; la caja del plan Pulso es un registro manual. Alta asistida sujeta a aceptación del alcance."
     },
     {
       "id": "menu",
@@ -205,7 +205,9 @@
       "status": "assisted_quote",
       "statusLabel": "Instalación por negocio",
       "pricingType": "starting_quote",
-      "monthlyFrom": 20000,
+      "monthlyFrom": 25000,
+      "unitLabel": "por negocio",
+      "pricingNote": "Referencia para un negocio. Implementación a cotizar tras revisar menú, variantes y material; alcance y aceptación por escrito.",
       "image": "/assets/proyectos/tu-comida.webp",
       "imageAlt": "Menú gastronómico Tu Comida con productos y opciones",
       "features": [
@@ -215,7 +217,7 @@
       ],
       "detailsUrl": "/consulta/?service=SOFTWARE&product=menu",
       "demoUrl": "/tu-comida/",
-      "boundary": "Referencia entre $20.000 y $25.000 por mes según menú y operación de un negocio. Implementación a cotizar tras revisar configuración y material. Presupuesto y aceptación antes de instalar. No se sincroniza automáticamente con Mesa."
+      "boundary": "Desde $25.000 por mes para un negocio, según menú y operación. Implementación a cotizar tras revisar configuración y material. Presupuesto y aceptación antes de instalar. No se sincroniza automáticamente con Mesa."
     },
     {
       "id": "mesa",
@@ -226,7 +228,9 @@
       "status": "pilot_required",
       "statusLabel": "Requiere piloto en el local",
       "pricingType": "starting_quote",
-      "monthlyFrom": 25000,
+      "monthlyFrom": 39900,
+      "unitLabel": "por local",
+      "pricingNote": "Referencia para un local, sujeta a relevamiento y aceptación del piloto. Implementación e integraciones a cotizar.",
       "image": "/assets/proyectos/scalaris-mesa.png",
       "imageAlt": "Demostración de Scalaris Mesa con plano del salón y cuenta",
       "features": [
@@ -236,7 +240,7 @@
       ],
       "detailsUrl": "/consulta/?service=SOFTWARE&product=mesa",
       "demoUrl": "/mesa/",
-      "boundary": "Precio de referencia para un local, sujeto a relevamiento y aceptación del piloto. Implementación a cotizar. Facturación fiscal, cobros integrados y prueba de impresoras físicas se presupuestan y validan por separado."
+      "boundary": "Desde $39.900 por mes para un local, sujeto a relevamiento y aceptación del piloto de salón, comandas y cuentas. Implementación a cotizar. Facturación fiscal, cobros integrados y prueba de impresoras físicas se presupuestan y validan por separado."
     },
     {
       "id": "academia",
@@ -244,10 +248,47 @@
       "need": "Administrar alumnos y cuotas",
       "category": "Academias e institutos",
       "description": "Gestión de alumnos, inscripciones, asistencias y cuotas.",
-      "status": "demo_quote",
-      "statusLabel": "Demo de consulta",
+      "status": "managed_pilot",
+      "statusLabel": "Piloto administrado",
       "pricingType": "starting_quote",
-      "monthlyFrom": 30000,
+      "monthlyFrom": 39900,
+      "unitLabel": "por institución · una sede",
+      "pricingNote": "Programa piloto administrado. El plan depende de alumnos activos; implementación de 1,5 mensualidades, con importación y acompañamiento delimitados en la propuesta.",
+      "plans": [
+        {
+          "id": "estudio",
+          "name": "Estudio",
+          "monthlyPrice": 39900,
+          "studentsMin": 1,
+          "studentsMax": 50
+        },
+        {
+          "id": "academia",
+          "name": "Academia",
+          "monthlyPrice": 59900,
+          "studentsMin": 51,
+          "studentsMax": 150
+        },
+        {
+          "id": "academia-plus",
+          "name": "Academia Plus",
+          "monthlyPrice": 89900,
+          "studentsMin": 151,
+          "studentsMax": 300
+        },
+        {
+          "id": "institucion",
+          "name": "Institución",
+          "monthlyPrice": 119900,
+          "studentsMin": 301,
+          "studentsMax": null,
+          "requiresQuote": true
+        }
+      ],
+      "billing": {
+        "annualDiscountRate": 0.15,
+        "implementationMonths": 1.5
+      },
       "image": "/assets/proyectos/gestudio.webp",
       "imageAlt": "Demostración de Gestudio con alumnos y gestión de academia",
       "features": [
@@ -257,7 +298,7 @@
       ],
       "detailsUrl": "/consulta/?service=SOFTWARE&product=academia",
       "demoUrl": "/gestudio/",
-      "boundary": "Referencia para una institución. Implementación y migración a cotizar según alcance, con piloto de aceptación antes del uso operativo. La demo pública es de lectura. No se ofrece una app Android publicada ni cobros bancarios automáticos."
+      "boundary": "Una institución y una sede. Programa piloto administrado con aceptación antes del uso operativo. Implementación de 1,5 mensualidades; migraciones complejas a cotizar. La demo pública es de lectura. Sin app Android publicada, cobros bancarios automáticos ni facturación fiscal ofrecida como operación habilitada."
     },
     {
       "id": "crm",
@@ -267,7 +308,10 @@
       "description": "Contactos, seguimientos y oportunidades comerciales.",
       "status": "scoped_implementation",
       "statusLabel": "A cotizar",
-      "pricingType": "quote",
+      "pricingType": "starting_quote",
+      "monthlyFrom": 49900,
+      "unitLabel": "por equipo pequeño",
+      "pricingNote": "Referencia para un equipo pequeño y una empresa. Usuarios, importación, adaptación y soporte se delimitan en el presupuesto; implementación aparte.",
       "image": "/assets/proyectos/crm-platform.svg",
       "imageAlt": "Referencia ilustrativa del proceso comercial en CRM Scalaris",
       "features": [
@@ -277,7 +321,7 @@
       ],
       "detailsUrl": "/consulta/?service=SOFTWARE&product=crm",
       "demoUrl": null,
-      "boundary": "Requiere relevamiento y adaptación antes de habilitarse para otro negocio. Los envíos automáticos de WhatsApp y correo no están incluidos como operación activa."
+      "boundary": "Desde $49.900 por mes para un equipo pequeño y una empresa. Requiere relevamiento, implementación y adaptación antes de habilitarse para otro negocio. Usuarios, datos y soporte se acuerdan en la propuesta. Los envíos automáticos de WhatsApp y correo no están incluidos como operación activa."
     }
   ],
   "addons": [
@@ -303,5 +347,5 @@
     }
   ],
   "integrationNote": "Menú, Mesa y CRM se implementan por separado. La sincronización de productos, pedidos, stock o caja se cotiza aparte.",
-  "generalTerms": "Precios finales en ARS. Lanzamiento para los primeros cinco clientes nuevos o hasta el 30/11/2026, sujeto a cupo. Anual: 10% de descuento en el abono y alta bonificada según plan; primer año de .com.ar disponible a nombre del cliente, con vinculación confirmada antes de contratar y renovación posterior a su cargo. Mensual: puesta en marcha en tres cuotas sin recargo más el abono. Incluye alojamiento, HTTPS y soporte según alcance. Ayuda inicial de contenido de hasta 60 minutos. Material y aprobación del cliente; adicionales a cotizar. Condiciones completas en /promociones/."
+  "generalTerms": "Precios finales en ARS para nuevas propuestas. Mensual por defecto. Web y Catálogo: anual opcional de doce meses anticipados con 10% de descuento sólo en el abono. Implementación completa, por única vez y por separado, en ambas modalidades; no se bonifica ni se aplica redondeo promocional. Dominio propio y renovación a nombre y cargo del cliente. Alojamiento, HTTPS y soporte según alcance. Menú, Mesa y CRM: referencias sujetas a presupuesto y aceptación, con implementación aparte; no se les aplica un anual automático. Gestudio conserva su escala por alumnos y condiciones específicas. Los acuerdos ya aceptados mantienen sus condiciones."
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-10-28",
+  "reviewedAt": "2026-11-01",
   "currency": "ARS",
   "validUntil": "2026-11-30",
   "product": {
@@ -15,7 +15,7 @@
       "extension": ".com.ar",
       "quantity": 1,
       "registrationAndRenewal": false,
-      "condition": "Dominio a nombre del cliente. En el anual de lanzamiento, primer año de un .com.ar disponible incluido; disponibilidad y vinculación se confirman antes de contratar. Renovación posterior a cargo del cliente. En mensual, registro y renovación por separado."
+      "condition": "Dominio propio a nombre del cliente. Registro, renovación y gastos del registrador a su cargo, separados del servicio. Disponibilidad y vinculación se confirman antes de contratar."
     },
     "email": {
       "provider": "Zoho Mail Free",
@@ -28,7 +28,7 @@
     "annualMonths": 12,
     "annualPayment": "upfront",
     "setupAnnualWaived": false,
-    "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego puede revisarse trimestralmente con aviso de treinta días. Anual opcional: doce meses abonados por adelantado con 10% de descuento sólo en el abono y precio fijo durante ese período; renovación a la tarifa informada con treinta días de anticipación. La instalación se abona una sola vez y por separado en ambas modalidades. El registro y la renovación del dominio propio quedan a cargo del cliente.",
+    "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego revisión trimestral con aviso de treinta días, sin ajustes retroactivos. Anual opcional: doce meses abonados por adelantado con 10% de descuento sólo en el abono y precio fijo durante ese período; renovación a la tarifa informada con treinta días de anticipación. La implementación se abona una sola vez al comenzar, por separado del abono, en ambas modalidades. Dominio propio y renovación a nombre y cargo del cliente.",
     "support": {
       "businessDays": "Lunes a viernes",
       "hours": "9 a 18",
@@ -57,7 +57,7 @@
         "Diseño adaptable a celular",
         "Títulos, descripción y sitemap básicos",
         "Alojamiento y HTTPS incluidos",
-        "Dominio propio a tu nombre; primer año incluido con anual de lanzamiento",
+        "Dominio propio a tu nombre, con registro y renovación por separado",
         "Configuración de hasta cinco correos con Zoho Free, según disponibilidad"
       ],
       "contentService": "Mantenimiento técnico. Los cambios de contenido posteriores al alta se cotizan aparte."
@@ -83,7 +83,7 @@
         "Títulos, descripción y sitemap básicos",
         "Un envío mensual de cambios simples, hasta veinte minutos de edición",
         "Alojamiento y HTTPS incluidos",
-        "Dominio propio a tu nombre; primer año incluido con anual de lanzamiento",
+        "Dominio propio a tu nombre, con registro y renovación por separado",
         "Configuración de hasta cinco correos con Zoho Free, según disponibilidad"
       ],
       "contentService": "El lote mensual cubre textos, fotos y datos sobre la estructura existente. No es acumulable ni incluye nuevas páginas o funciones."

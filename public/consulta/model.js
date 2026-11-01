@@ -1,4 +1,4 @@
-import { priceReferences } from './price-references.js?v=20261028-mensual';
+import { priceReferences } from './price-references.js?v=20261101-precios';
 
 export const services = {
   SOFTWARE: "Web / software",
@@ -22,9 +22,23 @@ const productBilling = Object.freeze({annual:'pago anual anticipado',monthly:'me
 /** Informational reference from the generated offer, never a closed quote or URL amount. */
 export function productPriceReference(interest) {
   const reference = interest && Object.hasOwn(priceReferences, interest.product) ? priceReferences[interest.product] : null;
-  if (!reference) return null;
-  const amount = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(reference.monthlyFrom);
-  return `Desde $${amount} ARS por mes para una institución. Implementación y migración a cotizar según alcance, con piloto de aceptación antes del uso operativo.`;
+  if (!reference || reference.currency !== 'ARS' || !Number.isSafeInteger(reference.monthlyFrom) || reference.monthlyFrom <= 0) return null;
+  const number = value => new Intl.NumberFormat('es-AR', { maximumFractionDigits: 2 }).format(value);
+  const lines = [`Desde $${number(reference.monthlyFrom)} ARS por mes${reference.unitLabel ? ` · ${reference.unitLabel}` : ''}.`];
+  if (reference.pricingNote) lines.push(reference.pricingNote);
+  if (interest.product === 'academia' && Array.isArray(reference.plans)) {
+    for (const plan of reference.plans) {
+      if (!Number.isSafeInteger(plan.monthlyPrice) || plan.monthlyPrice <= 0 || !Number.isSafeInteger(plan.studentsMin) || plan.studentsMin < 1) continue;
+      const openEnded = plan.studentsMax === null;
+      if (!openEnded && (!Number.isSafeInteger(plan.studentsMax) || plan.studentsMax < plan.studentsMin)) continue;
+      const students = openEnded ? `desde ${plan.studentsMin} alumnos activos` : `${plan.studentsMin} a ${plan.studentsMax} alumnos activos`;
+      lines.push(`${plan.name}: ${openEnded ? 'desde ' : ''}$${number(plan.monthlyPrice)} por mes · ${students}.`);
+    }
+    const billing = reference.billing;
+    if (Number.isFinite(billing?.implementationMonths) && billing.implementationMonths > 0 && !reference.pricingNote?.includes(`${number(billing.implementationMonths)} mensualidades`)) lines.push(`Implementación inicial de referencia: ${number(billing.implementationMonths)} mensualidades del plan acordado; importación y acompañamiento con alcance definido en el presupuesto.`);
+    if (Number.isFinite(billing?.annualDiscountRate) && billing.annualDiscountRate > 0 && billing.annualDiscountRate < 1) lines.push(`Pago anual anticipado: ${number(billing.annualDiscountRate * 100)}% de descuento en el abono. Implementación por separado.`);
+  }
+  return lines.join('\n');
 }
 /** A URL expresses interest only. Prices and contract terms never come from query values. */
 export function readProductInterest(search = '') {
@@ -35,7 +49,7 @@ export function readProductInterest(search = '') {
   const requestedPlan = params.get('plan'), requestedBilling = params.get('billing');
   const plan = family.plans&&Object.hasOwn(family.plans,requestedPlan) ? requestedPlan : null;
   const billing = family.plans
-    ? !params.has('billing') ? 'annual' : Object.hasOwn(productBilling,requestedBilling) ? requestedBilling : null
+    ? !params.has('billing') ? 'monthly' : Object.hasOwn(productBilling,requestedBilling) ? requestedBilling : null
     : null;
   return {product,productName:family.name,plan,planName:plan?family.plans[plan]:null,billing,billingName:billing?productBilling[billing]:null};
 }

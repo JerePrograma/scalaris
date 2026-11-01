@@ -211,13 +211,30 @@ test('standard tariff: approved plan names and prices stay consistent across URL
   }
 });
 
-test('standard tariff: fixed plan links default to annual while unsupported billing never becomes an approved quote',()=>{
+test('standard tariff: fixed plan links default to monthly while unsupported billing never becomes an approved quote',()=>{
   for(const [product,plan]of [['web','presencia'],['catalogo','catalogo']]){
     const selection=readProductInterest('?'+new URLSearchParams({product,plan,amount:'1',setup:'0'}));
-    assert.equal(selection.billing,'annual');
-    assert.equal(selection.billingName,'pago anual anticipado');
+    assert.equal(selection.billing,'monthly');
+    assert.equal(selection.billingName,'mes a mes');
     assert.equal(hasPlanSelection(selection),true);
     assert.equal(readProductInterest('?'+new URLSearchParams({product,plan,billing:'FREE'})).billing,null);
   }
   for(const product of ['menu','mesa','academia','crm'])assert.equal(readProductInterest('?product='+product).billing,null);
+});
+
+test('new proposals preserve full setup and base conditions even with old launch dates or eligibility parameters',()=>{
+  for (const [product,data,id] of [['web',webOffer,'presencia'],['catalogo',offer,'catalogo']]) {
+    for (const billing of ['monthly','annual']) {
+      const review=standardSummary(data,{product,plan:id,billing},{at:'2026-10-28T12:00:00-03:00',eligible:true});
+      const plan=data.plans.find(p=>p.id===id);
+      assert.equal(review.installation,plan.setupFee);
+      assert.equal(review.installationDiscount,0);
+      assert.equal(review.roundingDiscount,0);
+      assert.equal(review.domainIncluded,false);
+      assert.equal(review.installationSchedule.length,1);
+      assert.equal(review.total,billing==='annual'?plan.annualMonthlyEquivalent*12+plan.setupFee:plan.monthlyPrice+plan.setupFee);
+      assert.match(planSummaryText(review),/puesta en marcha se abona completa al comenzar/);
+      assert.doesNotMatch(planSummaryText(review),/bonificad|redondeo|tres cuotas|1 de 3|cupo|primer año/i);
+    }
+  }
 });

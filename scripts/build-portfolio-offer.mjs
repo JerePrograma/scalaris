@@ -3,6 +3,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
+import {loadGestudioOffer} from './gestudio-offer.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = {};
@@ -13,6 +14,11 @@ for (let index = 2; index < process.argv.length; index += 2) {
 }
 const publicRoot = args['--public-root'] || path.join(root, 'public');
 const source = JSON.parse(await readFile(args['--source'] || path.join(root, 'commercial/portfolio-offer.json'), 'utf8'));
+const academia = source.families.find(family => family.id === 'academia');
+if (academia?.pricingSource === 'gestudio_strategy') {
+  const gestudio = await loadGestudioOffer();
+  Object.assign(academia, {monthlyFrom: gestudio.monthlyFrom, plans: gestudio.plans, billing: gestudio.billing});
+}
 const catalog = JSON.parse(await readFile(args['--catalog-source'] || path.join(publicRoot, 'catalogo/offer.json'), 'utf8'));
 assert.equal(source.currency, 'ARS');
 assert.equal(catalog.currency, 'ARS');
@@ -72,7 +78,10 @@ const fixedPlans = [
   ...catalog.plans.map(plan => ({ product: 'catalogo', productName: catalog.product.name, id: plan.id, name: plan.name, audience: plan.audience, annualMonthlyEquivalent: plan.annualMonthlyEquivalent, monthlyPrice: plan.monthlyPrice, setupFee: plan.setupFee, setupAnnualWaived: catalog.billing.setupAnnualWaived, annualMonths: catalog.billing.annualMonths })),
 ];
 const families = source.families.map(family => ({ id: family.id, name: family.name, need: family.need, category: family.category, description: family.description, status: family.status, statusLabel: family.statusLabel, pricingType: family.pricingType,
-  ...(family.pricingType === 'starting_quote' ? { monthlyFrom: family.monthlyFrom, ...(family.setupFrom !== undefined ? { setupFrom: family.setupFrom } : {}) } : {}), image: family.image, imageAlt: family.imageAlt, features: [...family.features], detailsUrl: family.detailsUrl, demoUrl: family.demoUrl, boundary: family.boundary }));
+  ...(family.pricingType === 'starting_quote' ? { monthlyFrom: family.monthlyFrom,
+    unitLabel: family.unitLabel, pricingNote: family.pricingNote,
+    ...(family.plans ? {plans: family.plans.map(({id,name,monthlyPrice,studentsMin,studentsMax,requiresQuote}) => ({id,name,monthlyPrice,studentsMin,studentsMax,...(requiresQuote ? {requiresQuote:true}: {})})), billing: {annualDiscountRate:family.billing.annualDiscountRate,implementationMonths:family.billing.implementationMonths}} : {}),
+    ...(family.setupFrom !== undefined ? { setupFrom: family.setupFrom } : {}) } : {}), image: family.image, imageAlt: family.imageAlt, features: [...family.features], detailsUrl: family.detailsUrl, demoUrl: family.demoUrl, boundary: family.boundary }));
 const addons = source.addons.map(addon => ({ id: addon.id, name: addon.name, pricingType: addon.pricingType, ...(addon.pricingType === 'fixed_batch' ? { price: addon.price, minutes: addon.minutes } : {}), description: addon.description }));
 const offer = { schemaVersion: 1, reviewedAt: source.reviewedAt, currency: 'ARS', validUntil: source.validUntil, webOffer: publicWeb, fixedPlans, families, addons, integrationNote: source.integrationNote, generalTerms: source.generalTerms };
 const result = await renderPortfolio({offer,publicRoot});

@@ -2,7 +2,7 @@ import {readFile,writeFile} from 'node:fs/promises';
 import {quoteLaunch} from '../public/offer-policy.js';
 export const launchPromotion=JSON.parse(await readFile(new URL('../commercial/launch-promotion.json',import.meta.url),'utf8'));
 export const getLaunchQuote=(plan,options={})=>quoteLaunch(plan,{at:launchPromotion.reviewedOn+'T12:00:00-03:00',...options,policy:launchPromotion});
-export const launchTerms='Primeros cinco clientes nuevos o hasta el 30/11/2026, lo que ocurra primero. Cupos compartidos entre productos, sujetos a confirmación. Anual: doce meses por adelantado, 10% en el abono, alta bonificada según plan y primer año de .com.ar incluido. Renovación del dominio a cargo del cliente.';
+export const launchTerms='Mensual por defecto. Web y Catálogo: anual opcional anticipado de doce meses con 10% sólo en el abono. Implementación completa por única vez, al comenzar y por separado en ambas modalidades. Dominio propio y renovación a nombre y cargo del cliente. Las propuestas de otros productos tienen condiciones específicas.';
 export async function syncLaunchPolicy(){
   const file=new URL('../public/offer-policy.js',import.meta.url);
   const source=await readFile(file,'utf8');

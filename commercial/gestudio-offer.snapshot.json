@@ -1,0 +1,42 @@
+{
+  "generated": true,
+  "sourceReference": "Gestudio/docs/comercial/estrategia-comercial.md",
+  "sourceSha256": "fc6b7425fa208a465fcbb32721e25aac4e368743b31bc785696f87fe9c959884",
+  "currency": "ARS",
+  "monthlyFrom": 39900,
+  "plans": [
+    {
+      "id": "estudio",
+      "name": "Estudio",
+      "monthlyPrice": 39900,
+      "studentsMin": 1,
+      "studentsMax": 50
+    },
+    {
+      "id": "academia",
+      "name": "Academia",
+      "monthlyPrice": 59900,
+      "studentsMin": 51,
+      "studentsMax": 150
+    },
+    {
+      "id": "academia-plus",
+      "name": "Academia Plus",
+      "monthlyPrice": 89900,
+      "studentsMin": 151,
+      "studentsMax": 300
+    },
+    {
+      "id": "institucion",
+      "name": "Institución",
+      "monthlyPrice": 119900,
+      "studentsMin": 301,
+      "studentsMax": null,
+      "requiresQuote": true
+    }
+  ],
+  "billing": {
+    "annualDiscountRate": 0.15,
+    "implementationMonths": 1.5
+  }
+}

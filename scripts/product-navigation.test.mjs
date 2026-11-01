@@ -53,12 +53,12 @@ test('public navigation pages keep one shared accessible menu and product entry 
 });
 
 
-test('annual interest is the default for fixed plans while quoted products never acquire a billing commitment',()=>{
+test('monthly interest is the default for fixed plans while quoted products never acquire a billing commitment',()=>{
   for (const [product, plan] of [['web','presencia'], ['catalogo','catalogo'], ['catalogo','pedidos'], ['catalogo','gestion']]) {
     const interest = readProductInterest('?' + new URLSearchParams({product,plan,amount:'1',setup:'0'}));
-    assert.equal(interest.billing, 'annual');
-    assert.equal(interest.billingName, 'pago anual anticipado');
-    assert.match(productInterestAnswers(interest).scope, /pago anual anticipado/);
+    assert.equal(interest.billing, 'monthly');
+    assert.equal(interest.billingName, 'mes a mes');
+    assert.match(productInterestAnswers(interest).scope, /mes a mes/);
     assert.equal(interest.amount, undefined);
   }
   for (const product of ['menu','mesa','academia','crm']) {
@@ -72,33 +72,50 @@ test('annual interest is the default for fixed plans while quoted products never
 test('Web details retain domain ownership and email restrictions referenced from the product overview',async()=>{
   const html=await readFile(new URL('../public/web/index.html',import.meta.url),'utf8');
   assert.match(html, /dominio[^<]*a tu nombre|dominio[^<]*a nombre del cliente/i);
-  assert.match(html, /renovación posterior a cargo del cliente|renovación[^<]*a tu cargo/i);
-  assert.match(html, /Primer año[^<]*incluido|primer año de dominio[^<]*incluido/i);
+  assert.match(html, /renovación[^<]*(?:a tu cargo|a nombre y cargo del cliente)|registro y la renovación[^<]*a tu nombre y cargo/i);
+  assert.match(html, /dominio[^<]*por separado|registro y la renovación[^<]*por separado/i);
+  assert.doesNotMatch(html, /primer año[^<]*incluido/i);
   assert.match(html, /IMAP\/POP/);
   assert.match(html, /según disponibilidad|organizaciones elegibles/i);
 });
 
-test('launch navigation explains real benefits, shared eligibility and initial assistance',async()=>{
+test('current navigation compares monthly prices with optional annual billing and full implementation',async()=>{
   const home=await readFile(new URL('../public/index.html',import.meta.url),'utf8');
-  assert.match(home,/id="lanzamiento"/);
-  assert.match(home,/30\/11\/2026/);
-  assert.match(home,/sujet[oa]s? a confirmación/i);
-  assert.ok(home.includes('$ 13.500'));
-  assert.match(home,/Abono equivalente con pago anual anticipado de 12 meses/);
+  assert.ok(home.includes('$ 15.000'));
+  assert.match(home,/mes a mes/i);
+  assert.match(home,/implementación|puesta en marcha/i);
+  assert.match(home,/anual opcional/i);
   assert.doesNotMatch(home,/\$[ \u00a0]?(?:162|160|307|305|428|425|370)\.000/);
-  assert.match(home,/30, 60 o 100 productos/);
-  assert.match(home,/60 minutos/);
-  assert.doesNotMatch(home,/quedan (?:sólo )?5|5 cupos disponibles|subdominio de regalo/i);
   const form=await readFile(new URL('../public/consulta/index.html',import.meta.url),'utf8');
   assert.match(form,/href="#form-root"/);
-  assert.match(form,/tres cuotas sin recargo/);
-  assert.match(form,/sujeto a confirmación de cupo/i);
-  const promotion=await readFile(new URL('../public/promociones/index.html',import.meta.url),'utf8');
-  assert.match(promotion,/importe exacto antes de compartir la consulta/);
-  assert.match(promotion,/ajuste adicional de lanzamiento que redondea el total hacia abajo/);
-  assert.match(promotion,/100% bonificada/);
-  assert.match(promotion,/50% bonificada/);
-  assert.match(promotion,/tres cuotas sin recargo/);
-  assert.match(promotion,/treinta días de anticipación/);
-  assert.doesNotMatch(promotion,/Total anticipado|Abono por 12 meses|\$[ \u00a0]?(?:162|160|307|305|428|425|370|216|270|324)\.000/);
+  assert.match(form,/10% de descuento sólo en el abono/);
+  assert.match(form,/Gestudio[^<]*condiciones propias/);
+  const conditions=await readFile(new URL('../public/promociones/index.html',import.meta.url),'utf8');
+  assert.match(conditions,/10% de descuento sólo en el abono/);
+  assert.match(conditions,/quince|15%/);
+  assert.match(conditions,/1,5/);
+  assert.match(conditions,/treinta días de anticipación/);
+  for(const page of [home,form,conditions])assert.doesNotMatch(page,/100% bonificada|50% bonificada|alta bonificada|puesta en marcha bonificada|redondea el total|tres cuotas sin recargo|primeros cinco|5 cupos disponibles/i);
+  assert.doesNotMatch(conditions,/Total anticipado|Abono por 12 meses|\$[ \u00a0]?(?:162|160|307|305|428|425|370|216|270|324)\.000/);
+});
+
+test('the six published product references keep their own scope and only Web and Catalog expose monthly financial selections',async()=>{
+  const offer=JSON.parse(await readFile(new URL('../public/productos/offer.json',import.meta.url),'utf8'));
+  const page=await readFile(new URL('../public/productos/index.html',import.meta.url),'utf8');
+  assert.deepEqual(offer.families.map(f=>f.id),['web','catalogo','menu','mesa','academia','crm']);
+  assert.equal(offer.fixedPlans.length,5);
+  assert.ok(offer.fixedPlans.every(plan=>['web','catalogo'].includes(plan.product)));
+  for(const family of offer.families.filter(f=>f.pricingType==='starting_quote')){
+    const card=page.match(new RegExp(`<article\\b[^>]*id="solucion-${family.id}"[^>]*>[\\s\\S]*?<\\/article>`))?.[0];
+    assert.ok(card,family.id);
+    const money=new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(family.monthlyFrom).replace(/\s/g,' ');
+    assert.ok(card.includes(money),family.id);
+    assert.match(card,/cotizar|presupuesto|piloto|implementación/i);
+    assert.doesNotMatch(card,/pago anual anticipado|10%|15%|Total inicial|Bonificada/i,family.id);
+  }
+  assert.match(page,/id="planes-gestudio"/);
+  const academy=offer.families.find(f=>f.id==='academia');
+  assert.equal(academy.plans.length,4);
+  assert.equal(academy.billing.annualDiscountRate,.15);
+  for(const plan of academy.plans)assert.ok(page.includes(plan.name));
 });
