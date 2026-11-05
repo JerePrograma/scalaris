@@ -10,12 +10,13 @@ export function launchIsActive(at=new Date(), policy=launchPromotion) {
   const time=new Date(at).getTime();
   return policy.availability!=='closed' && Number.isFinite(time) && time>=Date.parse(policy.startsOn+'T00:00:00-03:00') && time<=Date.parse(policy.endsOn+'T23:59:59.999-03:00');
 }
-export function quoteLaunch(plan,{product,billing='monthly',eligible=true,at=new Date(),policy=launchPromotion}={}) {
+export function quoteLaunch(plan,{product,billing='monthly',eligible=true,at=new Date(),policy=launchPromotion,annualDiscountRate=policy.annualDiscountRate}={}) {
   if(!['monthly','annual'].includes(billing))throw new Error('Modalidad inválida.');
   const monthlyCents=cents(plan?.monthlyPrice,'abono',true),annualMonthlyCents=cents(plan?.annualMonthlyEquivalent,'abono anual',true),setupCents=cents(plan?.setupFee,'puesta en marcha');
   if(annualMonthlyCents>monthlyCents)throw new Error('Abono anual inconsistente.');
   const promotionActive=eligible===true&&launchIsActive(at,policy);
-  if(annualMonthlyCents!==Math.round(monthlyCents/100*(1-policy.annualDiscountRate))*100)throw new Error('El descuento anual publicado no coincide con la campaña.');
+  if(!Number.isFinite(annualDiscountRate)||annualDiscountRate<0||annualDiscountRate>=1)throw new Error('Descuento anual inválido.');
+  if(annualMonthlyCents!==Math.round(monthlyCents/100*(1-annualDiscountRate))*100)throw new Error('El descuento anual publicado no coincide con la oferta.');
   const annual=billing==='annual';
   const key=product+':'+plan.id;
   const rate=Object.hasOwn(policy.setupWaivers||{},key)?policy.setupWaivers[key]:policy.otherSetupDiscountRate;
@@ -23,7 +24,8 @@ export function quoteLaunch(plan,{product,billing='monthly',eligible=true,at=new
   const discountCents=promotionActive&&annual?Math.min(Math.round(setupCents*rate),Object.hasOwn(policy.setupWaivers||{},key)?setupCents:cents(policy.otherSetupDiscountCap,'tope')):0;
   const setupDueCents=setupCents-discountCents;
   const annualSubscriptionCents=annualMonthlyCents*12;
-  if(!Number.isSafeInteger(annualSubscriptionCents)||!Number.isSafeInteger(annualSubscriptionCents+setupDueCents))throw new Error('Total fuera de rango.');
+  const twelveMonthlyPaymentsCents=monthlyCents*12;
+  if(!Number.isSafeInteger(annualSubscriptionCents)||!Number.isSafeInteger(twelveMonthlyPaymentsCents)||!Number.isSafeInteger(annualSubscriptionCents+setupDueCents))throw new Error('Total fuera de rango.');
   const rawAnnualTotalCents=annualSubscriptionCents+setupDueCents;
   const roundingStepCents=promotionActive&&annual&&policy.annualRoundingPlans?.includes(key)?cents(policy.annualRoundingStep,'redondeo',true):0;
   const roundingDiscountCents=roundingStepCents?rawAnnualTotalCents%roundingStepCents:0;
@@ -33,5 +35,5 @@ export function quoteLaunch(plan,{product,billing='monthly',eligible=true,at=new
   const part=Math.round(setupDueCents/installmentCount);
   const schedule=Array.from({length:installmentCount},(_,i)=>i===installmentCount-1?setupDueCents-part*(installmentCount-1):part);
   const firstSetupCents=schedule[0];
-  return Object.freeze({billing,promotionActive,subjectToConfirmation:true,monthlyPrice:monthlyCents/100,annualMonthlyEquivalent:annualMonthlyCents/100,annualSubscription:annualSubscriptionCents/100,setupDue:setupDueCents/100,setupDiscount:discountCents/100,annualTotal:annualTotalCents/100,annualTotalBeforeRounding:rawAnnualTotalCents/100,roundingDiscount:roundingDiscountCents/100,setupInstallments:schedule.map(x=>x/100),monthlyPayments:schedule.map(x=>(x+monthlyCents)/100),totalInitial:(annual?annualTotalCents:monthlyCents+firstSetupCents)/100,setupBalanceAfterInitial:annual?0:(setupDueCents-firstSetupCents)/100,domainIncluded:promotionActive&&annual});
+  return Object.freeze({billing,promotionActive,subjectToConfirmation:true,monthlyPrice:monthlyCents/100,annualDiscountRate,annualMonthlyEquivalent:annualMonthlyCents/100,annualSubscription:annualSubscriptionCents/100,twelveMonthlyPayments:twelveMonthlyPaymentsCents/100,annualSavings:(twelveMonthlyPaymentsCents-annualSubscriptionCents)/100,setupDue:setupDueCents/100,setupDiscount:discountCents/100,annualTotal:annualTotalCents/100,annualTotalBeforeRounding:rawAnnualTotalCents/100,roundingDiscount:roundingDiscountCents/100,setupInstallments:schedule.map(x=>x/100),monthlyPayments:schedule.map(x=>(x+monthlyCents)/100),totalInitial:(annual?annualTotalCents:monthlyCents+firstSetupCents)/100,setupBalanceAfterInitial:annual?0:(setupDueCents-firstSetupCents)/100,domainIncluded:promotionActive&&annual});
 }

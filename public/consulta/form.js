@@ -8,14 +8,14 @@ import {
   readProductInterest,
   productInterestAnswers,
   productPriceReference,
-} from "./model.js?v=20261101-precios";
+} from "./model.js?v=20261105-personalizado";
 import {
   hasPlanSelection,
   loadPlanSummary,
   planSummaryRows,
   planSummaryText,
   planSummaryTotal,
-} from "./plan-summary.js?v=20261101-precios";
+} from "./plan-summary.js?v=20261105-personalizado";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
   interest = readProductInterest(window.location.search),
@@ -28,6 +28,7 @@ const id = crypto.randomUUID(),
   createdAt = new Date().toISOString();
 let renderedStep = step;
 let cancelPlanSummary = () => {};
+let refreshConditionalFields = () => {};
 function element(tag, text, attrs = {}) {
   const e = document.createElement(tag);
   if (text) e.textContent = text;
@@ -74,13 +75,12 @@ function field(
     input.autocomplete = key === "name" ? "name" : "tel";
   input.value = target[key] || "";
   if (required) input.required = true;
-  input.addEventListener("input", () => (target[key] = input.value));
-  if (options && key === "topic")
-    input.addEventListener("change", () => {
-      target[key] = input.value;
-      render();
-      root.querySelector('[name="topic"]').focus({ preventScroll: true });
-    });
+  const rememberValue = () => (target[key] = input.value);
+  input.addEventListener("input", rememberValue);
+  input.addEventListener("change", () => {
+    rememberValue();
+    if (options && key === "topic") refreshConditionalFields();
+  });
   wrapper.append(caption, input);
   return wrapper;
 }
@@ -109,11 +109,16 @@ function render() {
   if (step === 1) {
     root.append(element("h2", services[service]));
     const form = element("form");
-    for (const q of [
-      ...questions[service],
-      ...conditionalQuestions(service, answers),
-    ])
+    for (const q of questions[service])
       form.append(field(q.label, q.key, answers, q));
+    const conditionalFields = element("div");
+    refreshConditionalFields = () => {
+      const extra = conditionalQuestions(service, answers);
+      conditionalFields.hidden = extra.length === 0;
+      conditionalFields.replaceChildren(...extra.map(q => field(q.label, q.key, answers, q)));
+    };
+    refreshConditionalFields();
+    form.append(conditionalFields);
     form.append(
       element("h3", "¿Cómo te identificamos?"),
       field("Nombre o identificación útil *", "name", contact, {
@@ -132,6 +137,14 @@ function render() {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       try {
+        // Read the current controls as well as input events: browser autofill may
+        // update a field without emitting input before the first submit.
+        for (const q of questions[service]) answers[q.key] = form.elements.namedItem(q.key).value;
+        for (const q of conditionalQuestions(service, answers)) {
+          const control = form.elements.namedItem(q.key);
+          if (control) answers[q.key] = control.value;
+        }
+        for (const key of ['name', 'phone']) contact[key] = form.elements.namedItem(key).value;
         inquiry = buildInquiry(service, contact, answers, id, createdAt);
         step = 2;
         error.hidden = true;
@@ -292,6 +305,7 @@ function render() {
           total.append(element('span', 'Total inicial'), element('strong', planSummaryTotal(plan)));
           planSection.replaceChildren(
             element('h3', 'Revisá el plan elegido'),
+            ...(plan.billing === 'annual' ? [element('p', plan.savingsText, { class: 'plan-summary-saving' })] : []),
             lines,
             total,
             element('p', plan.nextPayment, { class: 'note' }),

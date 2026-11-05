@@ -33,8 +33,10 @@ test('only registered proxy boundaries may bypass static filesystem checks and n
 test('public offer projection rejects bank, issuer and source fields while permitting changed approved prices',()=>{
   const offer=JSON.parse(readFileSync(new URL('../public/catalogo/offer.json',import.meta.url),'utf8'));
   assert.deepEqual(validatePublicOffer(offer),[]);
-  const changed=structuredClone(offer);changed.plans[0].monthlyPrice=16000;
+  const changed=structuredClone(offer);changed.plans[0].monthlyPrice=16000;changed.plans[0].annualMonthlyEquivalent=12000;
   assert.deepEqual(validatePublicOffer(changed),[]);
+  const mismatch=structuredClone(changed);mismatch.plans[0].annualMonthlyEquivalent=14400;
+  assert.ok(validatePublicOffer(mismatch).some(error=>error.includes('25%')));
   changed.billing.bankTransfer={alias:'synthetic'};changed.issuer={taxId:'synthetic'};changed.plans[0].costARS=1;
   assert.ok(validatePublicOffer(changed).some(error=>error.includes('bankTransfer')));
   assert.ok(validatePublicOffer(changed).some(error=>error.includes('issuer')));

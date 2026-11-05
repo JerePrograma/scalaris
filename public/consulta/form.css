@@ -77,3 +77,4 @@
 .inquiry-start{display:none}@media(max-width:900px){.inquiry-start{display:inline-flex;align-items:center;gap:18px;font-size:13px;min-height:44px;margin-top:17px}.inquiry-page .intro h1{max-width:530px}}
 
 .product-price-reference{white-space:pre-line;line-height:1.8}
+#form-root .plan-summary-saving{padding:14px 16px;border-radius:8px;background:#e4f3ed;color:#155a42;font-size:15px;line-height:1.6;font-weight:600;margin:16px 0}

@@ -47,7 +47,7 @@ export function validatePublicOffer(offer) {
   if(!keys(offer,['schemaVersion','reviewedAt','currency','product','billing','plans'],'offer'))return errors;
   if(offer.schemaVersion!==1||offer.currency!=='ARS')errors.push('La oferta pública debe usar schemaVersion 1 y ARS.');
   if(keys(offer.product,['name','tagline','description'],'product'))for(const key of ['name','tagline','description'])if(typeof offer.product[key]!=='string'||!offer.product[key])errors.push(`product.${key}: texto requerido`);
-  if(keys(offer.billing,['annualMonths','setupAnnualWaived','promotionEnd','renewalPolicy','support'],'billing')){
+  if(keys(offer.billing,['annualMonths','annualDiscountRate','annualPayment','setupAnnualWaived','promotionEnd','renewalPolicy','support'],'billing')){
     if(offer.billing.annualMonths!==12)errors.push('La oferta debe indicar doce meses de pago anual.');
     if(typeof offer.billing.setupAnnualWaived!=='boolean')errors.push('La bonificación de alta debe ser explícita.');
     keys(offer.billing.support,['businessDays','hours','timezone','firstResponseTarget'],'billing.support');
@@ -58,6 +58,7 @@ export function validatePublicOffer(offer) {
     if(!keys(plan,['id','name','audience','featured','annualMonthlyEquivalent','monthlyPrice','setupFee','limits','features'],`plan.${plan.id||'unknown'}`))continue;
     for(const field of ['annualMonthlyEquivalent','monthlyPrice','setupFee'])if(!Number.isSafeInteger(plan[field])||plan[field]<0||(field!=='setupFee'&&plan[field]===0))errors.push(`plan.${plan.id}.${field}: importe inválido`);
     if(plan.monthlyPrice<plan.annualMonthlyEquivalent)errors.push(`plan.${plan.id}: el mensual debe cubrir su equivalente anual.`);
+    if(offer.billing.annualDiscountRate!==0.25||plan.annualMonthlyEquivalent*4!==plan.monthlyPrice*3)errors.push(`plan.${plan.id}: el anual debe descontar 25% sólo sobre el abono.`);
     if(keys(plan.limits,['products','imagesPerProduct','administrators','initialProductsLoaded','onboardingMinutes','revisionRounds'],`plan.${plan.id}.limits`))for(const [field,value]of Object.entries(plan.limits))if(!Number.isSafeInteger(value)||value<=0)errors.push(`plan.${plan.id}.limits.${field}: límite inválido`);
     if(!Array.isArray(plan.features)||plan.features.some(feature=>typeof feature!=='string'||!feature))errors.push(`plan.${plan.id}.features: lista inválida`);
   }

@@ -122,11 +122,10 @@ for(const [filename,route] of requiredCanonical){
   if(canonicals.length!==1||canonicals[0][1]!==expected)errors.push(`Canonical incorrecto en ${filename}`);
   if(!page.includes(`property="og:url" content="${expected}"`))errors.push(`OpenGraph URL incorrecta en ${filename}`);
 }
-// Marketing compares recurring charges. Exact payable totals belong to the review.
+// Annual offers must expose their savings and complete payable amounts.
 const marketingFiles=[...requiredCanonical.keys()].filter(f=>f!=='consulta/index.html').concat(['flyers/manifest.json','catalogo/cartel-precios.svg','productos/productos.js','web/web.js','catalogo/catalogo.js']);
 for(const filename of marketingFiles){
   const text=readFileSync(resolve(root,filename),'utf8');
-  if(/\$\s?(?:160\.000|162\.000|305\.000|307\.500|425\.000|428\.000|370\.000)\b/.test(text)||/data-plan-total|data-total-heading|Total anticipado|Desembolso completo/i.test(text))errors.push(`Total anual destacado en marketing: ${filename}`);
   if(/(?:alta|puesta en marcha)[^<\n]{0,30}bonificad|(?:100%|50%)[^<\n]{0,20}bonificad|bonificación adicional de redondeo|(?:tres|3) cuotas sin recargo/i.test(text))errors.push(`Beneficio de lanzamiento retirado en marketing: ${filename}`);
 }
 const sitemap=readFileSync(resolve(root,"sitemap.xml"),"utf8");
@@ -147,7 +146,8 @@ if(existsSync(publicOfferPath)){
     if(price!==money(plan.monthlyPrice)||setup!==money(plan.setupFee))errors.push(`Abono mensual o implementación completa inconsistente en el plan ${plan.id}`);
     if(!/mes a mes/i.test(card))errors.push(`Falta la modalidad mensual junto al plan ${plan.id}`);
     if(!cta?.includes(`plan=${plan.id}`)||!cta.includes("billing=monthly"))errors.push(`Consulta sin contexto mensual del plan ${plan.id}`);
-    if(!card.includes(money(plan.annualMonthlyEquivalent))||!/doce meses anticipados/i.test(card))errors.push(`Falta la alternativa anual explícita del plan ${plan.id}`);
+    if(!card.includes(money(plan.annualMonthlyEquivalent))||!/(?:doce|12) meses (?:anticipados|por adelantado)|pago anual anticipado de 12 meses/i.test(card))errors.push(`Falta la alternativa anual explícita del plan ${plan.id}`);
+    for(const amount of [plan.annualMonthlyEquivalent*12,(plan.monthlyPrice-plan.annualMonthlyEquivalent)*12,plan.annualMonthlyEquivalent*12+plan.setupFee])if(!card.includes(money(amount)))errors.push(`Falta ahorro o total anual/inicial visible: ${plan.id}`);
   }
   if(!productPage.includes('/promociones/'))errors.push('Catálogo debe enlazar las condiciones de contratación.');
   const js=readFileSync(resolve(root,"catalogo/catalogo.js"),"utf8");
@@ -179,12 +179,13 @@ if(existsSync(portfolioPath)){
     const price=row.match(/<strong\b[^>]*\bdata-plan-price\b[^>]*>([^<]+)<\/strong>/)?.[1];
     const setup=row.match(/<strong\b[^>]*\bdata-plan-setup\b[^>]*>([^<]+)<\/strong>/)?.[1];
     if(price!==offerMoney(plan.monthlyPrice)||setup!==offerMoney(plan.setupFee)||!row.includes('billing=monthly'))errors.push(`La tabla de planes no conserva mensual e implementación completa: ${plan.product}:${plan.id}`);
+    for(const amount of [plan.annualMonthlyEquivalent*12,(plan.monthlyPrice-plan.annualMonthlyEquivalent)*12,plan.annualMonthlyEquivalent*12+plan.setupFee])if(!row.includes(offerMoney(amount)))errors.push(`Tabla sin ahorro o total anual/inicial: ${plan.product}:${plan.id}`);
   }
   for(const id of ['menu','mesa','academia','crm']){
     const family=portfolio.families?.find(f=>f.id===id),reference=priceReferences[id];
     if(family?.pricingType!=='starting_quote'||!Number.isSafeInteger(family.monthlyFrom)||family.monthlyFrom<=0||reference?.monthlyFrom!==family.monthlyFrom||reference?.currency!=='ARS'||!reference?.unitLabel||!reference?.pricingNote)errors.push(`Referencia comercial incompleta o distinta de la oferta publicada: ${id}`);
     const card=products.match(new RegExp(`<article\\b[^>]*id="solucion-${id}"[^>]*>[\\s\\S]*?<\\/article>`))?.[0]||'';
-    if(!card.includes(offerMoney(family?.monthlyFrom))||/anual anticipado|10%|15%|Total inicial|Bonificada/i.test(card))errors.push(`La referencia de ${id} debe mostrar su abono mensual sin un anual genérico ni un total cerrado.`);
+    if(!card.includes(offerMoney(family?.monthlyFrom))||/anual anticipado|10%|15%|25%|Total inicial|Bonificada/i.test(card))errors.push(`La referencia de ${id} debe mostrar su abono mensual sin un anual genérico ni un total cerrado.`);
   }
   const academy=portfolio.families?.find(f=>f.id==='academia');
   try{
@@ -200,7 +201,8 @@ if(existsSync(portfolioPath)){
     const setup=card.match(/<strong\b[^>]*\bdata-web-setup\b[^>]*>([^<]+)<\/strong>/)?.[1];
     const cta=card.match(/<a\b[^>]*\bdata-web-cta\b[^>]*\bhref="([^"]+)"/)?.[1];
     if(price!==offerMoney(plan.monthlyPrice)||setup!==offerMoney(plan.setupFee)||!cta?.includes(`plan=${plan.id}`)||!cta.includes('billing=monthly'))errors.push(`Web no presenta mensual e implementación completa: ${plan.id}`);
-    if(!card.includes(offerMoney(plan.annualMonthlyEquivalent))||!/doce meses anticipados/i.test(card))errors.push(`Web no explica el anual opcional: ${plan.id}`);
+    if(!card.includes(offerMoney(plan.annualMonthlyEquivalent))||!/(?:doce|12) meses (?:anticipados|por adelantado)|pago anual anticipado de 12 meses/i.test(card))errors.push(`Web no explica el anual opcional: ${plan.id}`);
+    for(const amount of [plan.annualMonthlyEquivalent*12,(plan.monthlyPrice-plan.annualMonthlyEquivalent)*12,plan.annualMonthlyEquivalent*12+plan.setupFee])if(!card.includes(offerMoney(amount)))errors.push(`Web sin ahorro o total anual/inicial: ${plan.id}`);
   }
   const editablePortfolio=resolve(root,'../commercial/portfolio-offer.json');
   if(existsSync(editablePortfolio)){

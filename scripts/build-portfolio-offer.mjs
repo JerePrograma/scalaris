@@ -60,7 +60,7 @@ const publicWeb = {
   schemaVersion: web.schemaVersion, currency: 'ARS',
   product: { id: web.product.id, name: web.product.name, description: web.product.description },
   billing: {
-    annualMonths: web.billing.annualMonths, annualPayment: web.billing.annualPayment,
+    annualMonths: web.billing.annualMonths, annualPayment: web.billing.annualPayment, annualDiscountRate: web.billing.annualDiscountRate,
     setupAnnualWaived: web.billing.setupAnnualWaived, renewalPolicy: web.billing.renewalPolicy,
     support: { businessDays: web.billing.support.businessDays, hours: web.billing.support.hours, timezone: web.billing.support.timezone, firstResponseTarget: web.billing.support.firstResponseTarget },
   },
@@ -74,8 +74,8 @@ const publicWeb = {
   } } : {}),
 };
 const fixedPlans = [
-  ...publicWeb.plans.map(plan => ({ product: 'web', productName: publicWeb.product.name, id: plan.id, name: plan.name, audience: plan.audience, annualMonthlyEquivalent: plan.annualMonthlyEquivalent, monthlyPrice: plan.monthlyPrice, setupFee: plan.setupFee, setupAnnualWaived: publicWeb.billing.setupAnnualWaived, annualMonths: publicWeb.billing.annualMonths })),
-  ...catalog.plans.map(plan => ({ product: 'catalogo', productName: catalog.product.name, id: plan.id, name: plan.name, audience: plan.audience, annualMonthlyEquivalent: plan.annualMonthlyEquivalent, monthlyPrice: plan.monthlyPrice, setupFee: plan.setupFee, setupAnnualWaived: catalog.billing.setupAnnualWaived, annualMonths: catalog.billing.annualMonths })),
+  ...publicWeb.plans.map(plan => ({ product: 'web', productName: publicWeb.product.name, id: plan.id, name: plan.name, audience: plan.audience, annualMonthlyEquivalent: plan.annualMonthlyEquivalent, monthlyPrice: plan.monthlyPrice, setupFee: plan.setupFee, setupAnnualWaived: publicWeb.billing.setupAnnualWaived, annualMonths: publicWeb.billing.annualMonths, annualDiscountRate: publicWeb.billing.annualDiscountRate })),
+  ...catalog.plans.map(plan => ({ product: 'catalogo', productName: catalog.product.name, id: plan.id, name: plan.name, audience: plan.audience, annualMonthlyEquivalent: plan.annualMonthlyEquivalent, monthlyPrice: plan.monthlyPrice, setupFee: plan.setupFee, setupAnnualWaived: catalog.billing.setupAnnualWaived, annualMonths: catalog.billing.annualMonths, annualDiscountRate: catalog.billing.annualDiscountRate })),
 ];
 const families = source.families.map(family => ({ id: family.id, name: family.name, need: family.need, category: family.category, description: family.description, status: family.status, statusLabel: family.statusLabel, pricingType: family.pricingType,
   ...(family.pricingType === 'starting_quote' ? { monthlyFrom: family.monthlyFrom,

@@ -1,4 +1,4 @@
-import { priceReferences } from './price-references.js?v=20261101-precios';
+import { priceReferences } from './price-references.js?v=20261105-personalizado';
 
 export const services = {
   SOFTWARE: "Web / software",

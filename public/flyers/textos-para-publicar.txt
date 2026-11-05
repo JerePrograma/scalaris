@@ -2,9 +2,12 @@ Origen
 Presentá tu negocio y recibí consultas.
 Una página con hasta cinco secciones
 Tu marca y contacto por WhatsApp
-Alojamiento y HTTPS incluidos
-$15.000/mes
-Puesta en marcha única: $100.000
+Alojamiento y HTTPS incluidos · Diseño personalizado
+$69.900/mes
+Puesta en marcha única: $350.000
+Anual −25% sólo en el abono: $52.425/mes equivalente.
+Un pago anual de $629.100. Ahorro $209.700 frente a doce abonos al precio mensual actual.
+Total inicial anual con implementación: $979.100. Dominio y terceros por separado.
 Mes a mes. Dominio propio y terceros por separado. Alcance acordado antes de comenzar.
 Precios finales en ARS. Mes a mes.
 https://scalaris.com.ar/consulta/?service=SOFTWARE&product=web&plan=presencia&billing=monthly
@@ -15,9 +18,12 @@ Web institucional
 Más espacio para tus servicios y tu historia.
 Hasta cinco páginas institucionales
 Tu marca y contacto por WhatsApp
-Alojamiento y HTTPS incluidos
-$25.000/mes
-Puesta en marcha única: $200.000
+Alojamiento y HTTPS incluidos · Diseño personalizado
+$99.900/mes
+Puesta en marcha única: $650.000
+Anual −25% sólo en el abono: $74.925/mes equivalente.
+Un pago anual de $899.100. Ahorro $299.700 frente a doce abonos al precio mensual actual.
+Total inicial anual con implementación: $1.549.100. Dominio y terceros por separado.
 Mes a mes. Dominio propio y terceros por separado. Alcance acordado antes de comenzar.
 Precios finales en ARS. Mes a mes.
 https://scalaris.com.ar/consulta/?service=SOFTWARE&product=web&plan=negocio&billing=monthly
@@ -28,9 +34,12 @@ Vidriera
 Tus productos, al alcance de tus clientes.
 Productos y precios editables desde el celular
 Carrito para preparar el pedido por WhatsApp
-Hasta 100 productos · 1 administrador
-$15.000/mes
-Puesta en marcha única: $50.000
+Hasta 100 productos · 1 administrador · Diseño personalizado
+$89.900/mes
+Puesta en marcha única: $300.000
+Anual −25% sólo en el abono: $67.425/mes equivalente.
+Un pago anual de $809.100. Ahorro $269.700 frente a doce abonos al precio mensual actual.
+Total inicial anual con implementación: $1.109.100. Dominio y terceros por separado.
 Un negocio y una sucursal. Alta asistida y alcance a validar. Sin pagos online ni facturación fiscal.
 Precios finales en ARS. Mes a mes.
 https://scalaris.com.ar/consulta/?service=SOFTWARE&product=catalogo&plan=catalogo&billing=monthly
@@ -41,9 +50,12 @@ Flujo
 Ordená los pedidos que recibe tu negocio.
 Pedidos guardados y estados de seguimiento
 Enlace de seguimiento para el cliente
-Hasta 300 productos · 2 administradores
-$25.000/mes
-Puesta en marcha única: $75.000
+Hasta 300 productos · 2 administradores · Diseño personalizado
+$119.900/mes
+Puesta en marcha única: $450.000
+Anual −25% sólo en el abono: $89.925/mes equivalente.
+Un pago anual de $1.079.100. Ahorro $359.700 frente a doce abonos al precio mensual actual.
+Total inicial anual con implementación: $1.529.100. Dominio y terceros por separado.
 Un negocio y una sucursal. Alta asistida y alcance a validar. Sin pagos online ni facturación fiscal.
 Precios finales en ARS. Mes a mes.
 https://scalaris.com.ar/consulta/?service=SOFTWARE&product=catalogo&plan=pedidos&billing=monthly
@@ -54,9 +66,12 @@ Pulso
 Pedidos y caja manual, en un mismo lugar.
 Pedidos y seguimiento incluidos
 Ingresos, egresos y cierre de caja manual
-Hasta 1.000 productos · 3 administradores
-$35.000/mes
-Puesta en marcha única: $100.000
+Hasta 1.000 productos · 3 administradores · Diseño personalizado
+$149.900/mes
+Puesta en marcha única: $650.000
+Anual −25% sólo en el abono: $112.425/mes equivalente.
+Un pago anual de $1.349.100. Ahorro $449.700 frente a doce abonos al precio mensual actual.
+Total inicial anual con implementación: $1.999.100. Dominio y terceros por separado.
 Un negocio y una sucursal. Alta asistida y alcance a validar. Sin pagos online ni facturación fiscal.
 Precios finales en ARS. Mes a mes.
 https://scalaris.com.ar/consulta/?service=SOFTWARE&product=catalogo&plan=gestion&billing=monthly
@@ -136,8 +151,8 @@ Elegí la solución para tu próxima etapa.
 Planes mensuales con alcance definido
 Alta y acompañamiento acordados
 Desarrollo e integraciones a cotizar
-Web: $15.000/mes
-Catálogo: $15.000/mes
+Web: $69.900/mes
+Catálogo: $89.900/mes
 Menú gastronómico: $25.000/mes
 Scalaris Mesa: $39.900/mes
 Gestudio: $39.900/mes

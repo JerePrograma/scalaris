@@ -1,4 +1,4 @@
-export const version='20261101-precios';
+export const version='20261105-personalizado';
 export const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const money=value=>new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(value).replace(/\s/g,' ');
 export const inquiry=(product,plan=null,billing='monthly')=>'/consulta/?'+new URLSearchParams({service:'SOFTWARE',...(product?{product}:{}),...(plan?{plan}:{}),...(['web','catalogo'].includes(product)?{billing}:{})});

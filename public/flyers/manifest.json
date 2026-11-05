@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "reviewedAt": "2026-11-01",
+  "reviewedAt": "2026-11-05",
   "pieces": 11,
   "pngCount": 22,
   "currency": "ARS",
@@ -22,8 +22,8 @@
     "public/catalogo/offer.json"
   ],
   "bundles": {
-    "facebookInstagram": "scalaris-facebook-instagram-2026-11-01.zip",
-    "whatsapp": "scalaris-whatsapp-2026-11-01.zip"
+    "facebookInstagram": "scalaris-facebook-instagram-2026-11-05.zip",
+    "whatsapp": "scalaris-whatsapp-2026-11-05.zip"
   },
   "entries": [
     {
@@ -31,16 +31,21 @@
       "title": "Origen",
       "eyebrow": "SCALARIS WEB",
       "headline": "Presentá tu negocio y recibí consultas.",
-      "monthlyPrice": 15000,
-      "setupFee": 100000,
-      "setup": "Puesta en marcha única: $100.000",
+      "monthlyPrice": 69900,
+      "setupFee": 350000,
+      "setup": "Puesta en marcha única: $350.000",
       "features": [
         "Una página con hasta cinco secciones",
         "Tu marca y contacto por WhatsApp",
-        "Alojamiento y HTTPS incluidos"
+        "Alojamiento y HTTPS incluidos · Diseño personalizado"
       ],
       "notes": "Mes a mes. Dominio propio y terceros por separado. Alcance acordado antes de comenzar.",
       "url": "/consulta/?service=SOFTWARE&product=web&plan=presencia&billing=monthly",
+      "annualMonthlyEquivalent": 52425,
+      "annualTotal": 629100,
+      "annualSavings": 209700,
+      "annualInitialTotal": 979100,
+      "annualDiscountRate": 0.25,
       "thumbnail": "miniaturas/plan-presencia.webp",
       "facebookInstagram": "facebook-instagram/plan-presencia.png",
       "whatsapp": "whatsapp/plan-presencia.png"
@@ -50,16 +55,21 @@
       "title": "Web institucional",
       "eyebrow": "SCALARIS WEB",
       "headline": "Más espacio para tus servicios y tu historia.",
-      "monthlyPrice": 25000,
-      "setupFee": 200000,
-      "setup": "Puesta en marcha única: $200.000",
+      "monthlyPrice": 99900,
+      "setupFee": 650000,
+      "setup": "Puesta en marcha única: $650.000",
       "features": [
         "Hasta cinco páginas institucionales",
         "Tu marca y contacto por WhatsApp",
-        "Alojamiento y HTTPS incluidos"
+        "Alojamiento y HTTPS incluidos · Diseño personalizado"
       ],
       "notes": "Mes a mes. Dominio propio y terceros por separado. Alcance acordado antes de comenzar.",
       "url": "/consulta/?service=SOFTWARE&product=web&plan=negocio&billing=monthly",
+      "annualMonthlyEquivalent": 74925,
+      "annualTotal": 899100,
+      "annualSavings": 299700,
+      "annualInitialTotal": 1549100,
+      "annualDiscountRate": 0.25,
       "thumbnail": "miniaturas/plan-negocio.webp",
       "facebookInstagram": "facebook-instagram/plan-negocio.png",
       "whatsapp": "whatsapp/plan-negocio.png"
@@ -69,16 +79,21 @@
       "title": "Vidriera",
       "eyebrow": "SCALARIS CATÁLOGO",
       "headline": "Tus productos, al alcance de tus clientes.",
-      "monthlyPrice": 15000,
-      "setupFee": 50000,
-      "setup": "Puesta en marcha única: $50.000",
+      "monthlyPrice": 89900,
+      "setupFee": 300000,
+      "setup": "Puesta en marcha única: $300.000",
       "features": [
         "Productos y precios editables desde el celular",
         "Carrito para preparar el pedido por WhatsApp",
-        "Hasta 100 productos · 1 administrador"
+        "Hasta 100 productos · 1 administrador · Diseño personalizado"
       ],
       "notes": "Un negocio y una sucursal. Alta asistida y alcance a validar. Sin pagos online ni facturación fiscal.",
       "url": "/consulta/?service=SOFTWARE&product=catalogo&plan=catalogo&billing=monthly",
+      "annualMonthlyEquivalent": 67425,
+      "annualTotal": 809100,
+      "annualSavings": 269700,
+      "annualInitialTotal": 1109100,
+      "annualDiscountRate": 0.25,
       "thumbnail": "miniaturas/plan-catalogo.webp",
       "facebookInstagram": "facebook-instagram/plan-catalogo.png",
       "whatsapp": "whatsapp/plan-catalogo.png"
@@ -88,16 +103,21 @@
       "title": "Flujo",
       "eyebrow": "SCALARIS CATÁLOGO",
       "headline": "Ordená los pedidos que recibe tu negocio.",
-      "monthlyPrice": 25000,
-      "setupFee": 75000,
-      "setup": "Puesta en marcha única: $75.000",
+      "monthlyPrice": 119900,
+      "setupFee": 450000,
+      "setup": "Puesta en marcha única: $450.000",
       "features": [
         "Pedidos guardados y estados de seguimiento",
         "Enlace de seguimiento para el cliente",
-        "Hasta 300 productos · 2 administradores"
+        "Hasta 300 productos · 2 administradores · Diseño personalizado"
       ],
       "notes": "Un negocio y una sucursal. Alta asistida y alcance a validar. Sin pagos online ni facturación fiscal.",
       "url": "/consulta/?service=SOFTWARE&product=catalogo&plan=pedidos&billing=monthly",
+      "annualMonthlyEquivalent": 89925,
+      "annualTotal": 1079100,
+      "annualSavings": 359700,
+      "annualInitialTotal": 1529100,
+      "annualDiscountRate": 0.25,
       "thumbnail": "miniaturas/plan-pedidos.webp",
       "facebookInstagram": "facebook-instagram/plan-pedidos.png",
       "whatsapp": "whatsapp/plan-pedidos.png"
@@ -107,16 +127,21 @@
       "title": "Pulso",
       "eyebrow": "SCALARIS CATÁLOGO",
       "headline": "Pedidos y caja manual, en un mismo lugar.",
-      "monthlyPrice": 35000,
-      "setupFee": 100000,
-      "setup": "Puesta en marcha única: $100.000",
+      "monthlyPrice": 149900,
+      "setupFee": 650000,
+      "setup": "Puesta en marcha única: $650.000",
       "features": [
         "Pedidos y seguimiento incluidos",
         "Ingresos, egresos y cierre de caja manual",
-        "Hasta 1.000 productos · 3 administradores"
+        "Hasta 1.000 productos · 3 administradores · Diseño personalizado"
       ],
       "notes": "Un negocio y una sucursal. Alta asistida y alcance a validar. Sin pagos online ni facturación fiscal.",
       "url": "/consulta/?service=SOFTWARE&product=catalogo&plan=gestion&billing=monthly",
+      "annualMonthlyEquivalent": 112425,
+      "annualTotal": 1349100,
+      "annualSavings": 449700,
+      "annualInitialTotal": 1999100,
+      "annualDiscountRate": 0.25,
       "thumbnail": "miniaturas/plan-gestion.webp",
       "facebookInstagram": "facebook-instagram/plan-gestion.png",
       "whatsapp": "whatsapp/plan-gestion.png"
@@ -255,11 +280,11 @@
       "priceRows": [
         {
           "label": "Web",
-          "price": "$15.000/mes"
+          "price": "$69.900/mes"
         },
         {
           "label": "Catálogo",
-          "price": "$15.000/mes"
+          "price": "$89.900/mes"
         },
         {
           "label": "Menú gastronómico",

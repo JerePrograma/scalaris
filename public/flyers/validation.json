@@ -1,6 +1,6 @@
 {
-  "reviewedAt": "2026-11-01",
-  "generatedAt": "2026-11-01T18:02:02.695Z",
+  "reviewedAt": "2026-11-05",
+  "generatedAt": "2026-11-05T13:17:11.676Z",
   "status": "PASS",
   "pieces": 11,
   "pngCount": 22,
@@ -228,14 +228,14 @@
   ],
   "bundles": [
     {
-      "file": "scalaris-facebook-instagram-2026-11-01.zip",
-      "bytes": 1344363,
+      "file": "scalaris-facebook-instagram-2026-11-05.zip",
+      "bytes": 1472421,
       "pngCount": 11,
       "validated": true
     },
     {
-      "file": "scalaris-whatsapp-2026-11-01.zip",
-      "bytes": 1575400,
+      "file": "scalaris-whatsapp-2026-11-05.zip",
+      "bytes": 1739348,
       "pngCount": 11,
       "validated": true
     }

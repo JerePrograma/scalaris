@@ -6,7 +6,17 @@ Sitio público: https://scalaris.com.ar
 
 Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
-## Oferta vigente — 01/11/2026
+## Oferta vigente — 05/11/2026
+
+Por autorización del fundador, se adopta la [oferta con presentación personalizada](docs/precios-personalizacion-2026-11-05.md) para nuevas propuestas. Web y Catálogo incluyen relevamiento, una propuesta visual individual y dos rondas de ajustes dentro de las páginas, secciones y funciones del plan, sobre componentes propios. Las nuevas funciones e integraciones se presupuestan por separado.
+
+Las fuentes editables son [portfolio-offer.json](commercial/portfolio-offer.json) y [Catálogo](../scalaris-comercio/commercial/offer.json). El sitio muestra abono mensual, implementación única y anual opcional con **25% de descuento sólo sobre el abono**: equivalente mensual identificado, ahorro en pesos, pago anual anticipado y total inicial con implementación. El precio del abono queda fijo durante los doce meses cubiertos; dominio y terceros por separado. Los acuerdos ya aceptados conservan sus condiciones.
+
+Gestudio mantiene su escala y anual propios; Menú, Mesa y CRM conservan sus referencias sujetas a relevamiento. La actualización comercial no acredita nuevas funciones ni aceptación productiva de esos sistemas.
+
+Se regeneran las proyecciones con `npm run offers:build`, el material con `npm run flyers:sync` y se verifica con `npm run check`. La colección anterior del 01/11 queda en `legacy/flyers-2026-11-01/`; los enlaces a sus ZIP llevan a la colección vigente. El sitio conserva HTML/CSS/JavaScript estático y la publicación existente por GitHub y Cloudflare Pages.
+
+## Antecedente de oferta — 01/11/2026
 
 La plataforma presenta los abonos mensuales por defecto, implementación completa por separado y anual opcional sólo con las condiciones de cada producto. Se adopta la revisión por valor y competencia autorizada por el fundador el 01/11. Sustituye para nuevas propuestas las campañas y presentaciones históricas que se documentan más abajo; los acuerdos aceptados conservan sus condiciones.
 

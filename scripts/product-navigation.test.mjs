@@ -81,22 +81,34 @@ test('Web details retain domain ownership and email restrictions referenced from
 
 test('current navigation compares monthly prices with optional annual billing and full implementation',async()=>{
   const home=await readFile(new URL('../public/index.html',import.meta.url),'utf8');
-  assert.ok(home.includes('$ 15.000'));
+  assert.ok(home.includes('$ 69.900'));
+  assert.match(home,/propuesta visual|componentes propios/i);
   assert.match(home,/mes a mes/i);
   assert.match(home,/implementación|puesta en marcha/i);
   assert.match(home,/anual opcional/i);
-  assert.doesNotMatch(home,/\$[ \u00a0]?(?:162|160|307|305|428|425|370)\.000/);
+  assert.match(home,/ahorrás 25%/i);
+  assert.match(home,/Pagás 9 meses de abono y usás 12/i);
+  assert.match(home,/Total inicial con puesta en marcha/i);
   const form=await readFile(new URL('../public/consulta/index.html',import.meta.url),'utf8');
   assert.match(form,/href="#form-root"/);
-  assert.match(form,/10% de descuento sólo en el abono/);
+  assert.match(form,/25% de descuento sólo en el abono/);
   assert.match(form,/Gestudio[^<]*condiciones propias/);
   const conditions=await readFile(new URL('../public/promociones/index.html',import.meta.url),'utf8');
-  assert.match(conditions,/10% de descuento sólo en el abono/);
+  assert.match(conditions,/25% de descuento sólo en el abono|ahorrás 25% en el abono/);
   assert.match(conditions,/quince|15%/);
   assert.match(conditions,/1,5/);
   assert.match(conditions,/treinta días de anticipación/);
   for(const page of [home,form,conditions])assert.doesNotMatch(page,/100% bonificada|50% bonificada|alta bonificada|puesta en marcha bonificada|redondea el total|tres cuotas sin recargo|primeros cinco|5 cupos disponibles/i);
-  assert.doesNotMatch(conditions,/Total anticipado|Abono por 12 meses|\$[ \u00a0]?(?:162|160|307|305|428|425|370|216|270|324)\.000/);
+  const offer=JSON.parse(await readFile(new URL('../public/productos/offer.json',import.meta.url),'utf8'));
+  const money=value=>new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(value).replace(/\s/g,' ');
+  for(const plan of offer.fixedPlans){
+    const row=conditions.match(new RegExp(`<tr><th scope="row"><strong>${plan.name}</strong>[\\s\\S]*?<\\/tr>`))?.[0];
+    assert.ok(row,plan.name);
+    for(const amount of [plan.monthlyPrice+plan.setupFee,plan.annualMonthlyEquivalent*12,(plan.monthlyPrice-plan.annualMonthlyEquivalent)*12,plan.annualMonthlyEquivalent*12+plan.setupFee])assert.ok(row.includes(money(amount)),`${plan.name} ${amount}`);
+    assert.match(row,/mes equivalente/);
+    assert.match(row,/Abono anual anticipado/);
+    assert.match(row,/Total inicial anual/);
+  }
 });
 
 test('the six published product references keep their own scope and only Web and Catalog expose monthly financial selections',async()=>{
@@ -111,7 +123,7 @@ test('the six published product references keep their own scope and only Web and
     const money=new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(family.monthlyFrom).replace(/\s/g,' ');
     assert.ok(card.includes(money),family.id);
     assert.match(card,/cotizar|presupuesto|piloto|implementación/i);
-    assert.doesNotMatch(card,/pago anual anticipado|10%|15%|Total inicial|Bonificada/i,family.id);
+    assert.doesNotMatch(card,/pago anual anticipado|25%|15%|Total inicial|Bonificada/i,family.id);
   }
   assert.match(page,/id="planes-gestudio"/);
   const academy=offer.families.find(f=>f.id==='academia');

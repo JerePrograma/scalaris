@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-11-01",
+  "reviewedAt": "2026-11-05",
   "currency": "ARS",
   "product": {
     "name": "Scalaris Catálogo",
@@ -9,8 +9,10 @@
   },
   "billing": {
     "annualMonths": 12,
+    "annualPayment": "upfront",
+    "annualDiscountRate": 0.25,
     "setupAnnualWaived": false,
-    "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego revisión trimestral con aviso de treinta días, sin ajustes retroactivos. Anual opcional: doce meses abonados por adelantado con 10% de descuento sólo en el abono y precio fijo durante ese período; renovación a la tarifa informada con treinta días de anticipación. La implementación se abona una sola vez al comenzar, por separado del abono, en ambas modalidades. Dominio propio y renovación a nombre y cargo del cliente.",
+    "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego revisión trimestral con aviso de treinta días, sin ajustes retroactivos. Anual opcional: doce meses abonados por adelantado con 25% de descuento sólo en el abono y precio fijo durante ese período; renovación a la tarifa informada con treinta días de anticipación. El ahorro se calcula contra doce mensualidades al precio de lista vigente al contratar, sin proyectar ajustes futuros. La implementación se abona una sola vez al comenzar, por separado del abono, en ambas modalidades. Dominio propio y renovación a nombre y cargo del cliente. Los acuerdos ya aceptados conservan sus condiciones.",
     "support": {
       "businessDays": "Lunes a viernes",
       "hours": "09:00 a 18:00",
@@ -24,19 +26,19 @@
       "name": "Vidriera",
       "audience": "Catálogo para WhatsApp. Productos y precios editables; el cliente arma y envía el pedido por WhatsApp.",
       "featured": false,
-      "annualMonthlyEquivalent": 13500,
-      "monthlyPrice": 15000,
-      "setupFee": 50000,
+      "annualMonthlyEquivalent": 67425,
+      "monthlyPrice": 89900,
+      "setupFee": 300000,
       "limits": {
         "products": 100,
         "imagesPerProduct": 1,
         "administrators": 1,
         "initialProductsLoaded": 30,
         "onboardingMinutes": 20,
-        "revisionRounds": 1
+        "revisionRounds": 2
       },
       "features": [
-        "Web con tu marca y composición adaptada",
+        "Diseño y código de presentación personalizados para tu negocio",
         "Catálogo con categorías, foto, descripción y precio",
         "Alta, edición y baja de productos desde el celular",
         "Disponibilidad manual de productos",
@@ -50,16 +52,16 @@
       "name": "Flujo",
       "audience": "Catálogo + seguimiento de pedidos. Pedidos guardados, estados y enlace de seguimiento.",
       "featured": true,
-      "annualMonthlyEquivalent": 22500,
-      "monthlyPrice": 25000,
-      "setupFee": 75000,
+      "annualMonthlyEquivalent": 89925,
+      "monthlyPrice": 119900,
+      "setupFee": 450000,
       "limits": {
         "products": 300,
         "imagesPerProduct": 1,
         "administrators": 2,
         "initialProductsLoaded": 60,
         "onboardingMinutes": 30,
-        "revisionRounds": 1
+        "revisionRounds": 2
       },
       "features": [
         "Todo el plan Vidriera",
@@ -75,16 +77,16 @@
       "name": "Pulso",
       "audience": "Catálogo + pedidos y caja manual. Ingresos, egresos y cierre de caja.",
       "featured": false,
-      "annualMonthlyEquivalent": 31500,
-      "monthlyPrice": 35000,
-      "setupFee": 100000,
+      "annualMonthlyEquivalent": 112425,
+      "monthlyPrice": 149900,
+      "setupFee": 650000,
       "limits": {
         "products": 1000,
         "imagesPerProduct": 1,
         "administrators": 3,
         "initialProductsLoaded": 100,
         "onboardingMinutes": 45,
-        "revisionRounds": 1
+        "revisionRounds": 2
       },
       "features": [
         "Todo el plan Flujo",
