@@ -8,14 +8,14 @@ import {
   readProductInterest,
   productInterestAnswers,
   productPriceReference,
-} from "./model.js?v=20261105-anualbonificado";
+} from "./model.js?v=20261105-planesclaros";
 import {
   hasPlanSelection,
   loadPlanSummary,
   planSummaryRows,
   planSummaryText,
   planSummaryTotal,
-} from "./plan-summary.js?v=20261105-anualbonificado";
+} from "./plan-summary.js?v=20261105-planesclaros";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
   interest = readProductInterest(window.location.search),

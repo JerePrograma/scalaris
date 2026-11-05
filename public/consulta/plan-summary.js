@@ -1,4 +1,4 @@
-import {quoteLaunch,formatOfferMoney as money} from '../offer-policy.js?v=20261105-anualbonificado';
+import {quoteLaunch,formatOfferMoney as money} from '../offer-policy.js?v=20261105-planesclaros';
 const families=Object.freeze({catalogo:{endpoint:'/catalogo/offer.json',plans:{catalogo:'Vidriera',pedidos:'Flujo',gestion:'Pulso'}},web:{endpoint:'/web/offer.json',plans:{presencia:'Origen',negocio:'Web de hasta 5 páginas'}}});
 const modes=new Set(['annual','monthly']);
 export function hasPlanSelection(interest){return Boolean(interest&&Object.hasOwn(families,interest.product)&&Object.hasOwn(families[interest.product].plans,interest.plan)&&modes.has(interest.billing));}

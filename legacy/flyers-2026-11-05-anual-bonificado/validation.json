@@ -1,0 +1,246 @@
+{
+  "reviewedAt": "2026-11-05",
+  "generatedAt": "2026-11-05T13:54:10.632Z",
+  "status": "PASS",
+  "pieces": 11,
+  "pngCount": 22,
+  "layoutRecords": [
+    {
+      "slug": "plan-presencia",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "plan-presencia",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    },
+    {
+      "slug": "plan-negocio",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "plan-negocio",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    },
+    {
+      "slug": "plan-catalogo",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "plan-catalogo",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    },
+    {
+      "slug": "plan-pedidos",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "plan-pedidos",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    },
+    {
+      "slug": "plan-gestion",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "plan-gestion",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    },
+    {
+      "slug": "producto-menu",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "producto-menu",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    },
+    {
+      "slug": "producto-mesa",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "producto-mesa",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    },
+    {
+      "slug": "producto-crm",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "producto-crm",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    },
+    {
+      "slug": "producto-gestudio",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "producto-gestudio",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    },
+    {
+      "slug": "servicios",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "servicios",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    },
+    {
+      "slug": "soluciones-scalaris",
+      "format": "facebook-instagram",
+      "width": 1080,
+      "height": 1350,
+      "notesBottom": 1099.5,
+      "taxBottom": 1137.5,
+      "footerY": 1186,
+      "status": "PASS"
+    },
+    {
+      "slug": "soluciones-scalaris",
+      "format": "whatsapp",
+      "width": 1080,
+      "height": 1920,
+      "notesBottom": 1529.6,
+      "taxBottom": 1571.6,
+      "footerY": 1720,
+      "status": "PASS"
+    }
+  ],
+  "bundles": [
+    {
+      "file": "scalaris-facebook-instagram-2026-11-05-anual-bonificado.zip",
+      "bytes": 1522004,
+      "pngCount": 11,
+      "validated": true
+    },
+    {
+      "file": "scalaris-whatsapp-2026-11-05-anual-bonificado.zip",
+      "bytes": 1799850,
+      "pngCount": 11,
+      "validated": true
+    }
+  ],
+  "sourcePricesVerified": true,
+  "priceDisplay": "monthly",
+  "historicalSourceUsed": false
+}

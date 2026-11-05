@@ -13,6 +13,56 @@ const generator = path.join(root, 'scripts/build-portfolio-offer.mjs');
 const source = JSON.parse(await readFile(path.join(root, 'commercial/portfolio-offer.json'), 'utf8'));
 const catalog = JSON.parse(await readFile(path.join(root, 'public/catalogo/offer.json'), 'utf8'));
 
+function block(html, tag, attributes = '') {
+  const start = new RegExp('<' + tag + '\\b[^>]*' + attributes + '[^>]*>', 'i').exec(html);
+  if (!start) return null;
+  const tokens = new RegExp('</?' + tag + '\\b[^>]*>', 'gi');
+  tokens.lastIndex = start.index;
+  let depth = 0;
+  for (let token; (token = tokens.exec(html));) {
+    depth += token[0].startsWith('</') ? -1 : 1;
+    if (depth === 0) return html.slice(start.index, tokens.lastIndex);
+  }
+  return null;
+}
+function deferredBlocks(html) { return [...html.matchAll(/<details\b/gi)].map(match => block(html.slice(match.index), 'details')).filter(Boolean); }
+function visible(html) {
+  for (const details of deferredBlocks(html)) html = html.replace(details, '');
+  return html.replace(/<(script|style|noscript)\b[^>]*>[\s\S]*?<\/\1>/gi, '');
+}
+function text(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/\s+/g, ' ').trim(); }
+const occurrences = (value, expected) => value.split(expected).length - 1;
+function assertPayments(row, plan) {
+  const green = block(row, 'div', 'class="portfolio-annual-benefit"');
+  assert.ok(green, plan.id + ' annual offer');
+  const shown = text(visible(row)), annualShown = text(visible(green));
+  for (const amount of [plan.monthlyPrice, plan.setupFee, plan.monthlyPrice + plan.setupFee]) assert.ok(shown.includes(formatOfferMoney(amount)), plan.id + ' visible monthly payment ' + amount);
+  assert.ok(annualShown.includes(formatOfferMoney(plan.annualMonthlyEquivalent)), plan.id + ' annual equivalent');
+  assert.equal(occurrences(annualShown, formatOfferMoney(plan.annualMonthlyEquivalent * 12)), 1, plan.id + ' one visible annual total');
+  assert.equal(occurrences(annualShown, formatOfferMoney((plan.monthlyPrice - plan.annualMonthlyEquivalent) * 12 + plan.setupFee)), 1, plan.id + ' one visible first-year saving');
+  assert.match(annualShown, /100% bonificada/i);
+  assert.match(annualShown, /Total a pagar por 12 meses/);
+  assert.match(annualShown, /Ahorro total del primer año|Ahorrás.*el primer año/);
+  assert.doesNotMatch(annualShown, /Abono anual anticipado|Ahorro en el abono anual|Ahorrás además/);
+  assert.doesNotMatch(green, /<details\b|\shidden(?:\s|=|>)/i);
+  const details = deferredBlocks(row).find(item => /incluye|ahorro|detalle/i.test(text(block(item,'summary')||'')));
+  assert.ok(details, plan.id + ' accessible optional breakdown');
+  assert.ok(text(details).includes(formatOfferMoney((plan.monthlyPrice - plan.annualMonthlyEquivalent) * 12)), plan.id + ' subscription saving breakdown');
+  assert.ok(text(details).includes(formatOfferMoney(plan.setupFee)), plan.id + ' implementation saving breakdown');
+  for (const [marker, mode] of [['data-plan-link', 'monthly'], ['data-plan-annual-link', 'annual']]) {
+    const link = block(row, 'a', marker);
+    assert.ok(link, marker);
+    const href = link.match(/href="([^"]+)"/)?.[1];
+    const url = new URL(href.replaceAll('&amp;', '&'), 'https://scalaris.com.ar');
+    assert.equal(url.searchParams.get('product'), plan.product);
+    assert.equal(url.searchParams.get('plan'), plan.id);
+    assert.equal(url.searchParams.get('billing'), mode);
+    assert.deepEqual([...url.searchParams.keys()].sort(), ['billing', 'plan', 'product', 'service']);
+    assert.ok(visible(row).includes(link), plan.id + ' CTA is not behind details');
+  }
+}
+
+
 async function fixture(t, change = () => {}) {
   const directory = await mkdtemp(path.join(tmpdir(), 'scalaris-portfolio-test-'));
   t.after(async () => {
@@ -43,14 +93,13 @@ test('portfolio generation keeps six families, five fixed plans and explicit pub
   assert.equal((html.match(/class="solution-card"/g) || []).length, 6);
   assert.equal((html.match(/data-portfolio-plan="/g) || []).length, 5);
   for (const row of html.matchAll(/<tr data-portfolio-plan="[^"]+"[\s\S]*?<\/tr>/g)) {
-    assert.equal((row[0].match(/<(?:th|td)(?:\s|>)/g) || []).length, 5, 'Plan, purpose, subscription, setup and consultation are the only columns.');
+    assert.equal((row[0].match(/<(?:th|td)(?:\s|>)/g) || []).length, 3, 'Compare the plan with its monthly and annual offers.');
     assert.match(row[0], /\/mes/);
     assert.match(row[0], /billing=monthly/);
   }
   assert.equal((html.match(/class="portfolio-annual-benefit"/g) || []).length, 5, 'Annual savings stay visible in the monthly default.');
   assert.equal((html.match(/data-plan-initial/g) || []).length, 5);
-  assert.match(html, /25%/);
-  assert.match(html, /alta 100% bonificada/);
+  assert.match(html, /100% bonificada/);
   assert.doesNotMatch(html, /data-portfolio-billing=/);
   assert.match(html, /propuesta visual personalizada/);
   assert.match(html, /dos rondas de ajustes/);
@@ -76,7 +125,7 @@ test('portfolio generation keeps six families, five fixed plans and explicit pub
     if(plan.product==='web')assert.equal(plan.annualMonthlyEquivalent*4,plan.monthlyPrice*3);
     const row = html.match(new RegExp(`<tr data-portfolio-plan="${plan.product}:${plan.id}"[\\s\\S]*?<\\/tr>`))?.[0];
     assert.ok(row, plan.id);
-    for (const amount of [(plan.monthlyPrice-plan.annualMonthlyEquivalent)*12, plan.annualMonthlyEquivalent*12, (plan.monthlyPrice-plan.annualMonthlyEquivalent)*12+plan.setupFee, plan.monthlyPrice+plan.setupFee]) assert.ok(row.includes(formatOfferMoney(amount)), `${plan.id}: ${amount}`);
+    assertPayments(row,plan);
   }
   assert.equal(publicOffer.webOffer.billing.setupAnnualWaived,true);
   assert.equal(catalog.billing.setupAnnualWaived,true);
@@ -132,16 +181,12 @@ test('catalog prices follow their own public offer and regeneration is determini
   assert.ok(card);
   assert.match(card, /data-plan-price>\$ 18\.000/);
   assert.match(card, /data-plan-setup>\$ 31\.000/);
-  assert.match(card, /data-plan-setup-note>Por única vez/);
+  assert.match(text(card), /Puesta en marcha/);
   assert.match(card, /billing=monthly/);
   assert.ok(before[0].includes('$ 18.000'));
   assert.doesNotMatch(before[2], /annualMonthlyEquivalent|monthlyPrice|setupFee/, 'Billing context script does not carry mutable pricing data.');
-  assert.match(card, /Ahorro en el abono anual: \$ 54\.000/);
-  assert.match(card, /Abono anual anticipado: \$ 162\.000/);
-  assert.match(card, /Total a pagar por 12 meses: \$ 162\.000/);
-  assert.match(card, /Ahorro total del primer año: \$ 85\.000/);
-  assert.match(card, /Puesta en marcha: \$ 0 · 100% bonificada/);
-  assert.match(card, /Total inicial primer mes: \$ 49\.000/);
+  assertPayments(card,plan);
+  assert.match(text(visible(card)), /Total inicial primer mes[^$]*\$ 49\.000/);
   assert.doesNotMatch(before[0], /sujeto a cupo|50% bonificada|tres cuotas sin recargo/i);
   run();
   const after = await Promise.all(['index.html', 'productos.css', 'productos.js', 'offer.json'].map(read));
@@ -199,8 +244,7 @@ test('annual URL context cannot rewrite monthly prices or explicit billing links
       assert.ok(row,plan.id);
       assert.ok(row.includes('data-plan-price>'+formatOfferMoney(plan.monthlyPrice)));
       assert.ok(row.includes('data-plan-setup>'+formatOfferMoney(plan.setupFee)));
-      assert.ok(row.includes('Total inicial primer mes: '+formatOfferMoney(plan.monthlyPrice+plan.setupFee)));
-      assert.match(row,/\/mes sin descuento, pagando mes a mes/);
+      assertPayments(row,plan);
       for(const [marker,mode] of [['data-plan-link','monthly'],['data-plan-annual-link','annual']]){
         const href=row.match(new RegExp(marker+'[^>]*href="([^"]+)"'))?.[1];assert.ok(href,marker);
         const link=new URL(href.replaceAll('&amp;','&'),'https://scalaris.com.ar');
@@ -215,13 +259,11 @@ test('current annual setup waiver is independent from the expired launch campaig
   const {read}=await fixture(t),html=await read('index.html'),offer=JSON.parse(await read('offer.json'));
   assert.equal(launchIsActive('2026-12-01T00:00:00-03:00'),false);
   assert.doesNotMatch(await read('productos.js'),/quoteLaunch|launchPromotion/);
+  assert.doesNotMatch(html,/El bloque blanco|El bloque verde/i);
   for(const plan of offer.fixedPlans){
-    const row=html.match(new RegExp(`<tr data-portfolio-plan="${plan.product}:${plan.id}"[\\s\\S]*?<\\/tr>`))?.[0];
+    const row=block(html,'tr',`data-portfolio-plan="${plan.product}:${plan.id}"`);
     assert.ok(row);
-    assert.ok(row.includes('Abono anual anticipado: '+formatOfferMoney(plan.annualMonthlyEquivalent*12)));
-    assert.ok(row.includes('Total a pagar por 12 meses: '+formatOfferMoney(plan.annualMonthlyEquivalent*12)));
-    assert.match(row,/Puesta en marcha: \$ 0 · 100% bonificada/);
-    assert.ok(row.includes('Ahorro total del primer año: '+formatOfferMoney((plan.monthlyPrice-plan.annualMonthlyEquivalent)*12+plan.setupFee)));
+    assertPayments(row,plan);
     assert.doesNotMatch(row,/50% bonificada|primer año de dominio|3 cuotas|sin recargo|cuota 1/i);
     if(plan.product==='catalogo')assert.doesNotMatch(row,/25%|3 meses de abono|9 meses/);
   }
