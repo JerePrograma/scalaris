@@ -15,8 +15,8 @@
       "annualMonths": 12,
       "annualPayment": "upfront",
       "annualDiscountRate": 0.25,
-      "setupAnnualWaived": false,
-      "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego revisión trimestral con aviso de treinta días, sin ajustes retroactivos. Anual opcional: doce meses abonados por adelantado con 25% de descuento sólo en el abono y precio fijo durante ese período; renovación a la tarifa informada con treinta días de anticipación. El ahorro se calcula contra doce mensualidades al precio de lista vigente al contratar, sin proyectar ajustes futuros. La implementación se abona una sola vez al comenzar, por separado del abono, en ambas modalidades. Dominio propio y renovación a nombre y cargo del cliente. Los acuerdos ya aceptados conservan sus condiciones.",
+      "setupAnnualWaived": true,
+      "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego revisión trimestral con aviso de treinta días, sin ajustes retroactivos. La implementación se abona una sola vez al comenzar y por separado del abono mensual. Anual opcional: doce meses abonados por adelantado con 25% de descuento sólo en el abono, precio fijo durante ese período e implementación inicial bonificada al 100%. El ahorro del abono se calcula contra doce mensualidades al precio de lista vigente al contratar, sin proyectar ajustes futuros; el ahorro de implementación se informa por separado. Renovación a la tarifa informada con treinta días de anticipación. Dominio propio y renovación a nombre y cargo del cliente. Los acuerdos ya aceptados conservan sus condiciones.",
       "support": {
         "businessDays": "Lunes a viernes",
         "hours": "9 a 18",
@@ -106,7 +106,7 @@
       "annualMonthlyEquivalent": 52425,
       "monthlyPrice": 69900,
       "setupFee": 350000,
-      "setupAnnualWaived": false,
+      "setupAnnualWaived": true,
       "annualMonths": 12,
       "annualDiscountRate": 0.25
     },
@@ -119,7 +119,7 @@
       "annualMonthlyEquivalent": 74925,
       "monthlyPrice": 99900,
       "setupFee": 650000,
-      "setupAnnualWaived": false,
+      "setupAnnualWaived": true,
       "annualMonths": 12,
       "annualDiscountRate": 0.25
     },
@@ -129,12 +129,12 @@
       "id": "catalogo",
       "name": "Vidriera",
       "audience": "Catálogo para WhatsApp. Productos y precios editables; el cliente arma y envía el pedido por WhatsApp.",
-      "annualMonthlyEquivalent": 67425,
-      "monthlyPrice": 89900,
+      "annualMonthlyEquivalent": 60000,
+      "monthlyPrice": 70000,
       "setupFee": 300000,
-      "setupAnnualWaived": false,
+      "setupAnnualWaived": true,
       "annualMonths": 12,
-      "annualDiscountRate": 0.25
+      "annualDiscountRate": 0.1428571428571429
     },
     {
       "product": "catalogo",
@@ -142,12 +142,12 @@
       "id": "pedidos",
       "name": "Flujo",
       "audience": "Catálogo + seguimiento de pedidos. Pedidos guardados, estados y enlace de seguimiento.",
-      "annualMonthlyEquivalent": 89925,
-      "monthlyPrice": 119900,
+      "annualMonthlyEquivalent": 80000,
+      "monthlyPrice": 90000,
       "setupFee": 450000,
-      "setupAnnualWaived": false,
+      "setupAnnualWaived": true,
       "annualMonths": 12,
-      "annualDiscountRate": 0.25
+      "annualDiscountRate": 0.11111111111111116
     },
     {
       "product": "catalogo",
@@ -155,12 +155,12 @@
       "id": "gestion",
       "name": "Pulso",
       "audience": "Catálogo + pedidos y caja manual. Ingresos, egresos y cierre de caja.",
-      "annualMonthlyEquivalent": 112425,
-      "monthlyPrice": 149900,
+      "annualMonthlyEquivalent": 100000,
+      "monthlyPrice": 115000,
       "setupFee": 650000,
-      "setupAnnualWaived": false,
+      "setupAnnualWaived": true,
       "annualMonths": 12,
-      "annualDiscountRate": 0.25
+      "annualDiscountRate": 0.13043478260869568
     }
   ],
   "families": [
@@ -355,5 +355,5 @@
     }
   ],
   "integrationNote": "Menú, Mesa y CRM se implementan por separado. La sincronización de productos, pedidos, stock o caja se cotiza aparte.",
-  "generalTerms": "Precios finales en ARS para nuevas propuestas. Mensual por defecto. Web y Catálogo: anual opcional de doce meses anticipados con 25% de descuento sólo en el abono, equivalente a tres mensualidades de ahorro frente a doce abonos al precio de lista vigente al contratar, sin proyectar ajustes futuros. Precio del abono fijo durante esos doce meses. Implementación completa, por única vez y por separado, en ambas modalidades; no se bonifica ni se aplica redondeo promocional. Presentación personalizada sobre componentes propios compartidos, con propuesta visual individual y dos rondas de ajustes dentro del alcance contratado. Funciones e integraciones adicionales se cotizan aparte. Dominio propio y renovación a nombre y cargo del cliente. Alojamiento, HTTPS y soporte según alcance. Menú, Mesa y CRM: referencias sujetas a presupuesto y aceptación, con implementación aparte; no se les aplica un anual automático. Gestudio conserva su escala por alumnos y condiciones específicas. Los acuerdos ya aceptados mantienen sus condiciones."
+  "generalTerms": "Precios finales en ARS para nuevas propuestas. Mensual por defecto. Web: anual opcional de doce meses anticipados con 25% de descuento sólo en el abono. Catálogo: mensual y equivalente anual propios de cada plan; no se aplica un 25% uniforme. Web y Catálogo: precio del abono fijo durante los doce meses anticipados e implementación inicial bonificada al 100% con el anual. En modalidad mensual, la implementación completa se abona por única vez y por separado al comenzar. El ahorro del abono compara doce mensualidades al precio de lista vigente al contratar, sin proyectar ajustes futuros; la bonificación de implementación se informa por separado y se suma sólo al comparar el costo inicial del primer año. Presentación personalizada sobre componentes propios compartidos, con propuesta visual individual y dos rondas de ajustes dentro del alcance contratado. Funciones e integraciones adicionales se cotizan aparte. Dominio propio y renovación a nombre y cargo del cliente. Alojamiento, HTTPS y soporte según alcance. Menú, Mesa y CRM: referencias sujetas a presupuesto y aceptación, con implementación aparte; no se les aplica un anual automático. Gestudio conserva su escala por alumnos y condiciones específicas. Los acuerdos ya aceptados mantienen sus condiciones."
 }

@@ -75,7 +75,7 @@ const publicWeb = {
 };
 const fixedPlans = [
   ...publicWeb.plans.map(plan => ({ product: 'web', productName: publicWeb.product.name, id: plan.id, name: plan.name, audience: plan.audience, annualMonthlyEquivalent: plan.annualMonthlyEquivalent, monthlyPrice: plan.monthlyPrice, setupFee: plan.setupFee, setupAnnualWaived: publicWeb.billing.setupAnnualWaived, annualMonths: publicWeb.billing.annualMonths, annualDiscountRate: publicWeb.billing.annualDiscountRate })),
-  ...catalog.plans.map(plan => ({ product: 'catalogo', productName: catalog.product.name, id: plan.id, name: plan.name, audience: plan.audience, annualMonthlyEquivalent: plan.annualMonthlyEquivalent, monthlyPrice: plan.monthlyPrice, setupFee: plan.setupFee, setupAnnualWaived: catalog.billing.setupAnnualWaived, annualMonths: catalog.billing.annualMonths, annualDiscountRate: catalog.billing.annualDiscountRate })),
+  ...catalog.plans.map(plan => ({ product: 'catalogo', productName: catalog.product.name, id: plan.id, name: plan.name, audience: plan.audience, annualMonthlyEquivalent: plan.annualMonthlyEquivalent, monthlyPrice: plan.monthlyPrice, setupFee: plan.setupFee, setupAnnualWaived: catalog.billing.setupAnnualWaived, annualMonths: catalog.billing.annualMonths, annualDiscountRate: 1-plan.annualMonthlyEquivalent/plan.monthlyPrice })),
 ];
 const families = source.families.map(family => ({ id: family.id, name: family.name, need: family.need, category: family.category, description: family.description, status: family.status, statusLabel: family.statusLabel, pricingType: family.pricingType,
   ...(family.pricingType === 'starting_quote' ? { monthlyFrom: family.monthlyFrom,

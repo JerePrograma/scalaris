@@ -28,8 +28,8 @@
     "annualMonths": 12,
     "annualPayment": "upfront",
     "annualDiscountRate": 0.25,
-    "setupAnnualWaived": false,
-    "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego revisión trimestral con aviso de treinta días, sin ajustes retroactivos. Anual opcional: doce meses abonados por adelantado con 25% de descuento sólo en el abono y precio fijo durante ese período; renovación a la tarifa informada con treinta días de anticipación. El ahorro se calcula contra doce mensualidades al precio de lista vigente al contratar, sin proyectar ajustes futuros. La implementación se abona una sola vez al comenzar, por separado del abono, en ambas modalidades. Dominio propio y renovación a nombre y cargo del cliente. Los acuerdos ya aceptados conservan sus condiciones.",
+    "setupAnnualWaived": true,
+    "renewalPolicy": "Mensual: precio inicial garantizado por tres meses; luego revisión trimestral con aviso de treinta días, sin ajustes retroactivos. La implementación se abona una sola vez al comenzar y por separado del abono mensual. Anual opcional: doce meses abonados por adelantado con 25% de descuento sólo en el abono, precio fijo durante ese período e implementación inicial bonificada al 100%. El ahorro del abono se calcula contra doce mensualidades al precio de lista vigente al contratar, sin proyectar ajustes futuros; el ahorro de implementación se informa por separado. Renovación a la tarifa informada con treinta días de anticipación. Dominio propio y renovación a nombre y cargo del cliente. Los acuerdos ya aceptados conservan sus condiciones.",
     "support": {
       "businessDays": "Lunes a viernes",
       "hours": "9 a 18",

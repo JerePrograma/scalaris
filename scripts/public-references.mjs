@@ -50,15 +50,17 @@ export function validatePublicOffer(offer) {
   if(keys(offer.billing,['annualMonths','annualDiscountRate','annualPayment','setupAnnualWaived','promotionEnd','renewalPolicy','support'],'billing')){
     if(offer.billing.annualMonths!==12)errors.push('La oferta debe indicar doce meses de pago anual.');
     if(typeof offer.billing.setupAnnualWaived!=='boolean')errors.push('La bonificación de alta debe ser explícita.');
+    if(offer.billing.annualDiscountRate!=null&&(!Number.isFinite(offer.billing.annualDiscountRate)||offer.billing.annualDiscountRate<0||offer.billing.annualDiscountRate>=1))errors.push('La tasa anual debe ser válida o nula para importes variables por plan.');
     keys(offer.billing.support,['businessDays','hours','timezone','firstResponseTarget'],'billing.support');
   }
   if(!Array.isArray(offer.plans)||offer.plans.length!==3){errors.push('La oferta debe incluir sus tres planes.');return errors;}
   if(offer.plans.map(plan=>plan.id).join(',')!=='catalogo,pedidos,gestion')errors.push('Identificadores de planes inválidos o repetidos.');
   for(const plan of offer.plans){
-    if(!keys(plan,['id','name','audience','featured','annualMonthlyEquivalent','monthlyPrice','setupFee','limits','features'],`plan.${plan.id||'unknown'}`))continue;
+    if(!keys(plan,['id','name','audience','featured','annualMonthlyEquivalent','monthlyPrice','setupFee','annualDiscountRate','limits','features'],`plan.${plan.id||'unknown'}`))continue;
     for(const field of ['annualMonthlyEquivalent','monthlyPrice','setupFee'])if(!Number.isSafeInteger(plan[field])||plan[field]<0||(field!=='setupFee'&&plan[field]===0))errors.push(`plan.${plan.id}.${field}: importe inválido`);
     if(plan.monthlyPrice<plan.annualMonthlyEquivalent)errors.push(`plan.${plan.id}: el mensual debe cubrir su equivalente anual.`);
-    if(offer.billing.annualDiscountRate!==0.25||plan.annualMonthlyEquivalent*4!==plan.monthlyPrice*3)errors.push(`plan.${plan.id}: el anual debe descontar 25% sólo sobre el abono.`);
+    const rate=plan.annualDiscountRate??offer.billing.annualDiscountRate;
+    if(rate!=null&&(!Number.isFinite(rate)||rate<0||rate>=1||plan.annualMonthlyEquivalent!==Math.round(plan.monthlyPrice*(1-rate))))errors.push(`plan.${plan.id}: el descuento anual no coincide con sus importes.`);
     if(keys(plan.limits,['products','imagesPerProduct','administrators','initialProductsLoaded','onboardingMinutes','revisionRounds'],`plan.${plan.id}.limits`))for(const [field,value]of Object.entries(plan.limits))if(!Number.isSafeInteger(value)||value<=0)errors.push(`plan.${plan.id}.limits.${field}: límite inválido`);
     if(!Array.isArray(plan.features)||plan.features.some(feature=>typeof feature!=='string'||!feature))errors.push(`plan.${plan.id}.features: lista inválida`);
   }

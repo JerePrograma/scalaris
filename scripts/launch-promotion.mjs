@@ -4,7 +4,7 @@ export const launchPromotion=JSON.parse(await readFile(new URL('../commercial/la
 // Callers may provide the billing rate; otherwise use the trusted plan's own prices,
 // rather than letting a closed campaign redefine the current subscription discount.
 export const getLaunchQuote=(plan,options={})=>quoteLaunch(plan,{at:launchPromotion.reviewedOn+'T12:00:00-03:00',...options,policy:launchPromotion,annualDiscountRate:options.annualDiscountRate??(1-plan?.annualMonthlyEquivalent/plan?.monthlyPrice)});
-export const launchTerms='Mensual por defecto. Web y Catálogo: anual opcional anticipado de doce meses con 25% de descuento sólo en el abono y precio fijo por el período cubierto. Implementación completa por única vez, al comenzar y por separado en ambas modalidades. Dominio propio y renovación a nombre y cargo del cliente. Las propuestas de otros productos tienen condiciones específicas.';
+export const launchTerms='Web y Catálogo: mensualidad y puesta en marcha al comenzar en modalidad mes a mes. Con doce meses por adelantado, tarifa anual según el plan y puesta en marcha 100% bonificada. Ahorro comparado con doce mensualidades al precio actual más la implementación. Dominio propio y renovación a nombre y cargo del cliente. Las propuestas de otros productos tienen condiciones específicas.';
 export async function syncLaunchPolicy(){
   const file=new URL('../public/offer-policy.js',import.meta.url);
   const source=await readFile(file,'utf8');

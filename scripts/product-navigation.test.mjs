@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import vm from 'node:vm';
 import { version } from './site-shell.mjs';
 import { readProductInterest,productInterestAnswers,buildInquiry,summary } from '../public/consulta/model.js';
 
@@ -79,35 +80,30 @@ test('Web details retain domain ownership and email restrictions referenced from
   assert.match(html, /según disponibilidad|organizaciones elegibles/i);
 });
 
-test('current navigation compares monthly prices with optional annual billing and full implementation',async()=>{
+test('navigation separates monthly first payment from prepaid annual totals and setup waiver',async()=>{
   const home=await readFile(new URL('../public/index.html',import.meta.url),'utf8');
   assert.ok(home.includes('$ 69.900'));
   assert.match(home,/propuesta visual|componentes propios/i);
-  assert.match(home,/mes a mes/i);
-  assert.match(home,/implementación|puesta en marcha/i);
-  assert.match(home,/anual opcional/i);
-  assert.match(home,/ahorrás 25%/i);
-  assert.match(home,/Pagás 9 meses de abono y usás 12/i);
-  assert.match(home,/Total inicial con puesta en marcha/i);
+  assert.match(home,/mes a mes/i);assert.match(home,/anual opcional/i);
+  assert.match(home,/puesta en marcha 100% bonificada/i);
+  assert.match(home,/Total inicial primer mes/i);
   const form=await readFile(new URL('../public/consulta/index.html',import.meta.url),'utf8');
   assert.match(form,/href="#form-root"/);
-  assert.match(form,/25% de descuento sólo en el abono/);
+  assert.match(form,/100% bonificada/);
   assert.match(form,/Gestudio[^<]*condiciones propias/);
   const conditions=await readFile(new URL('../public/promociones/index.html',import.meta.url),'utf8');
-  assert.match(conditions,/25% de descuento sólo en el abono|ahorrás 25% en el abono/);
-  assert.match(conditions,/quince|15%/);
-  assert.match(conditions,/1,5/);
-  assert.match(conditions,/treinta días de anticipación/);
-  for(const page of [home,form,conditions])assert.doesNotMatch(page,/100% bonificada|50% bonificada|alta bonificada|puesta en marcha bonificada|redondea el total|tres cuotas sin recargo|primeros cinco|5 cupos disponibles/i);
+  assert.match(conditions,/Web conserva 25%/);
+  assert.match(conditions,/Catálogo tiene importes anuales propios/);
+  assert.match(conditions,/quince|15%/);assert.match(conditions,/1,5/);assert.match(conditions,/treinta días de anticipación/);
+  for(const page of [home,form,conditions])assert.doesNotMatch(page,/50% bonificada|redondea el total|tres cuotas sin recargo|primeros cinco|5 cupos disponibles|Web y Catálogo[^.]*25%/i);
   const offer=JSON.parse(await readFile(new URL('../public/productos/offer.json',import.meta.url),'utf8'));
   const money=value=>new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(value).replace(/\s/g,' ');
   for(const plan of offer.fixedPlans){
-    const row=conditions.match(new RegExp(`<tr><th scope="row"><strong>${plan.name}</strong>[\\s\\S]*?<\\/tr>`))?.[0];
-    assert.ok(row,plan.name);
-    for(const amount of [plan.monthlyPrice+plan.setupFee,plan.annualMonthlyEquivalent*12,(plan.monthlyPrice-plan.annualMonthlyEquivalent)*12,plan.annualMonthlyEquivalent*12+plan.setupFee])assert.ok(row.includes(money(amount)),`${plan.name} ${amount}`);
-    assert.match(row,/mes equivalente/);
-    assert.match(row,/Abono anual anticipado/);
-    assert.match(row,/Total inicial anual/);
+    const row=conditions.match(new RegExp(`<tr><th scope="row"><strong>${plan.name}</strong>[\\s\\S]*?<\\/tr>`))?.[0];assert.ok(row,plan.name);
+    const saving=(plan.monthlyPrice-plan.annualMonthlyEquivalent)*12;
+    for(const amount of [plan.monthlyPrice+plan.setupFee,plan.annualMonthlyEquivalent*12,saving,saving+plan.setupFee])assert.ok(row.includes(money(amount)),`${plan.name} ${amount}`);
+    assert.match(row,/mes equivalente/);assert.match(row,/Abono anual anticipado/);assert.match(row,/Total a pagar por 12 meses/);assert.match(row,/Puesta en marcha: \$ 0 · 100% bonificada/);
+    assert.match(row,/billing=monthly/);assert.match(row,/billing=annual/);
   }
 });
 
@@ -130,4 +126,44 @@ test('the six published product references keep their own scope and only Web and
   assert.equal(academy.plans.length,4);
   assert.equal(academy.billing.annualDiscountRate,.15);
   for(const plan of academy.plans)assert.ok(page.includes(plan.name));
+});
+
+test('Web and Catalog keep monthly white blocks fixed for annual URL context and expose explicit annual links',async()=>{
+  const money=value=>new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(value).replace(/\s/g,' ');
+  for(const [product,scriptName,planAttribute,priceAttribute,setupAttribute,initialAttribute,ctaAttribute,contextAttribute] of [
+    ['web','web','data-web-plan','data-web-price','data-web-setup','data-web-initial','data-web-cta','data-web-context'],
+    ['catalogo','catalogo','data-catalog-plan','data-plan-price','data-plan-setup','data-plan-initial','data-plan-cta','data-billing-context'],
+  ]){
+    const html=await readFile(new URL(`../public/${product}/index.html`,import.meta.url),'utf8');
+    const script=await readFile(new URL(`../public/${product}/${scriptName}.js`,import.meta.url),'utf8');
+    const offer=JSON.parse(await readFile(new URL(`../public/${product}/offer.json`,import.meta.url),'utf8'));
+    assert.equal(offer.billing.setupAnnualWaived,true,product);
+    assert.doesNotMatch(html,/data-web-billing=|data-billing="(?:annual|monthly)"/);
+    for(const search of ['?billing=annual&amount=1&setup=0&discount=1&promotion=true','?billing=FREE&need=UNTRUSTED']){
+      const anchor={value:'/consulta/?service=SOFTWARE&product='+product,getAttribute(){return this.value;},set href(value){this.value=value;},get href(){return this.value;}};
+      const context=vm.createContext({URL,URLSearchParams,window:{location:{origin:'https://scalaris.com.ar',search}},document:{querySelectorAll(selector){assert.equal(selector,'['+contextAttribute+']','Only general context links can change');return [anchor];},querySelector(selector){assert.equal(selector,'[data-print]');return null;}}});
+      vm.runInContext(script,context);
+      const url=new URL(anchor.href,'https://scalaris.com.ar');assert.equal(url.searchParams.get('billing'),search.startsWith('?billing=annual')?'annual':'monthly');
+      for(const key of ['amount','setup','discount','promotion','need'])assert.equal(url.searchParams.get(key),null);
+    }
+    for(const plan of offer.plans){
+      const card=html.match(new RegExp(`<article[^>]*${planAttribute}="${plan.id}"[\\s\\S]*?<\\/article>`))?.[0];assert.ok(card,plan.id);
+      assert.ok(card.includes(priceAttribute+'>'+money(plan.monthlyPrice)),plan.id+' monthly price');
+      assert.ok(card.includes(setupAttribute+'>'+money(plan.setupFee)),plan.id+' full monthly setup');
+      assert.ok(card.includes(initialAttribute+'>'+money(plan.monthlyPrice+plan.setupFee)),plan.id+' first monthly payment');
+      assert.match(card,/Sin descuento · pagando mes a mes/);assert.match(card,/Total inicial primer mes/);
+      const monthlyHref=card.match(new RegExp(ctaAttribute+'[^>]*href="([^"]+)"'))?.[1];assert.ok(monthlyHref);
+      assert.equal(new URL(monthlyHref.replaceAll('&amp;','&'),'https://scalaris.com.ar').searchParams.get('billing'),'monthly');
+      const green=card.match(new RegExp(`<div class="${product==='web'?'web':'catalog'}-annual-benefit">[\\s\\S]*?<\\/a><\\/div>`))?.[0];assert.ok(green);
+      const saving=(plan.monthlyPrice-plan.annualMonthlyEquivalent)*12;
+      for(const amount of [plan.annualMonthlyEquivalent,plan.annualMonthlyEquivalent*12,saving,saving+plan.setupFee])assert.ok(green.includes(money(amount)),plan.id+' annual amount '+amount);
+      assert.match(green,/Puesta en marcha bonificada \(100%\)/);assert.match(green,/>\$ 0<\/dd>/);assert.match(green,/Total a pagar por 12 meses/);assert.match(green,/billing=annual/);
+      if(product==='catalogo')assert.doesNotMatch(green,/25%|3 meses|9 meses/);
+    }
+    if(product==='catalogo'){
+      assert.equal(offer.billing.annualDiscountRate,null);
+      assert.deepEqual(offer.plans.map(p=>[p.monthlyPrice,p.annualMonthlyEquivalent,p.setupFee,p.limits.administrators,p.limits.onboardingMinutes]),[[70000,60000,300000,2,60],[90000,80000,450000,4,120],[115000,100000,650000,6,180]]);
+      for(const time of ['1 hora','2 horas','3 horas'])assert.ok(html.includes(time),time);
+    }
+  }
 });

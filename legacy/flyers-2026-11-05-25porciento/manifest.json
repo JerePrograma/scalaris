@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 2,
+  "reviewedAt": "2026-11-05",
+  "pieces": 11,
+  "pngCount": 22,
+  "currency": "ARS",
+  "priceDisplay": "monthly",
+  "campaign": null,
+  "formats": {
+    "facebookInstagram": [
+      1080,
+      1350
+    ],
+    "whatsapp": [
+      1080,
+      1920
+    ]
+  },
+  "sources": [
+    "commercial/portfolio-offer.json",
+    "public/productos/offer.json",
+    "public/catalogo/offer.json"
+  ],
+  "bundles": {
+    "facebookInstagram": "scalaris-facebook-instagram-2026-11-05.zip",
+    "whatsapp": "scalaris-whatsapp-2026-11-05.zip"
+  },
+  "entries": [
+    {
+      "slug": "plan-presencia",
+      "title": "Origen",
+      "eyebrow": "SCALARIS WEB",
+      "headline": "Presentá tu negocio y recibí consultas.",
+      "monthlyPrice": 69900,
+      "setupFee": 350000,
+      "setup": "Puesta en marcha única: $350.000",
+      "features": [
+        "Una página con hasta cinco secciones",
+        "Tu marca y contacto por WhatsApp",
+        "Alojamiento y HTTPS incluidos · Diseño personalizado"
+      ],
+      "notes": "Mes a mes. Dominio propio y terceros por separado. Alcance acordado antes de comenzar.",
+      "url": "/consulta/?service=SOFTWARE&product=web&plan=presencia&billing=monthly",
+      "annualMonthlyEquivalent": 52425,
+      "annualTotal": 629100,
+      "annualSavings": 209700,
+      "annualInitialTotal": 979100,
+      "annualDiscountRate": 0.25,
+      "thumbnail": "miniaturas/plan-presencia.webp",
+      "facebookInstagram": "facebook-instagram/plan-presencia.png",
+      "whatsapp": "whatsapp/plan-presencia.png"
+    },
+    {
+      "slug": "plan-negocio",
+      "title": "Web institucional",
+      "eyebrow": "SCALARIS WEB",
+      "headline": "Más espacio para tus servicios y tu historia.",
+      "monthlyPrice": 99900,
+      "setupFee": 650000,
+      "setup": "Puesta en marcha única: $650.000",
+      "features": [
+        "Hasta cinco páginas institucionales",
+        "Tu marca y contacto por WhatsApp",
+        "Alojamiento y HTTPS incluidos · Diseño personalizado"
+      ],
+      "notes": "Mes a mes. Dominio propio y terceros por separado. Alcance acordado antes de comenzar.",
+      "url": "/consulta/?service=SOFTWARE&product=web&plan=negocio&billing=monthly",
+      "annualMonthlyEquivalent": 74925,
+      "annualTotal": 899100,
+      "annualSavings": 299700,
+      "annualInitialTotal": 1549100,
+      "annualDiscountRate": 0.25,
+      "thumbnail": "miniaturas/plan-negocio.webp",
+      "facebookInstagram": "facebook-instagram/plan-negocio.png",
+      "whatsapp": "whatsapp/plan-negocio.png"
+    },
+    {
+      "slug": "plan-catalogo",
+      "title": "Vidriera",
+      "eyebrow": "SCALARIS CATÁLOGO",
+      "headline": "Tus productos, al alcance de tus clientes.",
+      "monthlyPrice": 89900,
+      "setupFee": 300000,
+      "setup": "Puesta en marcha única: $300.000",
+      "features": [
+        "Productos y precios editables desde el celular",
+        "Carrito para preparar el pedido por WhatsApp",
+        "Hasta 100 productos · 1 administrador · Diseño personalizado"
+      ],
+      "notes": "Un negocio y una sucursal. Alta asistida y alcance a validar. Sin pagos online ni facturación fiscal.",
+      "url": "/consulta/?service=SOFTWARE&product=catalogo&plan=catalogo&billing=monthly",
+      "annualMonthlyEquivalent": 67425,
+      "annualTotal": 809100,
+      "annualSavings": 269700,
+      "annualInitialTotal": 1109100,
+      "annualDiscountRate": 0.25,
+      "thumbnail": "miniaturas/plan-catalogo.webp",
+      "facebookInstagram": "facebook-instagram/plan-catalogo.png",
+      "whatsapp": "whatsapp/plan-catalogo.png"
+    },
+    {
+      "slug": "plan-pedidos",
+      "title": "Flujo",
+      "eyebrow": "SCALARIS CATÁLOGO",
+      "headline": "Ordená los pedidos que recibe tu negocio.",
+      "monthlyPrice": 119900,
+      "setupFee": 450000,
+      "setup": "Puesta en marcha única: $450.000",
+      "features": [
+        "Pedidos guardados y estados de seguimiento",
+        "Enlace de seguimiento para el cliente",
+        "Hasta 300 productos · 2 administradores · Diseño personalizado"
+      ],
+      "notes": "Un negocio y una sucursal. Alta asistida y alcance a validar. Sin pagos online ni facturación fiscal.",
+      "url": "/consulta/?service=SOFTWARE&product=catalogo&plan=pedidos&billing=monthly",
+      "annualMonthlyEquivalent": 89925,
+      "annualTotal": 1079100,
+      "annualSavings": 359700,
+      "annualInitialTotal": 1529100,
+      "annualDiscountRate": 0.25,
+      "thumbnail": "miniaturas/plan-pedidos.webp",
+      "facebookInstagram": "facebook-instagram/plan-pedidos.png",
+      "whatsapp": "whatsapp/plan-pedidos.png"
+    },
+    {
+      "slug": "plan-gestion",
+      "title": "Pulso",
+      "eyebrow": "SCALARIS CATÁLOGO",
+      "headline": "Pedidos y caja manual, en un mismo lugar.",
+      "monthlyPrice": 149900,
+      "setupFee": 650000,
+      "setup": "Puesta en marcha única: $650.000",
+      "features": [
+        "Pedidos y seguimiento incluidos",
+        "Ingresos, egresos y cierre de caja manual",
+        "Hasta 1.000 productos · 3 administradores · Diseño personalizado"
+      ],
+      "notes": "Un negocio y una sucursal. Alta asistida y alcance a validar. Sin pagos online ni facturación fiscal.",
+      "url": "/consulta/?service=SOFTWARE&product=catalogo&plan=gestion&billing=monthly",
+      "annualMonthlyEquivalent": 112425,
+      "annualTotal": 1349100,
+      "annualSavings": 449700,
+      "annualInitialTotal": 1999100,
+      "annualDiscountRate": 0.25,
+      "thumbnail": "miniaturas/plan-gestion.webp",
+      "facebookInstagram": "facebook-instagram/plan-gestion.png",
+      "whatsapp": "whatsapp/plan-gestion.png"
+    },
+    {
+      "slug": "producto-menu",
+      "title": "Menú gastronómico",
+      "eyebrow": "GASTRONOMÍA",
+      "monthlyPrice": 25000,
+      "starting": true,
+      "setup": "Implementación a cotizar según alcance.",
+      "url": "/consulta/?service=SOFTWARE&product=menu&billing=monthly",
+      "headline": "Tu menú, con las opciones de cada pedido.",
+      "features": [
+        "Variantes, ingredientes y adicionales",
+        "Fotos y publicación del menú",
+        "Pedidos y coordinación por WhatsApp"
+      ],
+      "notes": "Para un negocio. Implementación a cotizar. Menú y Mesa se implementan por separado.",
+      "thumbnail": "miniaturas/producto-menu.webp",
+      "facebookInstagram": "facebook-instagram/producto-menu.png",
+      "whatsapp": "whatsapp/producto-menu.png"
+    },
+    {
+      "slug": "producto-mesa",
+      "title": "Scalaris Mesa",
+      "eyebrow": "GASTRONOMÍA",
+      "monthlyPrice": 39900,
+      "starting": true,
+      "setup": "Implementación a cotizar según alcance.",
+      "url": "/consulta/?service=SOFTWARE&product=mesa&billing=monthly",
+      "headline": "Organizá el salón, las comandas y las cuentas.",
+      "features": [
+        "Mesas, mostrador y pedidos",
+        "Comandas de cocina y barra",
+        "División de cuentas y pagos manuales"
+      ],
+      "notes": "Para un local. Implementación a cotizar y piloto en el local antes del uso operativo.",
+      "thumbnail": "miniaturas/producto-mesa.webp",
+      "facebookInstagram": "facebook-instagram/producto-mesa.png",
+      "whatsapp": "whatsapp/producto-mesa.png"
+    },
+    {
+      "slug": "producto-crm",
+      "title": "CRM Scalaris",
+      "eyebrow": "EQUIPOS COMERCIALES",
+      "monthlyPrice": 49900,
+      "starting": true,
+      "setup": "Implementación a cotizar según alcance.",
+      "url": "/consulta/?service=SOFTWARE&product=crm&billing=monthly",
+      "headline": "Dale seguimiento a cada oportunidad.",
+      "features": [
+        "Contactos, notas y seguimientos",
+        "Oportunidades y presupuestos",
+        "Importación y capacitación acordadas"
+      ],
+      "notes": "Requiere relevamiento y adaptación. Implementación a cotizar. Sin envíos automáticos activos de WhatsApp ni correo.",
+      "thumbnail": "miniaturas/producto-crm.webp",
+      "facebookInstagram": "facebook-instagram/producto-crm.png",
+      "whatsapp": "whatsapp/producto-crm.png"
+    },
+    {
+      "slug": "producto-gestudio",
+      "title": "Gestudio",
+      "eyebrow": "ACADEMIAS E INSTITUTOS",
+      "headline": "Alumnos activos y cuotas, con una gestión más clara.",
+      "priceRows": [
+        {
+          "label": "Hasta 50 alumnos",
+          "price": "$39.900/mes",
+          "id": "estudio",
+          "monthlyPrice": 39900,
+          "studentsMin": 1,
+          "studentsMax": 50
+        },
+        {
+          "label": "51 a 150 alumnos",
+          "price": "$59.900/mes",
+          "id": "academia",
+          "monthlyPrice": 59900,
+          "studentsMin": 51,
+          "studentsMax": 150
+        },
+        {
+          "label": "151 a 300 alumnos",
+          "price": "$89.900/mes",
+          "id": "academia-plus",
+          "monthlyPrice": 89900,
+          "studentsMin": 151,
+          "studentsMax": 300
+        },
+        {
+          "label": "Más de 300 alumnos",
+          "price": "Desde $119.900/mes",
+          "id": "institucion",
+          "monthlyPrice": 119900,
+          "studentsMin": 301,
+          "studentsMax": null
+        }
+      ],
+      "setup": "Implementación: 1,5 abonos. Institución: a cotizar.",
+      "features": [
+        "Alumnos, disciplinas e inscripciones",
+        "Asistencias y mensualidades",
+        "Una institución y una sede"
+      ],
+      "notes": "Piloto de aceptación antes del uso operativo. Migración según alcance. Demo pública de consulta.",
+      "url": "/consulta/?service=SOFTWARE&product=academia&billing=monthly",
+      "thumbnail": "miniaturas/producto-gestudio.webp",
+      "facebookInstagram": "facebook-instagram/producto-gestudio.png",
+      "whatsapp": "whatsapp/producto-gestudio.png"
+    },
+    {
+      "slug": "servicios",
+      "title": "Tu próximo sistema",
+      "eyebrow": "DESARROLLO · AUTOMATIZACIONES · INTEGRACIONES",
+      "headline": "Software que acompañe la forma en que trabajás.",
+      "priceText": "Presupuesto por alcance",
+      "setup": "Entregables y puesta en marcha acordados.",
+      "features": [
+        "Desarrollo a medida para tu proceso",
+        "Automatización de tareas repetitivas",
+        "Integración entre tus herramientas"
+      ],
+      "notes": "Revisamos necesidad, herramientas y resultado antes de cotizar. Nuevas funciones y terceros por separado.",
+      "url": "/consulta/?service=SOFTWARE",
+      "thumbnail": "miniaturas/servicios.webp",
+      "facebookInstagram": "facebook-instagram/servicios.png",
+      "whatsapp": "whatsapp/servicios.png"
+    },
+    {
+      "slug": "soluciones-scalaris",
+      "title": "Software para tu negocio",
+      "eyebrow": "PRODUCTOS SCALARIS",
+      "headline": "Elegí la solución para tu próxima etapa.",
+      "priceRows": [
+        {
+          "label": "Web",
+          "price": "$69.900/mes"
+        },
+        {
+          "label": "Catálogo",
+          "price": "$89.900/mes"
+        },
+        {
+          "label": "Menú gastronómico",
+          "price": "$25.000/mes"
+        },
+        {
+          "label": "Scalaris Mesa",
+          "price": "$39.900/mes"
+        },
+        {
+          "label": "Gestudio",
+          "price": "$39.900/mes"
+        },
+        {
+          "label": "CRM Scalaris",
+          "price": "$49.900/mes"
+        }
+      ],
+      "setup": "Referencias desde · implementación por separado.",
+      "features": [
+        "Planes mensuales con alcance definido",
+        "Alta y acompañamiento acordados",
+        "Desarrollo e integraciones a cotizar"
+      ],
+      "notes": "La opción se define según tu operación. Gestudio y Mesa requieren aceptación de piloto. Consultá el alcance.",
+      "url": "/productos/#planes",
+      "thumbnail": "miniaturas/soluciones-scalaris.webp",
+      "facebookInstagram": "facebook-instagram/soluciones-scalaris.png",
+      "whatsapp": "whatsapp/soluciones-scalaris.png"
+    }
+  ]
+}

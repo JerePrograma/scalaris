@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
-import {quoteLaunch,formatOfferMoney,launchPromotion,launchIsActive} from '../public/offer-policy.js';
+import {formatOfferMoney,launchIsActive} from '../public/offer-policy.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const generator = path.join(root, 'scripts/build-portfolio-offer.mjs');
@@ -50,7 +50,8 @@ test('portfolio generation keeps six families, five fixed plans and explicit pub
   assert.equal((html.match(/class="portfolio-annual-benefit"/g) || []).length, 5, 'Annual savings stay visible in the monthly default.');
   assert.equal((html.match(/data-plan-initial/g) || []).length, 5);
   assert.match(html, /25%/);
-  assert.match(html, /3 meses de abono/);
+  assert.match(html, /alta 100% bonificada/);
+  assert.doesNotMatch(html, /data-portfolio-billing=/);
   assert.match(html, /propuesta visual personalizada/);
   assert.match(html, /dos rondas de ajustes/);
   for (const id of ['demos', 'planes', 'comparar']) assert.ok(html.includes(`id="${id}"`));
@@ -69,19 +70,23 @@ test('portfolio generation keeps six families, five fixed plans and explicit pub
   assert.deepEqual(publicOffer.fixedPlans.map(plan => plan.id), ['presencia', 'negocio', 'catalogo', 'pedidos', 'gestion']);
   assert.equal(publicOffer.webOffer.includedServices.domain.registrationAndRenewal, false);
   assert.match(publicOffer.webOffer.includedServices.domain.condition, /cargo|separado/);
-  assert.ok(publicOffer.fixedPlans.every(plan => plan.setupAnnualWaived === false));
+  assert.ok(publicOffer.fixedPlans.every(plan => plan.setupAnnualWaived === true));
   for (const plan of publicOffer.fixedPlans) {
-    assert.equal(plan.annualMonthlyEquivalent * 4, plan.monthlyPrice * 3);
-    assert.equal(plan.annualDiscountRate, 0.25);
+    assert.ok(Math.abs(plan.annualDiscountRate-(1-plan.annualMonthlyEquivalent/plan.monthlyPrice))<1e-12);
+    if(plan.product==='web')assert.equal(plan.annualMonthlyEquivalent*4,plan.monthlyPrice*3);
     const row = html.match(new RegExp(`<tr data-portfolio-plan="${plan.product}:${plan.id}"[\\s\\S]*?<\\/tr>`))?.[0];
     assert.ok(row, plan.id);
-    for (const amount of [(plan.monthlyPrice-plan.annualMonthlyEquivalent)*12, plan.annualMonthlyEquivalent*12, plan.annualMonthlyEquivalent*12+plan.setupFee, plan.monthlyPrice+plan.setupFee]) assert.ok(row.includes(formatOfferMoney(amount)), `${plan.id}: ${amount}`);
+    for (const amount of [(plan.monthlyPrice-plan.annualMonthlyEquivalent)*12, plan.annualMonthlyEquivalent*12, (plan.monthlyPrice-plan.annualMonthlyEquivalent)*12+plan.setupFee, plan.monthlyPrice+plan.setupFee]) assert.ok(row.includes(formatOfferMoney(amount)), `${plan.id}: ${amount}`);
   }
+  assert.equal(publicOffer.webOffer.billing.setupAnnualWaived,true);
+  assert.equal(catalog.billing.setupAnnualWaived,true);
+  assert.equal(catalog.billing.annualDiscountRate,null);
+  assert.deepEqual(publicOffer.fixedPlans.filter(p=>p.product==='catalogo').map(p=>p.annualMonthlyEquivalent),[60000,80000,100000]);
   assert.equal(publicOffer.webOffer.includedServices.email.maxAccounts, 5);
   assert.match(publicOffer.webOffer.includedServices.email.condition, /IMAP\/POP/);
   assert.deepEqual(publicOffer.fixedPlans.map(plan => [plan.product, plan.id, plan.monthlyPrice, plan.setupFee]), [
     ['web', 'presencia', 69900, 350000], ['web', 'negocio', 99900, 650000],
-    ['catalogo', 'catalogo', 89900, 300000], ['catalogo', 'pedidos', 119900, 450000], ['catalogo', 'gestion', 149900, 650000],
+    ['catalogo', 'catalogo', 70000, 300000], ['catalogo', 'pedidos', 90000, 450000], ['catalogo', 'gestion', 115000, 650000],
   ]);
 });
 
@@ -130,12 +135,14 @@ test('catalog prices follow their own public offer and regeneration is determini
   assert.match(card, /data-plan-setup-note>Por única vez/);
   assert.match(card, /billing=monthly/);
   assert.ok(before[0].includes('$ 18.000'));
-  assert.match(before[2], /"annualMonthlyEquivalent":13500/);
-  assert.match(card, /Ahorrás \$ 54\.000/);
+  assert.doesNotMatch(before[2], /annualMonthlyEquivalent|monthlyPrice|setupFee/, 'Billing context script does not carry mutable pricing data.');
+  assert.match(card, /Ahorro en el abono anual: \$ 54\.000/);
   assert.match(card, /Abono anual anticipado: \$ 162\.000/);
-  assert.match(card, /Total inicial anual: \$ 193\.000/);
-  assert.match(card, /Total inicial mensual: \$ 49\.000/);
-  assert.doesNotMatch(before[0], /sujeto a cupo|100% bonificada|50% bonificada/i);
+  assert.match(card, /Total a pagar por 12 meses: \$ 162\.000/);
+  assert.match(card, /Ahorro total del primer año: \$ 85\.000/);
+  assert.match(card, /Puesta en marcha: \$ 0 · 100% bonificada/);
+  assert.match(card, /Total inicial primer mes: \$ 49\.000/);
+  assert.doesNotMatch(before[0], /sujeto a cupo|50% bonificada|tres cuotas sin recargo/i);
   run();
   const after = await Promise.all(['index.html', 'productos.css', 'productos.js', 'offer.json'].map(read));
   assert.deepEqual(after, before);
@@ -178,123 +185,44 @@ test('Gestudio publishes a monthly reference with quoted implementation and no i
   assert.equal(values.priceReferences.academia.plans.length,4);
 });
 
-test('billing selector defaults to monthly and preserves trusted prices and initial totals without campaign benefits', async t => {
-  const { read } = await fixture(t);
-  const controls = ['annual', 'monthly'].map(mode => ({ dataset: { portfolioBilling: mode }, attributes: {}, setAttribute(key, value) { this.attributes[key] = value; }, addEventListener() {} }));
-  const keys = ['[data-plan-price]', '[data-plan-period]', '[data-plan-setup]', '[data-plan-setup-note]', '[data-plan-initial]', '[data-plan-link]'];
-  const rows = new Map(['web:presencia', 'web:negocio', 'catalogo:catalogo', 'catalogo:pedidos', 'catalogo:gestion'].map(key => {
-    const fields = new Map(keys.map(selector => [selector, { textContent: '', href: '' }]));
-    return [key, { fields, querySelector(selector) { return fields.get(selector); } }];
-  }));
-  const note = { textContent: '' };
-  const at = launchPromotion.reviewedOn + 'T12:00:00-03:00';
-  const makeContext = search => vm.createContext({ URLSearchParams, Intl,
-    quoteLaunch: (plan, options) => quoteLaunch(plan, {...options, at}),
-    money: formatOfferMoney, launchPromotion, launchIsActive: () => launchIsActive(at),
-    window: { location: { search } }, document: {
-      querySelectorAll: () => controls,
-      querySelector(selector) { const key = selector.match(/^\[data-portfolio-plan="([^"]+)"\]$/)?.[1]; return key ? rows.get(key) : selector === '[data-portfolio-billing-note]' ? note : null; },
-    },
-  });
-  const moduleSource = await read('productos.js');
-  assert.match(moduleSource, /from '\/offer-policy\.js\?v=/);
-  const script = moduleSource.replace(/^import[^\n]+\n/, '');
-  assert.doesNotMatch(script, /^import/m);
-  assert.match(script, /data-plan-initial/);
-  assert.match(script, /Total inicial anual/);
-  assert.match(script, /Total inicial mensual/);
-  const context = makeContext('?amount=1&setup=0&discount=1&domain=free');
-  vm.runInContext(script, context);
-  assert.equal(controls[1].attributes['aria-pressed'], 'true');
-  const plans = source.webOffer.plans.map(p => ({...p, product:'web'})).concat(catalog.plans.map(p => ({...p, product:'catalogo'})));
-  const setupDue = [350000,650000,300000,450000,650000];
-  plans.forEach((plan, i) => {
-    const fields = rows.get(plan.product + ':' + plan.id).fields;
-    assert.equal(fields.get('[data-plan-price]').textContent, formatOfferMoney(plan.monthlyPrice));
-    assert.equal(fields.get('[data-plan-setup]').textContent, setupDue[i] === 0 ? 'Bonificada' : formatOfferMoney(setupDue[i]));
-    assert.equal(fields.get('[data-plan-period]').textContent, '/mes, pagando mes a mes');
-    assert.equal(fields.get('[data-plan-initial]').textContent, 'Total inicial mensual: ' + formatOfferMoney(plan.monthlyPrice + plan.setupFee));
-    assert.match(fields.get('[data-plan-setup-note]').textContent, /^Por única vez(?:, en ambas modalidades)?$/);
-    const url = new URL(fields.get('[data-plan-link]').href, 'https://scalaris.com.ar');
-    assert.equal(url.searchParams.get('product'), plan.product);
-    assert.equal(url.searchParams.get('plan'), plan.id);
-    assert.equal(url.searchParams.get('billing'), 'monthly');
-    for (const untrusted of ['amount', 'setup', 'discount', 'domain']) assert.equal(url.searchParams.get(untrusted), null);
-  });
-  assert.equal(rows.get('web:negocio').fields.get('[data-plan-setup]').textContent, '$ 650.000');
-  assert.doesNotMatch(note.textContent,/cupo|bonificad|3 cuotas/);
-  vm.runInContext('showBilling("monthly")', context);
-  assert.equal(controls[1].attributes['aria-pressed'], 'true');
-  plans.forEach(plan => {
-    const fields = rows.get(plan.product + ':' + plan.id).fields;
-    assert.equal(fields.get('[data-plan-price]').textContent, formatOfferMoney(plan.monthlyPrice));
-    assert.equal(fields.get('[data-plan-setup]').textContent, formatOfferMoney(plan.setupFee));
-    assert.equal(fields.get('[data-plan-period]').textContent, '/mes, pagando mes a mes');
-    assert.equal(fields.get('[data-plan-initial]').textContent, 'Total inicial mensual: ' + formatOfferMoney(plan.monthlyPrice + plan.setupFee));
-    assert.match(fields.get('[data-plan-setup-note]').textContent, /^Por única vez(?:, en ambas modalidades)?$/);
-    const url = new URL(fields.get('[data-plan-link]').href, 'https://scalaris.com.ar');
-    assert.equal(url.searchParams.get('product'), plan.product);
-    assert.equal(url.searchParams.get('plan'), plan.id);
-    assert.equal(url.searchParams.get('billing'), 'monthly');
-    for (const untrusted of ['amount', 'setup', 'discount', 'domain']) assert.equal(url.searchParams.get(untrusted), null);
-  });
-  assert.doesNotMatch(note.textContent, /3 cuotas sin recargo/);
-  vm.runInContext(script, makeContext('?billing=monthly&amount=1&setup=0'));
-  assert.equal(controls[1].attributes['aria-pressed'], 'true');
-  assert.equal(rows.get('catalogo:gestion').fields.get('[data-plan-price]').textContent, '$ 149.900');
-  vm.runInContext(script, makeContext('?billing=FREE&amount=1&setup=0'));
-  assert.equal(controls[1].attributes['aria-pressed'], 'true');
-  assert.equal(rows.get('catalogo:gestion').fields.get('[data-plan-price]').textContent, '$ 149.900');
-  assert.equal(new URL(rows.get('catalogo:gestion').fields.get('[data-plan-link]').href, 'https://scalaris.com.ar').searchParams.get('billing'), 'monthly');
+test('annual URL context cannot rewrite monthly prices or explicit billing links', async t => {
+  const {read}=await fixture(t);
+  const html=await read('index.html'),script=await read('productos.js'),offer=JSON.parse(await read('offer.json'));
+  assert.doesNotMatch(html,/data-portfolio-billing=/);
+  for(const search of ['?billing=annual&amount=1&setup=0&discount=1&domain=free','?billing=monthly&promotion=true','?billing=FREE&amount=0','?billing=%3Cscript%3E&need=UNTRUSTED']){
+    const links=new Map(['web','catalogo'].map(product=>[product,{href:''}]));
+    const context=vm.createContext({URLSearchParams,window:{location:{search}},document:{querySelector(selector){const id=selector.match(/^\[data-family-link="(web|catalogo)"\]$/)?.[1];assert.ok(id,'Billing context must not query or mutate monthly price fields: '+selector);return links.get(id);}}});
+    vm.runInContext(script,context);
+    for(const [product,link] of links){const url=new URL(link.href,'https://scalaris.com.ar');assert.equal(url.pathname,product==='web'?'/web/':'/catalogo/');assert.equal(url.searchParams.get('billing'),search.startsWith('?billing=annual')?'annual':'monthly');for(const field of ['amount','setup','discount','domain','promotion','need'])assert.equal(url.searchParams.get(field),null);}
+    for(const plan of offer.fixedPlans){
+      const row=html.match(new RegExp(`<tr data-portfolio-plan="${plan.product}:${plan.id}"[\\s\\S]*?<\\/tr>`))?.[0];
+      assert.ok(row,plan.id);
+      assert.ok(row.includes('data-plan-price>'+formatOfferMoney(plan.monthlyPrice)));
+      assert.ok(row.includes('data-plan-setup>'+formatOfferMoney(plan.setupFee)));
+      assert.ok(row.includes('Total inicial primer mes: '+formatOfferMoney(plan.monthlyPrice+plan.setupFee)));
+      assert.match(row,/\/mes sin descuento, pagando mes a mes/);
+      for(const [marker,mode] of [['data-plan-link','monthly'],['data-plan-annual-link','annual']]){
+        const href=row.match(new RegExp(marker+'[^>]*href="([^"]+)"'))?.[1];assert.ok(href,marker);
+        const link=new URL(href.replaceAll('&amp;','&'),'https://scalaris.com.ar');
+        assert.equal(link.searchParams.get('product'),plan.product);assert.equal(link.searchParams.get('plan'),plan.id);assert.equal(link.searchParams.get('billing'),mode);
+        assert.deepEqual([...link.searchParams.keys()].sort(),['billing','plan','product','service']);
+      }
+    }
+  }
 });
 
-test('expired launch selector charges the full setup and stops promising gifts or three installments', async t => {
-  const { read } = await fixture(t);
-  const at = '2026-12-01T00:00:00-03:00';
-  assert.equal(launchIsActive(at), false);
-  const controls = ['annual', 'monthly'].map(mode => ({dataset:{portfolioBilling:mode},attributes:{},setAttribute(key,value){this.attributes[key]=value;},addEventListener(){}}));
-  const keys = ['[data-plan-price]', '[data-plan-period]', '[data-plan-setup]', '[data-plan-setup-note]', '[data-plan-initial]', '[data-plan-link]'];
-  const plans = source.webOffer.plans.map(p => ({...p,product:'web'})).concat(catalog.plans.map(p => ({...p,product:'catalogo'})));
-  const rows = new Map(plans.map(p => {
-    const fields = new Map(keys.map(selector => [selector,{textContent:'',href:''}]));
-    return [p.product+':'+p.id,{fields,querySelector(selector){return fields.get(selector);}}];
-  }));
-  const note = {textContent:''};
-  const context = vm.createContext({URLSearchParams,Intl,money:formatOfferMoney,launchPromotion,
-    quoteLaunch:(plan,options)=>quoteLaunch(plan,{...options,at}),launchIsActive:()=>false,
-    window:{location:{search:'?billing=annual&promotion=true&discount=1&domain=free&setup=0'}},
-    document:{querySelectorAll:()=>controls,querySelector(selector){const key=selector.match(/^\[data-portfolio-plan="([^"]+)"\]$/)?.[1];return key?rows.get(key):selector==='[data-portfolio-billing-note]'?note:null;}},
-  });
-  const script = (await read('productos.js')).replace(/^import[^\n]+\n/,'');
-  vm.runInContext(script, context);
-  assert.equal(controls[0].attributes['aria-pressed'],'true');
-  const noExpiredBenefit = /bonificad|bonificación|primer año de dominio|3 cuotas|sin recargo|cuota 1/i;
-  plans.forEach(plan => {
-    const fields=rows.get(plan.product+':'+plan.id).fields;
-    assert.equal(fields.get('[data-plan-price]').textContent,formatOfferMoney(plan.annualMonthlyEquivalent));
-    assert.equal(fields.get('[data-plan-setup]').textContent,formatOfferMoney(plan.setupFee));
-    assert.match(fields.get('[data-plan-setup-note]').textContent,/^Por única vez(?:, en ambas modalidades)?$/);
-    assert.match(fields.get('[data-plan-period]').textContent,/pago anual anticipado de 12 meses/);
-    assert.equal(fields.get('[data-plan-initial]').textContent,'Total inicial anual: '+formatOfferMoney(plan.annualMonthlyEquivalent*12+plan.setupFee));
-    assert.doesNotMatch(fields.get('[data-plan-setup-note]').textContent,noExpiredBenefit);
-    const link=new URL(fields.get('[data-plan-link]').href,'https://scalaris.com.ar');
-    assert.equal(link.searchParams.get('billing'),'annual');
-    for(const field of ['promotion','discount','domain','setup'])assert.equal(link.searchParams.get(field),null);
-  });
-  assert.match(note.textContent,/Implementación completa por separado|Puesta en marcha completa adicional/);
-  assert.match(note.textContent,/Dominio propio[^.]*por separado/);
-  assert.doesNotMatch(note.textContent,noExpiredBenefit);
-  vm.runInContext('showBilling("monthly")',context);
-  assert.equal(controls[1].attributes['aria-pressed'],'true');
-  plans.forEach(plan=>{
-    const fields=rows.get(plan.product+':'+plan.id).fields;
-    assert.equal(fields.get('[data-plan-price]').textContent,formatOfferMoney(plan.monthlyPrice));
-    assert.equal(fields.get('[data-plan-initial]').textContent,'Total inicial mensual: '+formatOfferMoney(plan.monthlyPrice+plan.setupFee));
-    assert.equal(fields.get('[data-plan-setup]').textContent,formatOfferMoney(plan.setupFee));
-    assert.match(fields.get('[data-plan-setup-note]').textContent,/^Por única vez(?:, en ambas modalidades)?$/);
-    assert.doesNotMatch(fields.get('[data-plan-setup-note]').textContent,noExpiredBenefit);
-    assert.equal(new URL(fields.get('[data-plan-link]').href,'https://scalaris.com.ar').searchParams.get('billing'),'monthly');
-  });
-  assert.doesNotMatch(note.textContent,/promoción de lanzamiento|cupo|bonificad/);
-  assert.doesNotMatch(note.textContent,noExpiredBenefit);
+test('current annual setup waiver is independent from the expired launch campaign',async t=>{
+  const {read}=await fixture(t),html=await read('index.html'),offer=JSON.parse(await read('offer.json'));
+  assert.equal(launchIsActive('2026-12-01T00:00:00-03:00'),false);
+  assert.doesNotMatch(await read('productos.js'),/quoteLaunch|launchPromotion/);
+  for(const plan of offer.fixedPlans){
+    const row=html.match(new RegExp(`<tr data-portfolio-plan="${plan.product}:${plan.id}"[\\s\\S]*?<\\/tr>`))?.[0];
+    assert.ok(row);
+    assert.ok(row.includes('Abono anual anticipado: '+formatOfferMoney(plan.annualMonthlyEquivalent*12)));
+    assert.ok(row.includes('Total a pagar por 12 meses: '+formatOfferMoney(plan.annualMonthlyEquivalent*12)));
+    assert.match(row,/Puesta en marcha: \$ 0 · 100% bonificada/);
+    assert.ok(row.includes('Ahorro total del primer año: '+formatOfferMoney((plan.monthlyPrice-plan.annualMonthlyEquivalent)*12+plan.setupFee)));
+    assert.doesNotMatch(row,/50% bonificada|primer año de dominio|3 cuotas|sin recargo|cuota 1/i);
+    if(plan.product==='catalogo')assert.doesNotMatch(row,/25%|3 meses de abono|9 meses/);
+  }
 });

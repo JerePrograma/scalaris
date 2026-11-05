@@ -8,13 +8,13 @@ Dirección anterior, con redirección permanente: https://scalaris.pages.dev
 
 ## Oferta vigente — 05/11/2026
 
-Por autorización del fundador, se adopta la [oferta con presentación personalizada](docs/precios-personalizacion-2026-11-05.md) para nuevas propuestas. Web y Catálogo incluyen relevamiento, una propuesta visual individual y dos rondas de ajustes dentro de las páginas, secciones y funciones del plan, sobre componentes propios. Las nuevas funciones e integraciones se presupuestan por separado.
+Por corrección posterior del fundador, rige el [ajuste de planes y anual bonificado](docs/ajuste-planes-2026-11-05.md) para nuevas propuestas. La [decisión anterior](docs/precios-personalizacion-2026-11-05.md) se conserva como antecedente. Web y Catálogo incluyen relevamiento, una propuesta visual individual y dos rondas de ajustes dentro de las páginas, secciones y funciones del plan, sobre componentes propios. Las nuevas funciones e integraciones se presupuestan por separado.
 
-Las fuentes editables son [portfolio-offer.json](commercial/portfolio-offer.json) y [Catálogo](../scalaris-comercio/commercial/offer.json). El sitio muestra abono mensual, implementación única y anual opcional con **25% de descuento sólo sobre el abono**: equivalente mensual identificado, ahorro en pesos, pago anual anticipado y total inicial con implementación. El precio del abono queda fijo durante los doce meses cubiertos; dominio y terceros por separado. Los acuerdos ya aceptados conservan sus condiciones.
+Las fuentes editables son [portfolio-offer.json](commercial/portfolio-offer.json) y [Catálogo](../scalaris-comercio/commercial/offer.json). Las tarjetas blancas muestran siempre el abono **sin descuento por mes**, la puesta en marcha y el **Total inicial primer mes**. El bloque anual separado muestra equivalente mensual, ahorro real, pago completo por doce meses y **puesta en marcha bonificada**. Catálogo tiene importes anuales propios por plan, sin un porcentaje uniforme; Web conserva su descuento del 25% en el abono. El precio del abono queda fijo durante los doce meses cubiertos; dominio y terceros por separado. Los acuerdos ya aceptados conservan sus condiciones.
 
 Gestudio mantiene su escala y anual propios; Menú, Mesa y CRM conservan sus referencias sujetas a relevamiento. La actualización comercial no acredita nuevas funciones ni aceptación productiva de esos sistemas.
 
-Se regeneran las proyecciones con `npm run offers:build`, el material con `npm run flyers:sync` y se verifica con `npm run check`. La colección anterior del 01/11 queda en `legacy/flyers-2026-11-01/`; los enlaces a sus ZIP llevan a la colección vigente. El sitio conserva HTML/CSS/JavaScript estático y la publicación existente por GitHub y Cloudflare Pages.
+Se regeneran las proyecciones con `npm run offers:build`, el material con `npm run flyers:sync` y se verifica con `npm run check`. Las colecciones anteriores quedan en `legacy/flyers-2026-11-01/` y `legacy/flyers-2026-11-05-25porciento/`; los enlaces a sus ZIP llevan a la colección vigente de anual bonificado. El sitio conserva HTML/CSS/JavaScript estático y la publicación existente por GitHub y Cloudflare Pages.
 
 ## Antecedente de oferta — 01/11/2026
 

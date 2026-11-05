@@ -8,14 +8,14 @@ import {
   readProductInterest,
   productInterestAnswers,
   productPriceReference,
-} from "./model.js?v=20261105-personalizado";
+} from "./model.js?v=20261105-anualbonificado";
 import {
   hasPlanSelection,
   loadPlanSummary,
   planSummaryRows,
   planSummaryText,
   planSummaryTotal,
-} from "./plan-summary.js?v=20261105-personalizado";
+} from "./plan-summary.js?v=20261105-anualbonificado";
 const root = document.querySelector("#form-root"),
   error = document.querySelector("#error"),
   interest = readProductInterest(window.location.search),
@@ -302,7 +302,7 @@ function render() {
             lines.append(element('dt', label), element('dd', value));
           }
           const total = element('p', null, { class: 'plan-summary-total' });
-          total.append(element('span', 'Total inicial'), element('strong', planSummaryTotal(plan)));
+          total.append(element('span', plan.totalLabel), element('strong', planSummaryTotal(plan)));
           planSection.replaceChildren(
             element('h3', 'Revisá el plan elegido'),
             ...(plan.billing === 'annual' ? [element('p', plan.savingsText, { class: 'plan-summary-saving' })] : []),

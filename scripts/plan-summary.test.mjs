@@ -5,31 +5,31 @@ import { buildInquiry, readProductInterest, productInterestAnswers } from '../pu
 
 const offer = {
   currency: 'ARS',
-  billing: { annualMonths: 12, annualDiscountRate: .25, setupAnnualWaived: false },
+  billing: { annualMonths: 12, annualDiscountRate: null, setupAnnualWaived: true },
   plans: [
-    { id: 'catalogo', annualMonthlyEquivalent: 67425, monthlyPrice: 89900, setupFee: 300000 },
-    { id: 'pedidos', annualMonthlyEquivalent: 89925, monthlyPrice: 119900, setupFee: 450000 },
-    { id: 'gestion', annualMonthlyEquivalent: 112425, monthlyPrice: 149900, setupFee: 650000 },
+    { id: 'catalogo', annualMonthlyEquivalent: 60000, monthlyPrice: 70000, setupFee: 300000 },
+    { id: 'pedidos', annualMonthlyEquivalent: 80000, monthlyPrice: 90000, setupFee: 450000 },
+    { id: 'gestion', annualMonthlyEquivalent: 100000, monthlyPrice: 115000, setupFee: 650000 },
   ],
 };
 const webOffer = {
   currency: 'ARS',
-  billing: { annualMonths: 12, annualDiscountRate: .25, setupAnnualWaived: false },
+  billing: { annualMonths: 12, annualDiscountRate: .25, setupAnnualWaived: true },
   plans: [
     { id: 'presencia', annualMonthlyEquivalent: 52425, monthlyPrice: 69900, setupFee: 350000 },
     { id: 'negocio', annualMonthlyEquivalent: 74925, monthlyPrice: 99900, setupFee: 650000 },
   ],
 };
 const cases = [
-  ['web', 'presencia', 'Origen', webOffer, 979100, 419900, 209700],
-  ['web', 'negocio', 'Web de hasta 5 páginas', webOffer, 1549100, 749900, 299700],
-  ['catalogo', 'catalogo', 'Vidriera', offer, 1109100, 389900, 269700],
-  ['catalogo', 'pedidos', 'Flujo', offer, 1529100, 569900, 359700],
-  ['catalogo', 'gestion', 'Pulso', offer, 1999100, 799900, 449700],
+  ['web', 'presencia', 'Origen', webOffer, 629100, 419900, 209700],
+  ['web', 'negocio', 'Web de hasta 5 páginas', webOffer, 899100, 749900, 299700],
+  ['catalogo', 'catalogo', 'Vidriera', offer, 720000, 370000, 120000],
+  ['catalogo', 'pedidos', 'Flujo', offer, 960000, 540000, 120000],
+  ['catalogo', 'gestion', 'Pulso', offer, 1200000, 765000, 180000],
 ];
 const interest = (plan, billing) => ({ product: 'catalogo', plan, billing });
 
-test('all five annual reviews show the saving, prepaid subscription and full implementation separately', () => {
+test('all five annual reviews separate subscription savings, waived implementation and first-year savings', () => {
   for (const [product, id, name, data, annualTotal, , savings] of cases) {
     const review = buildPlanSummary(data, { product, plan: id, billing: 'annual' });
     const plan = data.plans.find(p => p.id === id);
@@ -39,24 +39,26 @@ test('all five annual reviews show the saving, prepaid subscription and full imp
     assert.equal(review.monthlyAmount, plan.annualMonthlyEquivalent);
     assert.equal(review.twelveMonthlyPayments, plan.monthlyPrice * 12);
     assert.equal(review.annualSavings, savings);
-    assert.equal(review.annualDiscountRate, .25);
-    assert.equal(review.annualDiscountPercent, '25%');
+    assert.equal(review.annualDiscountRate, data.billing.annualDiscountRate ?? (1-plan.annualMonthlyEquivalent/plan.monthlyPrice));
     assert.equal(review.periodMonths, 12);
-    assert.equal(review.installation, plan.setupFee);
-    assert.equal(review.installationPayment, plan.setupFee);
+    assert.equal(review.installation, 0);
+    assert.equal(review.installationPayment, 0);
     assert.equal(review.installationBalance, 0);
-    assert.equal(review.installationWaived, false);
-    assert.equal(review.installationDiscount, 0);
+    assert.equal(review.installationWaived, true);
+    assert.equal(review.installationDiscount, plan.setupFee);
+    assert.equal(review.firstYearSavings, savings+plan.setupFee);
     const text = planSummaryText(review);
     assert.match(text, /Plan anual · pago anticipado/);
     assert.match(text, /12 mensualidades al precio actual/);
     assert.match(text, /Abono anual · 12 meses por adelantado/);
-    assert.match(text, /Ahorro anual en el abono \(25%\)/);
-    assert.match(text, /Puesta en marcha única · pago completo/);
+    assert.match(text, /Ahorro anual en el abono/);
+    assert.match(text, /Puesta en marcha bonificada al 100%/);
+    assert.match(text, /Total a pagar por 12 meses/);
     assert.match(text, /precio fijo durante ese período/);
     assert.match(text, /Esta consulta no contrata ni activa el servicio/);
-    assert.equal(review.total + review.annualSavings, plan.monthlyPrice * 12 + plan.setupFee);
-    assert.deepEqual(planSummaryRows(review).at(-1), ['Puesta en marcha única · pago completo', '$ ' + new Intl.NumberFormat('es-AR').format(plan.setupFee)]);
+    assert.equal(review.total + review.firstYearSavings, plan.monthlyPrice * 12 + plan.setupFee);
+    assert.ok(planSummaryRows(review).some(([label,value])=>label==='Puesta en marcha a pagar'&&value==='$ 0'));
+    assert.equal(review.promotionActive,false);
   }
 });
 
@@ -78,14 +80,14 @@ test('monthly review separates first month and complete implementation from recu
 test('the annual percentage comes from the trusted offer and is not hardcoded into the summary', () => {
   const changed = structuredClone(offer);
   changed.billing.annualDiscountRate = .2;
-  changed.plans[0].annualMonthlyEquivalent = 71920;
+  changed.plans[0].annualMonthlyEquivalent = 56000;
   const review = buildPlanSummary(changed, interest('catalogo', 'annual'), { annualDiscountRate: .99 });
   assert.equal(review.annualDiscountPercent, '20%');
-  assert.equal(review.subscription, 863040);
-  assert.equal(review.annualSavings, 215760);
-  assert.equal(review.total, 1163040);
-  assert.match(review.nextPayment, /descuento del 20%/);
-  assert.match(review.savingsText, /215.760.*20%/);
+  assert.equal(review.subscription, 672000);
+  assert.equal(review.annualSavings, 168000);
+  assert.equal(review.total, 672000);
+  assert.equal(review.firstYearSavings,468000);
+  assert.match(review.savingsText, /468.000.*168.000.*300.000/);
   assert.doesNotMatch(planSummaryText(review), /25%|10%/);
 });
 
@@ -97,7 +99,7 @@ test('query prices cannot change charges or the minimal inquiry schema', () => {
     const before = structuredClone(inquiry);
     const review = buildPlanSummary(data, selection);
     assert.equal(review.total, annualTotal);
-    assert.equal(review.installation, data.plans.find(p => p.id === id).setupFee);
+    assert.equal(review.installation, 0);
     assert.deepEqual(inquiry, before);
     assert.equal(inquiry.schema, 'scalaris.inquiry');
     assert.equal(inquiry.version, 1);
@@ -122,8 +124,7 @@ test('malformed amounts, discount rates, duplicate plans and overflow block a fi
     data => { data.currency = 'USD'; },
     data => { data.billing.annualMonths = 0; },
     data => { data.billing.setupAnnualWaived = 'true'; },
-    data => { data.billing.setupAnnualWaived = true; },
-    data => { delete data.billing.annualDiscountRate; },
+    data => { data.billing.setupAnnualWaived = null; },
     data => { data.billing.annualDiscountRate = '0.25'; },
     data => { data.billing.annualDiscountRate = -1; },
     data => { data.billing.annualDiscountRate = 1; },
@@ -131,8 +132,9 @@ test('malformed amounts, discount rates, duplicate plans and overflow block a fi
     data => { data.plans[0].setupFee = -1; },
     data => { data.plans[0].monthlyPrice = '89900'; },
     data => { data.plans[0].annualMonthlyEquivalent = 90000; },
-    data => { data.plans[0].annualMonthlyEquivalent = 60000; },
+    data => { data.billing.annualDiscountRate = .25; },
     data => { data.plans[0].setupFee = Number.MAX_SAFE_INTEGER; },
+    data => { data.plans[0].setupFee = 90071992547409; },
     data => { data.billing.annualMonths = Number.MAX_SAFE_INTEGER; },
     data => { data.plans.push({ ...data.plans[0] }); },
   ]) {
@@ -159,7 +161,7 @@ test('quote requests only fixed same-origin offer endpoints, without cached pric
         return { ok: true, json: async () => product === 'web' ? webOffer : offer };
       },
     });
-    assert.equal(review.total, product === 'web' ? 979100 : 1109100);
+    assert.equal(review.total, product === 'web' ? 629100 : 720000);
   }
   await assert.rejects(loadPlanSummary(interest('catalogo', 'annual'), { fetchImpl: async () => ({ ok: false }) }));
   await assert.rejects(loadPlanSummary(interest('catalogo', 'annual'), { fetchImpl: async () => { throw new Error('offline'); } }));
@@ -195,20 +197,42 @@ test('fixed plan links default to monthly and unsupported billing cannot become 
   }
 });
 
-test('new proposals cannot recover old campaign benefits through options or previous dates', () => {
-  for (const [product, id, , data] of cases) {
-    for (const billing of ['monthly', 'annual']) {
-      const review = buildPlanSummary(data, { product, plan: id, billing }, { at: '2026-10-28T12:00:00-03:00', eligible: true });
-      const plan = data.plans.find(p => p.id === id);
-      assert.equal(review.installation, plan.setupFee);
-      assert.equal(review.installationDiscount, 0);
-      assert.equal(review.roundingDiscount, 0);
-      assert.equal(review.domainIncluded, false);
-      assert.equal(review.promotionActive, false);
-      assert.deepEqual(review.installationSchedule, [plan.setupFee]);
-      assert.equal(review.total, billing === 'annual' ? plan.annualMonthlyEquivalent * 12 + plan.setupFee : plan.monthlyPrice + plan.setupFee);
-      assert.match(planSummaryText(review), /puesta en marcha se abona completa al comenzar/);
-      assert.doesNotMatch(planSummaryText(review), /bonificad|redondeo|tres cuotas|1 de 3|cupo|primer año/i);
+test('current offer alone controls setup waiver; dates and options do not restore archived gifts',()=>{
+  for(const [product,id,,data]of cases){
+    const plan=data.plans.find(p=>p.id===id);
+    for(const billing of ['monthly','annual']){
+      const review=buildPlanSummary(data,{product,plan:id,billing},{at:'2026-10-28T12:00:00-03:00',eligible:true,setupAnnualWaived:false});
+      assert.equal(review.installation,billing==='annual'?0:plan.setupFee);
+      assert.equal(review.installationDiscount,billing==='annual'?plan.setupFee:0);
+      assert.equal(review.promotionActive,false);
+      assert.equal(review.roundingDiscount,0);
+      assert.equal(review.domainIncluded,false);
+      assert.equal(review.total,billing==='annual'?plan.annualMonthlyEquivalent*12:plan.monthlyPrice+plan.setupFee);
+      assert.doesNotMatch(planSummaryText(review),/redondeo|tres cuotas|1 de 3|cupo/i);
     }
+    const noWaiver=structuredClone(data);noWaiver.billing.setupAnnualWaived=false;
+    const selection=readProductInterest('?'+new URLSearchParams({product,plan:id,billing:'annual',setupAnnualWaived:'true',setup:'0',promotion:'free'}));
+    const review=buildPlanSummary(noWaiver,selection,{setupAnnualWaived:true,eligible:true});
+    assert.equal(review.installation,plan.setupFee);
+    assert.equal(review.installationDiscount,0);
+    assert.equal(review.total,plan.annualMonthlyEquivalent*12+plan.setupFee);
+    assert.doesNotMatch(planSummaryText(review),/bonificad/i);
+  }
+});
+
+test('Catalog uses three distinct subscription discounts and exact first-year savings',()=>{
+  const expected=[['catalogo',720000,370000,120000,300000,420000,'14,29%'],['pedidos',960000,540000,120000,450000,570000,'11,11%'],['gestion',1200000,765000,180000,650000,830000,'13,04%']];
+  for(const[id,annualTotal,monthlyTotal,subscriptionSaving,setupSaving,firstYearSaving,percent]of expected){
+    const annual=buildPlanSummary(offer,interest(id,'annual'));
+    const monthly=buildPlanSummary(offer,interest(id,'monthly'));
+    assert.equal(annual.total,annualTotal);
+    assert.equal(monthly.total,monthlyTotal);
+    assert.equal(annual.annualSavings,subscriptionSaving);
+    assert.equal(annual.installationDiscount,setupSaving);
+    assert.equal(annual.firstYearSavings,firstYearSaving);
+    assert.equal(annual.annualDiscountPercent,percent);
+    assert.equal(annual.totalLabel,'Total a pagar por 12 meses');
+    assert.equal(monthly.totalLabel,'Total inicial del primer mes');
+    assert.doesNotMatch(planSummaryText(annual),/25%|tres mensualidades/);
   }
 });
